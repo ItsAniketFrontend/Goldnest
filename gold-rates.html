@@ -21,339 +21,228 @@
   <link rel="icon" type="image/png" href="FrontendLogo.png" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    /* ---- Page-specific styles ---- */
-    .rate-hero {
-      padding: 120px 0 40px;
-      background: linear-gradient(180deg, rgba(201,151,28,0.08) 0%, transparent 100%), var(--bg);
-    }
+    /* ================================================
+       GOLD RATES PAGE - COMPLETE RESPONSIVE STYLES
+       ================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
 
+    /* HERO */
+    .rate-hero { padding: 120px 0 48px; background: linear-gradient(180deg, rgba(201,151,28,0.08) 0%, transparent 100%), var(--bg); overflow: hidden; }
+    .hero-flex { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .hero-meta { text-align: right; font-size: 0.8rem; color: var(--text-muted); flex-shrink: 0; }
 
-    /* Live price cards */
-    .live-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 40px;
-    }
-    .live-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-lg);
-      padding: 24px 20px;
-      position: relative;
-      overflow: hidden;
-      transition: all var(--transition);
-    }
+    /* LIVE PRICE CARDS */
+    .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+    .live-card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 22px 18px; position: relative; overflow: hidden; transition: all var(--transition); min-width: 0; }
     .live-card:hover { border-color: var(--gold); box-shadow: var(--shadow); }
     .live-card.primary { border-color: var(--gold); background: linear-gradient(135deg, rgba(201,151,28,0.06), var(--bg-card)); }
-    .live-card::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 80px; height: 80px;
-      background: radial-gradient(circle, rgba(201,151,28,0.08) 0%, transparent 70%);
-      border-radius: 0 0 0 100%;
-    }
-    .lc-metal { font-size: 0.72rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-    .lc-price { font-size: 1.7rem; font-weight: 800; color: var(--text); line-height: 1.1; margin-bottom: 4px; }
-    .lc-per10 { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px; }
-    .lc-change {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 20px;
-    }
+    .live-card::after { content: ''; position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: radial-gradient(circle, rgba(201,151,28,0.08) 0%, transparent 70%); border-radius: 0 0 0 100%; pointer-events: none; }
+    .lc-metal { font-size: 0.67rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lc-price { font-size: 1.55rem; font-weight: 800; color: var(--text); line-height: 1.1; margin-bottom: 4px; white-space: nowrap; }
+    .lc-per10 { font-size: 0.74rem; color: var(--text-muted); margin-bottom: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lc-change { display: inline-flex; align-items: center; gap: 4px; font-size: 0.74rem; font-weight: 600; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
     .lc-change.up   { background: rgba(22,163,74,0.10); color: #16A34A; }
     .lc-change.down { background: rgba(220,38,38,0.10); color: #DC2626; }
-    .lc-time { font-size: 0.68rem; color: var(--text-muted); margin-top: 8px; }
-    .live-dot {
-      display: inline-block;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #16A34A;
-      margin-right: 4px;
-      animation: blink 1.4s infinite;
-    }
+    .lc-time { font-size: 0.64rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 3px; }
+    .live-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #16A34A; flex-shrink: 0; animation: blink 1.4s infinite; }
     @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
 
-    /* Chart panel */
-    .chart-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      margin-bottom: 32px;
-    }
-    .chart-header {
-      padding: 24px 28px 0;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .chart-title { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-    .chart-subtitle { font-size: 0.8rem; color: var(--text-muted); }
-
-    .chart-tabs {
-      display: flex;
-      gap: 4px;
-      background: var(--bg-card2);
-      border: 1px solid var(--border-light);
-      border-radius: 10px;
-      padding: 4px;
-    }
-    .chart-tab {
-      padding: 6px 14px;
-      border-radius: 7px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      transition: all var(--transition);
-    }
-    .chart-tab.active {
-      background: var(--gold);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(201,151,28,0.3);
-    }
+    /* CHART PANEL */
+    .chart-panel { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 32px; }
+    .chart-header { padding: 22px 24px 0; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .chart-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .chart-subtitle { font-size: 0.78rem; color: var(--text-muted); }
+    .chart-tabs { display: flex; gap: 3px; background: var(--bg-card2); border: 1px solid var(--border-light); border-radius: 10px; padding: 4px; flex-wrap: wrap; }
+    .chart-tab { padding: 5px 11px; border-radius: 7px; font-size: 0.75rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--text-muted); transition: all var(--transition); white-space: nowrap; }
+    .chart-tab.active { background: var(--gold); color: #fff; box-shadow: 0 2px 8px rgba(201,151,28,0.3); }
     .chart-tab:hover:not(.active) { color: var(--gold-dark); }
-
-    .chart-body { padding: 20px 28px 28px; }
-    .chart-canvas-wrap { position: relative; height: 340px; }
-
-    /* Metal selector */
-    .metal-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .metal-tab {
-      padding: 7px 16px;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid var(--border-light);
-      background: transparent;
-      color: var(--text-muted);
-      transition: all var(--transition);
-    }
+    .chart-body { padding: 18px 24px 24px; }
+    .chart-canvas-wrap { position: relative; width: 100%; height: 320px; }
+    .metal-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+    .metal-tab { padding: 6px 14px; border-radius: 8px; font-size: 0.79rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border-light); background: transparent; color: var(--text-muted); transition: all var(--transition); white-space: nowrap; }
     .metal-tab.active { border-color: var(--gold); background: rgba(201,151,28,0.08); color: var(--gold-dark); }
 
-    /* 10-year panel */
-    .decade-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      margin-bottom: 32px;
-    }
-    .decade-header {
-      padding: 24px 28px;
-      border-bottom: 1px solid var(--border-light);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .decade-badge {
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      color: #fff;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 20px;
-      letter-spacing: 0.5px;
-    }
-    .decade-body { padding: 28px; }
-    .decade-canvas-wrap { position: relative; height: 380px; }
-
-    /* Year milestone cards */
-    .milestones {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 28px;
-    }
-    .milestone-card {
-      background: var(--bg-card2);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius);
-      padding: 16px;
-      text-align: center;
-      transition: all var(--transition);
-    }
+    /* 10-YEAR PANEL */
+    .decade-panel { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 32px; }
+    .decade-header { padding: 20px 24px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .decade-badge { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.5px; white-space: nowrap; }
+    .decade-body { padding: 24px; }
+    .decade-canvas-wrap { position: relative; width: 100%; height: 360px; }
+    .milestones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 22px; }
+    .milestone-card { background: var(--bg-card2); border: 1px solid var(--border-light); border-radius: var(--radius); padding: 14px 10px; text-align: center; transition: all var(--transition); min-width: 0; }
     .milestone-card:hover { border-color: var(--gold); }
-    .ms-year { font-size: 0.72rem; font-weight: 700; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-    .ms-price { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
-    .ms-change { font-size: 0.72rem; font-weight: 600; }
+    .ms-year { font-size: 0.67rem; font-weight: 700; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+    .ms-price { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 4px; white-space: nowrap; }
+    .ms-change { font-size: 0.66rem; font-weight: 600; }
     .ms-change.pos { color: #16A34A; }
     .ms-change.neg { color: #DC2626; }
 
-    /* Stats table */
-    .stats-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      margin-bottom: 32px;
-    }
-    .stats-panel-header {
-      padding: 20px 28px;
-      border-bottom: 1px solid var(--border-light);
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .rates-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-    }
-    .rates-table th {
-      padding: 12px 20px;
-      text-align: left;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: var(--bg-card2);
-      border-bottom: 1px solid var(--border-light);
-    }
-    .rates-table td {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border-light);
-      color: var(--text);
-    }
+    /* RATES TABLE */
+    .stats-panel { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 32px; }
+    .stats-panel-header { padding: 18px 24px; border-bottom: 1px solid var(--border-light); font-size: 0.95rem; font-weight: 700; color: var(--text); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .scroll-hint { font-size: 0.7rem; color: var(--text-muted); display: none; }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .rates-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 500px; }
+    .rates-table th { padding: 11px 16px; text-align: left; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); background: var(--bg-card2); border-bottom: 1px solid var(--border-light); white-space: nowrap; }
+    .rates-table td { padding: 13px 16px; border-bottom: 1px solid var(--border-light); color: var(--text); white-space: nowrap; }
     .rates-table tr:last-child td { border-bottom: none; }
     .rates-table tr:hover td { background: rgba(201,151,28,0.03); }
     .td-metal { font-weight: 600; }
-    .td-purity { color: var(--text-muted); font-size: 0.8rem; }
+    .td-purity { color: var(--text-muted); font-size: 0.78rem; }
     .td-price { font-weight: 700; color: var(--text); }
     .td-up   { color: #16A34A; font-weight: 600; }
     .td-down { color: #DC2626; font-weight: 600; }
 
-    /* Insights sidebar */
-    .page-layout { display: grid; grid-template-columns: 1fr 320px; gap: 28px; align-items: start; }
-    .sidebar-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      margin-bottom: 20px;
-    }
-    .sidebar-card-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-light);
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .sidebar-card-body { padding: 16px 20px; }
-    .insight-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border-light);
-      font-size: 0.83rem;
-    }
+    /* PAGE LAYOUT */
+    .page-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+
+    /* SIDEBAR */
+    .sidebar-card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px; }
+    .sidebar-card-header { padding: 14px 18px; border-bottom: 1px solid var(--border-light); font-size: 0.85rem; font-weight: 700; color: var(--text); }
+    .sidebar-card-body { padding: 14px 18px; }
+    .insight-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border-light); font-size: 0.8rem; gap: 8px; }
     .insight-item:last-child { border-bottom: none; }
     .insight-label { color: var(--text-muted); }
-    .insight-val { font-weight: 700; color: var(--text); }
+    .insight-val { font-weight: 700; color: var(--text); white-space: nowrap; }
     .insight-val.gold { color: var(--gold-dark); }
-
-    /* Range bars */
-    .range-wrap { margin: 6px 0; }
-    .range-label { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-bottom:4px; }
-    .range-bar { height: 6px; background: var(--border-light); border-radius: 3px; overflow: hidden; }
+    .range-label { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-muted); margin-bottom: 4px; }
+    .range-bar { height: 5px; background: var(--border-light); border-radius: 3px; overflow: hidden; }
     .range-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light)); border-radius: 3px; }
-
-    /* Converter */
-    .converter-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-    .converter-row input {
-      flex: 1;
-      padding: 10px 14px;
-      background: var(--bg-card2);
-      border: 1px solid var(--border-light);
-      border-radius: 8px;
-      font-size: 0.88rem;
-      color: var(--text);
-      outline: none;
-      font-family: var(--font);
-    }
+    .converter-row { display: flex; gap: 8px; align-items: stretch; margin-bottom: 10px; }
+    .converter-row input { flex: 1; min-width: 0; padding: 9px 12px; background: var(--bg-card2); border: 1px solid var(--border-light); border-radius: 8px; font-size: 0.85rem; color: var(--text); outline: none; font-family: var(--font); }
     .converter-row input:focus { border-color: var(--gold); }
-    .converter-row select {
-      padding: 10px 12px;
-      background: var(--bg-card2);
-      border: 1px solid var(--border-light);
-      border-radius: 8px;
-      font-size: 0.82rem;
-      color: var(--text);
-      outline: none;
-      cursor: pointer;
-      font-family: var(--font);
-    }
-    .converter-result {
-      background: linear-gradient(135deg, rgba(201,151,28,0.08), rgba(201,151,28,0.03));
-      border: 1px solid rgba(201,151,28,0.2);
-      border-radius: 10px;
-      padding: 16px;
-      text-align: center;
-    }
-    .cr-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-    .cr-val { font-size: 1.4rem; font-weight: 800; color: var(--gold-dark); }
+    .converter-row select { flex-shrink: 0; min-width: 0; padding: 9px 10px; background: var(--bg-card2); border: 1px solid var(--border-light); border-radius: 8px; font-size: 0.8rem; color: var(--text); outline: none; cursor: pointer; font-family: var(--font); }
+    .converter-result { background: linear-gradient(135deg, rgba(201,151,28,0.08), rgba(201,151,28,0.03)); border: 1px solid rgba(201,151,28,0.2); border-radius: 10px; padding: 14px; text-align: center; }
+    .cr-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .cr-val { font-size: 1.3rem; font-weight: 800; color: var(--gold-dark); }
+
+    /* === RESPONSIVE BREAKPOINTS === */
 
     @media (max-width: 1024px) {
       .page-layout { grid-template-columns: 1fr; }
-      .live-grid { grid-template-columns: repeat(2,1fr); }
-      .milestones { grid-template-columns: repeat(2,1fr); }
+      .live-grid { grid-template-columns: repeat(2, 1fr); }
+      .milestones { grid-template-columns: repeat(4, 1fr); }
       .decade-canvas-wrap { height: 300px; }
-      .chart-canvas-wrap { height: 260px; }
+      .chart-canvas-wrap { height: 280px; }
     }
+
     @media (max-width: 768px) {
       .rate-hero { padding: 100px 0 28px; }
-      .live-grid { grid-template-columns: repeat(2,1fr); }
-      .chart-header { flex-direction: column; align-items: flex-start; }
-      .decade-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .rates-table { font-size: 0.78rem; }
-      .rates-table th, .rates-table td { padding: 10px 10px; white-space: nowrap; }
-      .metal-tabs { flex-wrap: wrap; gap: 6px; }
-      .chart-tabs { flex-wrap: wrap; gap: 4px; }
-      .rate-hero .hero-meta { display: none; }
-      .decade-canvas-wrap { height: 260px; }
-      .chart-canvas-wrap { height: 220px; }
-      .scroll-hint { display: inline !important; }
+      .hero-flex { flex-direction: column; align-items: flex-start; }
+      .hero-meta { display: none; }
+      .live-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 24px; }
+      .chart-header { padding: 16px 18px 0; flex-direction: column; align-items: flex-start; }
+      .chart-body { padding: 14px 18px 20px; }
+      .chart-canvas-wrap { height: 230px; }
+      .decade-header { padding: 16px 18px; flex-direction: column; align-items: flex-start; }
+      .decade-body { padding: 14px 18px; }
+      .decade-canvas-wrap { height: 240px; }
+      .milestones { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 16px; }
+      .stats-panel-header { padding: 14px 18px; font-size: 0.88rem; }
+      .scroll-hint { display: inline; }
     }
+
     @media (max-width: 480px) {
-      .live-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .live-card { padding: 16px 14px; }
-      .lc-price { font-size: 1.35rem; }
+      .rate-hero { padding: 88px 0 20px; }
+      .rate-hero h1 { font-size: 1.7rem !important; line-height: 1.25 !important; }
+      .rate-hero p { font-size: 0.87rem !important; max-width: 100% !important; }
+      .live-grid { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px; }
+      .live-card { padding: 12px 10px; }
+      .lc-metal { font-size: 0.58rem; letter-spacing: 0.5px; }
+      .lc-price { font-size: 1rem; }
       .lc-per10 { display: none; }
-      .milestones { grid-template-columns: repeat(2,1fr); gap: 8px; }
-      .milestone-card { padding: 12px 10px; }
-      .ms-price { font-size: 0.92rem; }
-      .decade-canvas-wrap { height: 220px; }
-      .chart-canvas-wrap { height: 200px; }
-      .decade-body { padding: 16px; }
-      .chart-body { padding: 12px 16px 20px; }
-      .chart-header { padding: 16px 16px 0; }
-      .stats-panel-header { padding: 14px 16px; font-size: 0.9rem; }
-      .sidebar-card-header { padding: 12px 16px; }
-      .sidebar-card-body { padding: 12px 16px; }
+      .lc-change { font-size: 0.62rem; padding: 2px 6px; }
+      .lc-time { font-size: 0.58rem; margin-top: 5px; }
+      .chart-header { padding: 12px 12px 0; gap: 8px; }
+      .chart-title { font-size: 0.88rem; }
+      .chart-subtitle { font-size: 0.72rem; }
+      .chart-tabs { padding: 3px; gap: 2px; }
+      .chart-tab { padding: 4px 7px; font-size: 0.67rem; }
+      .chart-body { padding: 10px 12px 14px; }
+      .metal-tabs { gap: 5px; margin-bottom: 10px; }
+      .metal-tab { padding: 4px 10px; font-size: 0.7rem; }
+      .chart-canvas-wrap { height: 175px; }
+      .decade-header { padding: 12px; gap: 8px; }
+      .decade-badge { font-size: 0.62rem; padding: 3px 9px; }
+      .decade-body { padding: 10px; }
+      .decade-canvas-wrap { height: 185px; }
+      .milestones { grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
+      .milestone-card { padding: 10px 6px; }
+      .ms-year { font-size: 0.58rem; margin-bottom: 3px; }
+      .ms-price { font-size: 0.78rem; }
+      .ms-change { font-size: 0.58rem; }
+      .stats-panel-header { padding: 10px 12px; font-size: 0.8rem; }
+      .rates-table { font-size: 0.74rem; }
+      .rates-table th { padding: 8px 10px; font-size: 0.6rem; }
+      .rates-table td { padding: 8px 10px; }
+      .sidebar-card-header { padding: 10px 12px; font-size: 0.8rem; }
+      .sidebar-card-body { padding: 10px 12px; }
+      .insight-item { font-size: 0.74rem; padding: 7px 0; }
+      .range-label { font-size: 0.62rem; }
+      .converter-row { flex-direction: column; gap: 8px; }
+      .converter-row input, .converter-row select { width: 100%; }
+      .cr-val { font-size: 1rem; }
+    }
+
+    @media (max-width: 360px) {
+      .live-card { padding: 10px 8px; }
+      .lc-price { font-size: 0.92rem; }
+      .milestone-card { padding: 8px 4px; }
+      .ms-price { font-size: 0.72rem; }
+    }
+
+    /* ================================================================
+       BULLETPROOF OVERFLOW PREVENTION
+       Overrides any conflicting Bootstrap / style.css rules
+       ================================================================ */
+
+    /* 1. Hard-clip the root so nothing can widen the viewport */
+    html { max-width: 100vw; overflow-x: hidden !important; }
+    body { max-width: 100vw; overflow-x: hidden !important; }
+
+    /* 2. Keep every canvas inside its parent */
+    canvas { display: block; max-width: 100% !important; }
+    .chart-canvas-wrap, .decade-canvas-wrap { overflow: hidden; }
+
+    /* 3. Grid containers: never wider than parent */
+    .live-grid, .page-layout, .milestones { max-width: 100%; width: 100%; }
+    .page-layout > div { min-width: 0; max-width: 100%; }
+
+    /* 4. Critical responsive overrides — !important so nothing beats them */
+    @media (max-width: 1024px) {
+      .page-layout { grid-template-columns: 1fr !important; width: 100%; }
+      .live-grid   { grid-template-columns: repeat(2,1fr) !important; }
+      .milestones  { grid-template-columns: repeat(4,1fr) !important; }
+    }
+
+    @media (max-width: 768px) {
+      .page-layout { grid-template-columns: 1fr !important; }
+      .milestones  { grid-template-columns: repeat(2,1fr) !important; }
+      /* Sidebar: insight values must not push outside card */
+      .insight-item { flex-wrap: wrap; gap: 4px; }
+      .insight-val  { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+      .range-label  { font-size: 0.62rem; }
+    }
+
+    @media (max-width: 480px) {
+      .page-layout { grid-template-columns: 1fr !important; }
+      .live-grid   { grid-template-columns: 1fr 1fr !important; }
+      .milestones  { grid-template-columns: 1fr 1fr !important; }
+      /* Keep ms-price legible but not overflowing */
+      .ms-price    { overflow: hidden; text-overflow: ellipsis; }
+      /* City table: ensure it never widens the card */
+      .sidebar-card table { width: 100% !important; table-layout: fixed; }
+      .sidebar-card td    { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    }
+
+    @media (max-width: 360px) {
+      .page-layout { grid-template-columns: 1fr !important; }
+      .live-grid   { grid-template-columns: 1fr 1fr !important; }
+      .milestones  { grid-template-columns: 1fr 1fr !important; }
     }
   </style>
 </head>
-<body>
+<body style="overflow-x:hidden;">
 
 <!-- NAVBAR -->
 <nav class="navbar">
@@ -406,13 +295,13 @@
     <div class="breadcrumb" style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--text-muted);margin-bottom:16px;">
       <a href="index.html" style="color:var(--gold-dark);">Home</a><span>/</span><span>Gold Rates</span>
     </div>
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+    <div class="hero-flex">
       <div>
-        <span style="display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:10px;"><span class="live-dot"></span>Live Prices</span>
+        <span style="display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:10px;"><span class="live-dot"></span>Live Prices</span>
         <h1 style="margin-bottom:8px;">Today's Gold <span style="background:linear-gradient(135deg,var(--gold-dark),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Rates</span></h1>
-        <p style="max-width:520px;margin:0;">Real-time gold prices in India. Track 24K, 22K &amp; 18K gold rates with live charts and 10-year price history.</p>
+        <p>Real-time gold prices in India. Track 24K, 22K &amp; 18K gold rates with live charts and 10-year price history.</p>
       </div>
-      <div class="hero-meta" style="text-align:right;font-size:.8rem;color:var(--text-muted);">
+      <div class="hero-meta">
         <div>Last updated: <span id="lastUpdate" style="color:var(--text);font-weight:600;">–</span></div>
         <div style="margin-top:4px;">Source: MCX Spot Price</div>
         <div style="margin-top:4px;">Currency: Indian Rupee (₹)</div>
@@ -422,7 +311,7 @@
 </section>
 
 <!-- MAIN CONTENT -->
-<section style="background:var(--bg);padding:32px 0 80px;">
+<section class="rates-main-section" style="background:var(--bg);padding:32px 0 80px;overflow-x:hidden;">
   <div class="container">
 
     <!-- LIVE RATE CARDS -->
@@ -450,7 +339,7 @@
       </div>
       <div class="live-card">
         <div class="lc-metal">Silver (99.9%)</div>
-        <div class="lc-price" id="pSilver" style="font-size:1.4rem;">₹107</div>
+        <div class="lc-price" id="pSilver">₹107</div>
         <div class="lc-per10" id="pSilver-10g">per gram &nbsp;|&nbsp; ₹1,070 / 10g</div>
         <div class="lc-change down" id="cSilver">▼ ₹0.16 &nbsp; -0.15%</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
@@ -496,7 +385,7 @@
         <div class="decade-panel fade-up" data-delay="1">
           <div class="decade-header">
             <div>
-              <div class="chart-title" style="font-size:1.1rem;">10-Year Gold Price History in India</div>
+              <div class="chart-title">10-Year Gold Price History in India</div>
               <div class="chart-subtitle">Annual average 24K gold price (₹ per gram) · 2015 – 2025</div>
             </div>
             <span class="decade-badge">10 Year View</span>
@@ -554,12 +443,12 @@
 
         <!-- DETAILED RATES TABLE -->
         <div class="stats-panel fade-up" data-delay="2">
-          <div class="stats-panel-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-            <span>Today's Detailed Gold & Metal Rates</span>
-            <span style="font-size:0.72rem;color:var(--text-muted);display:none;" class="scroll-hint">← Scroll to see all →</span>
+          <div class="stats-panel-header">
+            <span>Today's Detailed Gold &amp; Metal Rates</span>
+            <span class="scroll-hint">← Scroll →</span>
           </div>
-          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
-          <table class="rates-table" style="min-width:520px;">
+          <div class="table-scroll">
+          <table class="rates-table">
             <thead>
               <tr>
                 <th>Metal</th>
@@ -1002,14 +891,14 @@ function buildLiveChart(metal, range) {
       scales: {
         x: {
           grid: { color: 'rgba(234,217,138,0.2)' },
-          ticks: { maxTicksLimit: 8, font: { size: 11 } }
+          ticks: { maxTicksLimit: 6, font: { size: 10 }, maxRotation: 0 }
         },
         y: {
           position: 'right',
           grid: { color: 'rgba(234,217,138,0.2)' },
           ticks: {
-            font: { size: 11 },
-            callback: v => '₹' + v.toLocaleString('en-IN')
+            font: { size: 10 },
+            callback: v => '₹' + (v >= 1000 ? Math.round(v/1000)+'K' : v)
           }
         }
       }
@@ -1066,7 +955,7 @@ document.querySelectorAll('.metal-tab').forEach(btn => {
         },
         {
           type: 'line',
-          label: 'SIP Portfolio Value (₹500/mo)',
+          label: 'SIP Value (₹500/mo)',
           data: sipValue,
           borderColor: '#16A34A',
           backgroundColor: 'rgba(22,163,74,0.06)',
@@ -1090,7 +979,7 @@ document.querySelectorAll('.metal-tab').forEach(btn => {
         legend: {
           display: true,
           position: 'top',
-          labels: { font: { size: 12 }, padding: 20, usePointStyle: true }
+          labels: { font: { size: 11 }, padding: 12, usePointStyle: true, boxWidth: 10 }
         },
         tooltip: {
           backgroundColor: '#fff',
@@ -1110,27 +999,27 @@ document.querySelectorAll('.metal-tab').forEach(btn => {
       scales: {
         x: {
           grid: { color: 'rgba(234,217,138,0.25)' },
-          ticks: { font: { size: 12, weight: '600' } }
+          ticks: { font: { size: 10, weight: '600' }, maxRotation: 0, autoSkip: true, maxTicksLimit: 8 }
         },
         yPrice: {
           type: 'linear',
           position: 'left',
           grid: { color: 'rgba(234,217,138,0.25)' },
           ticks: {
-            font: { size: 11 },
-            callback: v => '₹' + v.toLocaleString('en-IN')
+            font: { size: 10 },
+            callback: v => '₹' + Math.round(v / 1000) + 'K'
           },
-          title: { display: true, text: 'Gold Price (₹/gram)', color: '#C9971C', font: { size: 11, weight: '600' } }
+          title: { display: false }
         },
         ySip: {
           type: 'linear',
           position: 'right',
           grid: { display: false },
           ticks: {
-            font: { size: 11 },
-            callback: v => '₹' + (v / 1000).toFixed(0) + 'K'
+            font: { size: 10 },
+            callback: v => '₹' + Math.round(v / 1000) + 'K'
           },
-          title: { display: true, text: 'SIP Value (₹)', color: '#16A34A', font: { size: 11, weight: '600' } }
+          title: { display: false }
         }
       }
     }
