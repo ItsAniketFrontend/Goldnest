@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Gold Rates Today | 10-Year Gold Price Chart India | GoldNest</title>
+  <meta name="description" content="Check today's live gold price in India. View real-time 24K, 22K, 18K gold rates per gram and per 10g. Explore 10-year historical gold price chart and trend analysis." />
+  <meta name="keywords" content="live gold rate today India, gold price per gram, 24K gold rate, gold price chart 10 years India, today gold price Vadodara, gold rate history" />
+  <link rel="canonical" href="https://goldsnest.com/gold-rates.html" />
+  <meta property="og:title" content="Live Gold Rates & 10-Year Price Chart | GoldNest" />
+  <meta property="og:description" content="Real-time gold price tracker with historical charts. Check 24K, 22K, 18K gold rates and 10-year price trends in India." />
+  <meta property="og:url" content="https://goldsnest.com/gold-rates.html" />
+  <meta property="og:image" content="https://goldsnest.com/FrontendLogo.png" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Live Gold Rates","url":"https://goldsnest.com/gold-rates.html","description":"Real-time and historical gold price tracker for Indian investors."}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="FrontendLogo.png" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ---- Page-specific styles ---- */
+    .rate-hero {
+      padding: 120px 0 40px;
+      background: linear-gradient(180deg, rgba(201,151,28,0.08) 0%, transparent 100%), var(--bg);
+    }
+
+    /* Live price cards */
+    .live-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .live-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+    .live-card:hover { border-color: var(--gold); box-shadow: var(--shadow); }
+    .live-card.primary { border-color: var(--gold); background: linear-gradient(135deg, rgba(201,151,28,0.06), var(--bg-card)); }
+    .live-card::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 80px; height: 80px;
+      background: radial-gradient(circle, rgba(201,151,28,0.08) 0%, transparent 70%);
+      border-radius: 0 0 0 100%;
+    }
+    .lc-metal { font-size: 0.72rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .lc-price { font-size: 1.7rem; font-weight: 800; color: var(--text); line-height: 1.1; margin-bottom: 4px; }
+    .lc-per10 { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px; }
+    .lc-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .lc-change.up   { background: rgba(22,163,74,0.10); color: #16A34A; }
+    .lc-change.down { background: rgba(220,38,38,0.10); color: #DC2626; }
+    .lc-time { font-size: 0.68rem; color: var(--text-muted); margin-top: 8px; }
+    .live-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #16A34A;
+      margin-right: 4px;
+      animation: blink 1.4s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+    /* Chart panel */
+    .chart-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .chart-header {
+      padding: 24px 28px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .chart-title { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .chart-subtitle { font-size: 0.8rem; color: var(--text-muted); }
+
+    .chart-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-card2);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 4px;
+    }
+    .chart-tab {
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      transition: all var(--transition);
+    }
+    .chart-tab.active {
+      background: var(--gold);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(201,151,28,0.3);
+    }
+    .chart-tab:hover:not(.active) { color: var(--gold-dark); }
+
+    .chart-body { padding: 20px 28px 28px; }
+    .chart-canvas-wrap { position: relative; height: 340px; }
+
+    /* Metal selector */
+    .metal-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .metal-tab {
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-light);
+      background: transparent;
+      color: var(--text-muted);
+      transition: all var(--transition);
+    }
+    .metal-tab.active { border-color: var(--gold); background: rgba(201,151,28,0.08); color: var(--gold-dark); }
+
+    /* 10-year panel */
+    .decade-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .decade-header {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .decade-badge {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+    .decade-body { padding: 28px; }
+    .decade-canvas-wrap { position: relative; height: 380px; }
+
+    /* Year milestone cards */
+    .milestones {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .milestone-card {
+      background: var(--bg-card2);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    .milestone-card:hover { border-color: var(--gold); }
+    .ms-year { font-size: 0.72rem; font-weight: 700; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .ms-price { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .ms-change { font-size: 0.72rem; font-weight: 600; }
+    .ms-change.pos { color: #16A34A; }
+    .ms-change.neg { color: #DC2626; }
+
+    /* Stats table */
+    .stats-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .stats-panel-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .rates-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .rates-table th {
+      padding: 12px 20px;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--bg-card2);
+      border-bottom: 1px solid var(--border-light);
+    }
+    .rates-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text);
+    }
+    .rates-table tr:last-child td { border-bottom: none; }
+    .rates-table tr:hover td { background: rgba(201,151,28,0.03); }
+    .td-metal { font-weight: 600; }
+    .td-purity { color: var(--text-muted); font-size: 0.8rem; }
+    .td-price { font-weight: 700; color: var(--text); }
+    .td-up   { color: #16A34A; font-weight: 600; }
+    .td-down { color: #DC2626; font-weight: 600; }
+
+    /* Insights sidebar */
+    .page-layout { display: grid; grid-template-columns: 1fr 320px; gap: 28px; align-items: start; }
+    .sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .sidebar-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .sidebar-card-body { padding: 16px 20px; }
+    .insight-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 0.83rem;
+    }
+    .insight-item:last-child { border-bottom: none; }
+    .insight-label { color: var(--text-muted); }
+    .insight-val { font-weight: 700; color: var(--text); }
+    .insight-val.gold { color: var(--gold-dark); }
+
+    /* Range bars */
+    .range-wrap { margin: 6px 0; }
+    .range-label { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-bottom:4px; }
+    .range-bar { height: 6px; background: var(--border-light); border-radius: 3px; overflow: hidden; }
+    .range-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light)); border-radius: 3px; }
+
+    /* Converter */
+    .converter-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+    .converter-row input {
+      flex: 1;
+      padding: 10px 14px;
+      background: var(--bg-card2);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      color: var(--text);
+      outline: none;
+      font-family: var(--font);
+    }
+    .converter-row input:focus { border-color: var(--gold); }
+    .converter-row select {
+      padding: 10px 12px;
+      background: var(--bg-card2);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: var(--text);
+      outline: none;
+      cursor: pointer;
+      font-family: var(--font);
+    }
+    .converter-result {
+      background: linear-gradient(135deg, rgba(201,151,28,0.08), rgba(201,151,28,0.03));
+      border: 1px solid rgba(201,151,28,0.2);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .cr-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .cr-val { font-size: 1.4rem; font-weight: 800; color: var(--gold-dark); }
+
+    @media (max-width: 1024px) {
+      .page-layout { grid-template-columns: 1fr; }
+      .live-grid { grid-template-columns: repeat(2,1fr); }
+      .milestones { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 600px) {
+      .live-grid { grid-template-columns: 1fr; }
+      .milestones { grid-template-columns: repeat(2,1fr); }
+      .chart-tabs { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-logo"><img src="FrontendLogo.png" alt="GoldNest Logo" width="40" height="40" /></a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <div class="has-dropdown"><a href="services.html">Services</a>
+        <div class="dropdown-menu">
+          <a href="digital-gold.html">🪙 Digital Gold</a>
+          <a href="gold-sip.html">📈 Gold SIP</a>
+          <a href="physical-gold.html">🏅 Physical Gold</a>
+          <a href="custom-jewelry.html">💍 Custom Jewelry</a>
+        </div>
+      </div>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="gold-rates.html" class="active">Gold Rates</a>
+      <a href="blog.html">Blog</a>
+      <a href="faq.html">FAQ</a>
+      <a href="partner.html">Partner With Us</a>
+    </div>
+    <div class="navbar-cta">
+      <a href="contact.html" class="btn btn-outline btn-sm">Contact</a>
+      <a href="index.html#download" class="btn btn-gold btn-sm">Download App</a>
+    </div>
+    <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav">
+  <a href="index.html">Home</a>
+  <a href="about.html">About Us</a>
+  <a href="services.html">Services</a>
+  <a href="digital-gold.html">Digital Gold</a>
+  <a href="gold-sip.html">Gold SIP</a>
+  <a href="physical-gold.html">Physical Gold</a>
+  <a href="custom-jewelry.html">Custom Jewelry</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="gold-rates.html">Gold Rates</a>
+  <a href="blog.html">Blog</a>
+  <a href="faq.html">FAQ</a>
+  <div class="divider"></div>
+  <a href="partner.html">Partner With Us</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="rate-hero">
+  <div class="container">
+    <div class="breadcrumb" style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--text-muted);margin-bottom:16px;">
+      <a href="index.html" style="color:var(--gold-dark);">Home</a><span>/</span><span>Gold Rates</span>
+    </div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <div>
+        <span style="display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:10px;"><span class="live-dot"></span>Live Prices</span>
+        <h1 style="margin-bottom:8px;">Today's Gold <span style="background:linear-gradient(135deg,var(--gold-dark),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Rates</span></h1>
+        <p style="max-width:520px;margin:0;">Real-time gold prices in India. Track 24K, 22K &amp; 18K gold rates with live charts and 10-year price history.</p>
+      </div>
+      <div style="text-align:right;font-size:.8rem;color:var(--text-muted);">
+        <div>Last updated: <span id="lastUpdate" style="color:var(--text);font-weight:600;">–</span></div>
+        <div style="margin-top:4px;">Source: MCX Spot Price</div>
+        <div style="margin-top:4px;">Currency: Indian Rupee (₹)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section style="background:var(--bg);padding:32px 0 80px;">
+  <div class="container">
+
+    <!-- LIVE RATE CARDS -->
+    <div class="live-grid">
+      <div class="live-card primary">
+        <div class="lc-metal">24K Gold (99.9%)</div>
+        <div class="lc-price" id="p24">₹9,245</div>
+        <div class="lc-per10" id="p24-10g">per gram &nbsp;|&nbsp; ₹92,450 / 10g</div>
+        <div class="lc-change up" id="c24">▲ ₹38 &nbsp; +0.42%</div>
+        <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
+      </div>
+      <div class="live-card">
+        <div class="lc-metal">22K Gold (91.6%)</div>
+        <div class="lc-price" id="p22">₹8,475</div>
+        <div class="lc-per10" id="p22-10g">per gram &nbsp;|&nbsp; ₹84,750 / 10g</div>
+        <div class="lc-change up" id="c22">▲ ₹32 &nbsp; +0.38%</div>
+        <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
+      </div>
+      <div class="live-card">
+        <div class="lc-metal">18K Gold (75.0%)</div>
+        <div class="lc-price" id="p18">₹6,934</div>
+        <div class="lc-per10" id="p18-10g">per gram &nbsp;|&nbsp; ₹69,340 / 10g</div>
+        <div class="lc-change up" id="c18">▲ ₹22 &nbsp; +0.31%</div>
+        <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
+      </div>
+      <div class="live-card">
+        <div class="lc-metal">Silver (99.9%)</div>
+        <div class="lc-price" id="pSilver" style="font-size:1.4rem;">₹107</div>
+        <div class="lc-per10" id="pSilver-10g">per gram &nbsp;|&nbsp; ₹1,070 / 10g</div>
+        <div class="lc-change down" id="cSilver">▼ ₹0.16 &nbsp; -0.15%</div>
+        <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
+      </div>
+    </div>
+
+    <!-- PAGE LAYOUT: MAIN + SIDEBAR -->
+    <div class="page-layout">
+
+      <!-- MAIN COLUMN -->
+      <div>
+
+        <!-- LIVE CHART -->
+        <div class="chart-panel fade-up">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">24K Gold – Live Price Movement</div>
+              <div class="chart-subtitle">Intraday price in ₹ per gram</div>
+            </div>
+            <div class="chart-tabs">
+              <button class="chart-tab active" data-range="1D">1D</button>
+              <button class="chart-tab" data-range="1W">1W</button>
+              <button class="chart-tab" data-range="1M">1M</button>
+              <button class="chart-tab" data-range="3M">3M</button>
+              <button class="chart-tab" data-range="6M">6M</button>
+              <button class="chart-tab" data-range="1Y">1Y</button>
+            </div>
+          </div>
+          <div class="chart-body">
+            <div class="metal-tabs">
+              <button class="metal-tab active" data-metal="24K">24K Gold</button>
+              <button class="metal-tab" data-metal="22K">22K Gold</button>
+              <button class="metal-tab" data-metal="18K">18K Gold</button>
+              <button class="metal-tab" data-metal="Silver">Silver</button>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="liveChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10-YEAR CHART -->
+        <div class="decade-panel fade-up" data-delay="1">
+          <div class="decade-header">
+            <div>
+              <div class="chart-title" style="font-size:1.1rem;">10-Year Gold Price History in India</div>
+              <div class="chart-subtitle">Annual average 24K gold price (₹ per gram) · 2015 – 2025</div>
+            </div>
+            <span class="decade-badge">10 Year View</span>
+          </div>
+          <div class="decade-body">
+            <div class="decade-canvas-wrap">
+              <canvas id="decadeChart"></canvas>
+            </div>
+
+            <!-- Year milestone cards -->
+            <div class="milestones">
+              <div class="milestone-card">
+                <div class="ms-year">2015</div>
+                <div class="ms-price">₹2,524/g</div>
+                <div class="ms-change pos">Base Year</div>
+              </div>
+              <div class="milestone-card">
+                <div class="ms-year">2017</div>
+                <div class="ms-price">₹2,900/g</div>
+                <div class="ms-change pos">+14.9% vs 2015</div>
+              </div>
+              <div class="milestone-card">
+                <div class="ms-year">2020</div>
+                <div class="ms-price">₹4,840/g</div>
+                <div class="ms-change pos">+66.8% (COVID)</div>
+              </div>
+              <div class="milestone-card">
+                <div class="ms-year">2022</div>
+                <div class="ms-price">₹5,220/g</div>
+                <div class="ms-change pos">+7.9% vs 2021</div>
+              </div>
+              <div class="milestone-card">
+                <div class="ms-year">2023</div>
+                <div class="ms-price">₹6,180/g</div>
+                <div class="ms-change pos">+18.4% vs 2022</div>
+              </div>
+              <div class="milestone-card">
+                <div class="ms-year">2024</div>
+                <div class="ms-price">₹7,490/g</div>
+                <div class="ms-change pos">+21.2% vs 2023</div>
+              </div>
+              <div class="milestone-card">
+                <div class="ms-year">2025</div>
+                <div class="ms-price">₹9,245/g</div>
+                <div class="ms-change pos">+23.4% YTD</div>
+              </div>
+              <div class="milestone-card" style="border-color:var(--gold);background:rgba(201,151,28,0.05);">
+                <div class="ms-year" style="color:var(--gold-dark);">10Y Return</div>
+                <div class="ms-price" style="color:var(--gold-dark);">+266%</div>
+                <div class="ms-change pos">₹2,524 → ₹9,245</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DETAILED RATES TABLE -->
+        <div class="stats-panel fade-up" data-delay="2">
+          <div class="stats-panel-header">Today's Detailed Gold & Metal Rates</div>
+          <table class="rates-table">
+            <thead>
+              <tr>
+                <th>Metal</th>
+                <th>Purity</th>
+                <th>Per Gram</th>
+                <th>Per 8g (Tola)</th>
+                <th>Per 10g</th>
+                <th>Per 100g</th>
+                <th>Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-metal">Gold 24K</td>
+                <td class="td-purity">99.9%</td>
+                <td class="td-price" id="t24g">₹9,245</td>
+                <td id="t24-8g">₹73,960</td>
+                <td id="t24-10g">₹92,450</td>
+                <td id="t24-100g">₹9,24,500</td>
+                <td class="td-up" id="t24-ch">▲ +0.42%</td>
+              </tr>
+              <tr>
+                <td class="td-metal">Gold 22K</td>
+                <td class="td-purity">91.6%</td>
+                <td class="td-price" id="t22g">₹8,475</td>
+                <td id="t22-8g">₹67,800</td>
+                <td id="t22-10g">₹84,750</td>
+                <td id="t22-100g">₹8,47,500</td>
+                <td class="td-up" id="t22-ch">▲ +0.38%</td>
+              </tr>
+              <tr>
+                <td class="td-metal">Gold 18K</td>
+                <td class="td-purity">75.0%</td>
+                <td class="td-price" id="t18g">₹6,934</td>
+                <td id="t18-8g">₹55,472</td>
+                <td id="t18-10g">₹69,340</td>
+                <td id="t18-100g">₹6,93,400</td>
+                <td class="td-up" id="t18-ch">▲ +0.31%</td>
+              </tr>
+              <tr>
+                <td class="td-metal">Gold 14K</td>
+                <td class="td-purity">58.5%</td>
+                <td class="td-price">₹5,408</td>
+                <td>₹43,264</td>
+                <td>₹54,080</td>
+                <td>₹5,40,800</td>
+                <td class="td-up">▲ +0.42%</td>
+              </tr>
+              <tr>
+                <td class="td-metal">Silver</td>
+                <td class="td-purity">99.9%</td>
+                <td class="td-price" id="tSig">₹107</td>
+                <td id="tSi-8g">₹856</td>
+                <td id="tSi-10g">₹1,070</td>
+                <td id="tSi-100g">₹10,700</td>
+                <td class="td-down" id="tSi-ch">▼ -0.15%</td>
+              </tr>
+              <tr>
+                <td class="td-metal">Platinum</td>
+                <td class="td-purity">95.0%</td>
+                <td class="td-price">₹3,020</td>
+                <td>₹24,160</td>
+                <td>₹30,200</td>
+                <td>₹3,02,000</td>
+                <td class="td-down">▼ -0.08%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /main column -->
+
+      <!-- SIDEBAR -->
+      <div>
+
+        <!-- Quick Stats -->
+        <div class="sidebar-card fade-up">
+          <div class="sidebar-card-header">📊 24K Gold – Today's Stats</div>
+          <div class="sidebar-card-body">
+            <div class="insight-item">
+              <span class="insight-label">Open</span>
+              <span class="insight-val">₹9,207</span>
+            </div>
+            <div class="insight-item">
+              <span class="insight-label">Day High</span>
+              <span class="insight-val" id="dayHigh">₹9,258</span>
+            </div>
+            <div class="insight-item">
+              <span class="insight-label">Day Low</span>
+              <span class="insight-val" id="dayLow">₹9,196</span>
+            </div>
+            <div class="insight-item">
+              <span class="insight-label">Previous Close</span>
+              <span class="insight-val">₹9,207</span>
+            </div>
+            <div class="insight-item">
+              <span class="insight-label">Day Change</span>
+              <span class="insight-val td-up">+₹38 (+0.42%)</span>
+            </div>
+            <div class="insight-item">
+              <span class="insight-label">Week Change</span>
+              <span class="insight-val td-up">+₹142 (+1.56%)</span>
+            </div>
+            <div class="insight-item">
+              <span class="insight-label">Month Change</span>
+              <span class="insight-val td-up">+₹610 (+7.06%)</span>
+            </div>
+            <div class="insight-item">
+              <span class="insight-label">YTD Change</span>
+              <span class="insight-val td-up gold">+₹1,760 (+23.5%)</span>
+            </div>
+            <div style="margin-top:16px;">
+              <div class="range-label"><span>52W Low: ₹6,850</span><span>52W High: ₹9,480</span></div>
+              <div class="range-bar"><div class="range-fill" style="width:72%;" id="rangeBar"></div></div>
+              <div style="font-size:.7rem;color:var(--text-muted);margin-top:4px;text-align:center;">Current: ₹9,245 (72% of 52W range)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gold Converter -->
+        <div class="sidebar-card fade-up" data-delay="1">
+          <div class="sidebar-card-header">🔄 Gold Price Converter</div>
+          <div class="sidebar-card-body">
+            <div class="converter-row">
+              <input type="number" id="convAmount" value="1" min="0.01" step="0.01" placeholder="Amount" oninput="convertGold()" />
+              <select id="convUnit" onchange="convertGold()">
+                <option value="gram">Gram</option>
+                <option value="tola">Tola (8g)</option>
+                <option value="10g">10 Gram</option>
+                <option value="100g">100 Gram</option>
+                <option value="kg">Kilogram</option>
+              </select>
+            </div>
+            <div class="converter-row">
+              <select id="convMetal" onchange="convertGold()" style="width:100%;">
+                <option value="9245">24K Gold (99.9%)</option>
+                <option value="8475">22K Gold (91.6%)</option>
+                <option value="6934">18K Gold (75.0%)</option>
+                <option value="107">Silver (99.9%)</option>
+              </select>
+            </div>
+            <div class="converter-result">
+              <div class="cr-label">Estimated Value</div>
+              <div class="cr-val" id="convResult">₹9,245</div>
+            </div>
+            <p style="font-size:.68rem;color:var(--text-muted);margin-top:10px;margin-bottom:0;">Based on indicative spot price. Actual transaction price may vary slightly.</p>
+          </div>
+        </div>
+
+        <!-- City rates -->
+        <div class="sidebar-card fade-up" data-delay="2">
+          <div class="sidebar-card-header">📍 City-wise 24K Gold Rates</div>
+          <div class="sidebar-card-body" style="padding:0;">
+            <table style="width:100%;border-collapse:collapse;font-size:.83rem;">
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border-light);">
+                  <td style="padding:11px 20px;font-weight:600;color:var(--text);">Vadodara</td>
+                  <td style="padding:11px 20px;text-align:right;font-weight:700;color:var(--gold-dark);">₹9,245</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-light);">
+                  <td style="padding:11px 20px;font-weight:600;color:var(--text);">Ahmedabad</td>
+                  <td style="padding:11px 20px;text-align:right;color:var(--text-muted);">₹9,250</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-light);">
+                  <td style="padding:11px 20px;font-weight:600;color:var(--text);">Surat</td>
+                  <td style="padding:11px 20px;text-align:right;color:var(--text-muted);">₹9,248</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-light);">
+                  <td style="padding:11px 20px;font-weight:600;color:var(--text);">Mumbai</td>
+                  <td style="padding:11px 20px;text-align:right;color:var(--text-muted);">₹9,265</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-light);">
+                  <td style="padding:11px 20px;font-weight:600;color:var(--text);">Delhi</td>
+                  <td style="padding:11px 20px;text-align:right;color:var(--text-muted);">₹9,278</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-light);">
+                  <td style="padding:11px 20px;font-weight:600;color:var(--text);">Chennai</td>
+                  <td style="padding:11px 20px;text-align:right;color:var(--text-muted);">₹9,260</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 20px;font-weight:600;color:var(--text);">Jaipur</td>
+                  <td style="padding:11px 20px;text-align:right;color:var(--text-muted);">₹9,252</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div style="background:linear-gradient(135deg,var(--gold-dark),#8A6408);border-radius:var(--radius-lg);padding:28px;text-align:center;" class="fade-up" data-delay="3">
+          <div style="font-size:2rem;margin-bottom:12px;">🪙</div>
+          <h4 style="color:#fff;margin-bottom:8px;font-size:1rem;">Buy Gold at These Rates</h4>
+          <p style="color:rgba(255,255,255,0.8);font-size:.82rem;margin-bottom:20px;">Lock in today's price. Start from just ₹100 with GoldNest.</p>
+          <a href="digital-gold.html" class="btn btn-white btn-sm" style="width:100%;justify-content:center;">Buy Digital Gold →</a>
+        </div>
+
+      </div><!-- /sidebar -->
+    </div><!-- /page-layout -->
+
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Start Investing at Today's Rate</h2>
+    <p>Don't just watch the price — own the gold. Start from ₹100 with GoldNest's secure digital platform.</p>
+    <div class="cta-btns">
+      <a href="digital-gold.html" class="btn btn-white btn-lg">Buy Digital Gold Now</a>
+      <a href="gold-sip.html" class="btn btn-outline btn-lg">Start Gold SIP</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><img src="FrontendLogo.png" alt="GoldNest" width="36" height="36" /></div>
+        <p>India's trusted digital gold investment platform. Secure, transparent, and accessible.</p>
+        <div class="footer-social"><div class="social-btn">f</div><div class="social-btn">in</div><div class="social-btn">𝕏</div><div class="social-btn">li</div><div class="social-btn">▶</div></div>
+      </div>
+      <div class="footer-col"><h5>Services</h5><ul><li><a href="digital-gold.html">Digital Gold</a></li><li><a href="gold-sip.html">Gold SIP</a></li><li><a href="physical-gold.html">Physical Gold</a></li><li><a href="custom-jewelry.html">Custom Jewelry</a></li></ul></div>
+      <div class="footer-col"><h5>Company</h5><ul><li><a href="about.html">About Us</a></li><li><a href="how-it-works.html">How It Works</a></li><li><a href="gold-rates.html">Gold Rates</a></li><li><a href="blog.html">Blog</a></li><li><a href="faq.html">FAQ</a></li><li><a href="partner.html">Partner With Us</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+      <div class="footer-col"><h5>Contact Us</h5>
+        <div class="footer-contact-item"><span class="icon">📞</span><span>+91 8460050987</span></div>
+        <div class="footer-contact-item"><span class="icon">✉️</span><span>admin@goldsnest.com</span></div>
+        <div class="footer-contact-item"><span class="icon">📍</span><span>Vadodara, Gujarat, India</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 GoldNest. All rights reserved. Prices are indicative only.</span>
+      <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+    </div>
+  </div>
+</footer>
+<button class="scroll-top" aria-label="Scroll to top">↑</button>
+
+<script src="js/main.js"></script>
+<script>
+/* ================================================================
+   GOLD RATES PAGE – JavaScript
+   ================================================================ */
+
+/* ---- Base Prices ---- */
+const BASE = { '24K': 9245, '22K': 8475, '18K': 6934, 'Silver': 107 };
+let current = { ...BASE };
+let dayHigh  = { '24K': 9258, '22K': 8486, '18K': 6942, 'Silver': 108 };
+let dayLow   = { '24K': 9196, '22K': 8432, '18K': 6905, 'Silver': 106.5 };
+
+/* ---- Live timestamp ---- */
+function updateTime() {
+  const now = new Date();
+  document.getElementById('lastUpdate').textContent = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + '  ' + now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+/* ---- Helpers ---- */
+const fmt = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
+const fmtDec = (n) => '₹' + n.toFixed(2);
+
+/* ---- Live price update ---- */
+function updatePrices() {
+  // Simulate small fluctuations
+  const drift = { '24K': (Math.random() - 0.48) * 8, '22K': (Math.random() - 0.48) * 7, '18K': (Math.random() - 0.48) * 6, 'Silver': (Math.random() - 0.48) * 0.3 };
+  for (const m in current) {
+    current[m] = Math.max(current[m] + drift[m], BASE[m] * 0.98);
+    dayHigh[m] = Math.max(dayHigh[m], current[m]);
+    dayLow[m]  = Math.min(dayLow[m],  current[m]);
+  }
+
+  const p24 = current['24K'], p22 = current['22K'], p18 = current['18K'], pSi = current['Silver'];
+
+  // Cards
+  document.getElementById('p24').textContent = fmt(p24);
+  document.getElementById('p24-10g').textContent = `per gram | ${fmt(p24 * 10)} / 10g`;
+  document.getElementById('p22').textContent = fmt(p22);
+  document.getElementById('p22-10g').textContent = `per gram | ${fmt(p22 * 10)} / 10g`;
+  document.getElementById('p18').textContent = fmt(p18);
+  document.getElementById('p18-10g').textContent = `per gram | ${fmt(p18 * 10)} / 10g`;
+  document.getElementById('pSilver').textContent = fmtDec(pSi);
+  document.getElementById('pSilver-10g').textContent = `per gram | ${fmt(pSi * 10)} / 10g`;
+
+  // Changes vs open
+  const chg24 = p24 - 9207, pct24 = (chg24 / 9207 * 100);
+  const chg22 = p22 - 8443, pct22 = (chg22 / 8443 * 100);
+  const chg18 = p18 - 6912, pct18 = (chg18 / 6912 * 100);
+  const chgSi = pSi - 107.16, pctSi = (chgSi / 107.16 * 100);
+
+  function setChange(id, change, pct) {
+    const el = document.getElementById(id);
+    const up = change >= 0;
+    el.className = 'lc-change ' + (up ? 'up' : 'down');
+    el.textContent = (up ? '▲' : '▼') + ' ₹' + Math.abs(change).toFixed(0) + '  ' + (up ? '+' : '') + pct.toFixed(2) + '%';
+  }
+  setChange('c24', chg24, pct24);
+  setChange('c22', chg22, pct22);
+  setChange('c18', chg18, pct18);
+  setChange('cSilver', chgSi, pctSi);
+
+  // Sidebar stats
+  document.getElementById('dayHigh').textContent = fmt(dayHigh['24K']);
+  document.getElementById('dayLow').textContent  = fmt(dayLow['24K']);
+
+  // Table
+  document.getElementById('t24g').textContent  = fmt(p24);
+  document.getElementById('t24-8g').textContent  = fmt(p24 * 8);
+  document.getElementById('t24-10g').textContent = fmt(p24 * 10);
+  document.getElementById('t24-100g').textContent = fmt(p24 * 100);
+  const cl24 = chg24 >= 0 ? 'td-up' : 'td-down';
+  document.getElementById('t24-ch').className = cl24;
+  document.getElementById('t24-ch').textContent = (chg24 >= 0 ? '▲ +' : '▼ ') + pct24.toFixed(2) + '%';
+
+  document.getElementById('t22g').textContent  = fmt(p22);
+  document.getElementById('tSig').textContent  = fmtDec(pSi);
+
+  // Converter update
+  convertGold();
+
+  // Push to live chart
+  const now = new Date();
+  if (liveChart && liveChart.data.datasets.length) {
+    const ds = liveChart.data.datasets[0];
+    const metal = activeMetal;
+    const price = metal === '24K' ? p24 : metal === '22K' ? p22 : metal === '18K' ? p18 : pSi;
+    if (activeRange === '1D') {
+      ds.data.push(Math.round(price * 100) / 100);
+      liveChart.data.labels.push(now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }));
+      if (ds.data.length > 60) { ds.data.shift(); liveChart.data.labels.shift(); }
+      liveChart.update('none');
+    }
+  }
+}
+
+setInterval(updatePrices, 3000);
+
+/* ---- Gold Converter ---- */
+function convertGold() {
+  const amt   = parseFloat(document.getElementById('convAmount')?.value) || 1;
+  const unit  = document.getElementById('convUnit')?.value;
+  const price = parseFloat(document.getElementById('convMetal')?.value) || 9245;
+  const grams = unit === 'gram' ? amt : unit === 'tola' ? amt * 8 : unit === '10g' ? amt * 10 : unit === '100g' ? amt * 100 : amt * 1000;
+  const val   = grams * price;
+  const el = document.getElementById('convResult');
+  if (el) el.textContent = '₹' + Math.round(val).toLocaleString('en-IN');
+}
+convertGold();
+
+/* ================================================================
+   CHARTS
+   ================================================================ */
+
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#6B6255';
+
+/* ---- Generate time-series data for live chart ---- */
+let activeMetal = '24K';
+let activeRange = '1D';
+
+function generateLiveData(metal, range) {
+  const bases = { '24K': 9207, '22K': 8443, '18K': 6912, 'Silver': 107.16 };
+  const base = bases[metal];
+  const configs = {
+    '1D': { pts: 48, step: 30, vol: 0.003 },
+    '1W': { pts: 42, step: 1440 * 0.167, vol: 0.008 },
+    '1M': { pts: 30, step: 1440, vol: 0.015 },
+    '3M': { pts: 90, step: 1440, vol: 0.018 },
+    '6M': { pts: 180, step: 1440, vol: 0.02 },
+    '1Y': { pts: 52, step: 10080, vol: 0.025 },
+  };
+  const { pts, vol } = configs[range];
+  const prices = [], labels = [];
+  let p = base * (0.94 + Math.random() * 0.02);
+  const now = new Date();
+
+  for (let i = pts; i >= 0; i--) {
+    const d = new Date(now - i * configs[range].step * 60000);
+    p = p * (1 + (Math.random() - 0.49) * vol);
+    prices.push(Math.round(p * 100) / 100);
+    if (range === '1D') labels.push(d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }));
+    else if (range === '1W') labels.push(d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' }));
+    else if (['1M', '3M', '6M'].includes(range)) labels.push(d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }));
+    else labels.push(d.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' }));
+  }
+  return { prices, labels };
+}
+
+/* ---- Live Chart ---- */
+let liveChart;
+function buildLiveChart(metal, range) {
+  const { prices, labels } = generateLiveData(metal, range);
+  const isUp = prices[prices.length - 1] >= prices[0];
+  const color = isUp ? '#16A34A' : '#DC2626';
+  const bgColor = isUp ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.08)';
+
+  const ctx = document.getElementById('liveChart').getContext('2d');
+  if (liveChart) liveChart.destroy();
+
+  liveChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: metal + ' Gold (₹/g)',
+        data: prices,
+        borderColor: color,
+        borderWidth: 2,
+        backgroundColor: bgColor,
+        fill: true,
+        tension: 0.35,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: color,
+        pointHoverBorderColor: '#fff',
+        pointHoverBorderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#fff',
+          borderColor: 'rgba(201,151,28,0.25)',
+          borderWidth: 1,
+          titleColor: '#1C1914',
+          bodyColor: '#6B6255',
+          padding: 12,
+          callbacks: {
+            label: ctx => '  ₹' + ctx.raw.toLocaleString('en-IN') + ' / gram'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(234,217,138,0.2)' },
+          ticks: { maxTicksLimit: 8, font: { size: 11 } }
+        },
+        y: {
+          position: 'right',
+          grid: { color: 'rgba(234,217,138,0.2)' },
+          ticks: {
+            font: { size: 11 },
+            callback: v => '₹' + v.toLocaleString('en-IN')
+          }
+        }
+      }
+    }
+  });
+}
+buildLiveChart('24K', '1D');
+
+/* ---- Chart tab handlers ---- */
+document.querySelectorAll('.chart-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.chart-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeRange = btn.dataset.range;
+    buildLiveChart(activeMetal, activeRange);
+  });
+});
+
+document.querySelectorAll('.metal-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.metal-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeMetal = btn.dataset.metal;
+    buildLiveChart(activeMetal, activeRange);
+  });
+});
+
+/* ---- 10-YEAR CHART ---- */
+(function buildDecadeChart() {
+  // Approximate annual average 24K gold price per gram in India (₹)
+  const years    = ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025*'];
+  const annual   = [2524,  2752,  2900,  3142,  3499,  4840,  4742,  5220,  6180,  7490,  9245];
+  const sipValue = [2524,  5454,  8422,  11709, 15357, 20443, 25355, 30851, 37346, 45250, 54960]; // ₹500/mo Gold SIP total value
+
+  const ctx = document.getElementById('decadeChart').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Gold Price (₹/gram)',
+          data: annual,
+          backgroundColor: years.map((_, i) => i === years.length - 1
+            ? 'rgba(201,151,28,0.90)'
+            : 'rgba(201,151,28,0.55)'),
+          borderColor: 'rgba(201,151,28,1)',
+          borderWidth: 1,
+          borderRadius: 6,
+          yAxisID: 'yPrice',
+          order: 2,
+        },
+        {
+          type: 'line',
+          label: 'SIP Portfolio Value (₹500/mo)',
+          data: sipValue,
+          borderColor: '#16A34A',
+          backgroundColor: 'rgba(22,163,74,0.06)',
+          borderWidth: 2.5,
+          fill: false,
+          tension: 0.4,
+          pointRadius: 5,
+          pointBackgroundColor: '#16A34A',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          yAxisID: 'ySip',
+          order: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: { font: { size: 12 }, padding: 20, usePointStyle: true }
+        },
+        tooltip: {
+          backgroundColor: '#fff',
+          borderColor: 'rgba(201,151,28,0.25)',
+          borderWidth: 1,
+          titleColor: '#1C1914',
+          bodyColor: '#6B6255',
+          padding: 14,
+          callbacks: {
+            label: ctx => {
+              if (ctx.datasetIndex === 0) return '  Gold Price: ₹' + ctx.raw.toLocaleString('en-IN') + '/g';
+              return '  SIP Value: ₹' + ctx.raw.toLocaleString('en-IN');
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(234,217,138,0.25)' },
+          ticks: { font: { size: 12, weight: '600' } }
+        },
+        yPrice: {
+          type: 'linear',
+          position: 'left',
+          grid: { color: 'rgba(234,217,138,0.25)' },
+          ticks: {
+            font: { size: 11 },
+            callback: v => '₹' + v.toLocaleString('en-IN')
+          },
+          title: { display: true, text: 'Gold Price (₹/gram)', color: '#C9971C', font: { size: 11, weight: '600' } }
+        },
+        ySip: {
+          type: 'linear',
+          position: 'right',
+          grid: { display: false },
+          ticks: {
+            font: { size: 11 },
+            callback: v => '₹' + (v / 1000).toFixed(0) + 'K'
+          },
+          title: { display: true, text: 'SIP Value (₹)', color: '#16A34A', font: { size: 11, weight: '600' } }
+        }
+      }
+    }
+  });
+})();
+
+</script>
+</body>
+</html>
