@@ -27,6 +27,7 @@
       background: linear-gradient(180deg, rgba(201,151,28,0.08) 0%, transparent 100%), var(--bg);
     }
 
+
     /* Live price cards */
     .live-grid {
       display: grid;
@@ -316,21 +317,39 @@
       .page-layout { grid-template-columns: 1fr; }
       .live-grid { grid-template-columns: repeat(2,1fr); }
       .milestones { grid-template-columns: repeat(2,1fr); }
+      .decade-canvas-wrap { height: 300px; }
+      .chart-canvas-wrap { height: 260px; }
     }
     @media (max-width: 768px) {
-      .rates-table { font-size: 0.8rem; }
-      .rates-table th, .rates-table td { padding: 10px 8px; }
-      .metal-tabs { flex-wrap: wrap; }
-    }
-    @media (max-width: 600px) {
-      .live-grid { grid-template-columns: 1fr; }
-      .milestones { grid-template-columns: repeat(2,1fr); }
-      .chart-tabs { flex-wrap: wrap; }
-      .page-layout { gap: 20px; }
+      .rate-hero { padding: 100px 0 28px; }
+      .live-grid { grid-template-columns: repeat(2,1fr); }
+      .chart-header { flex-direction: column; align-items: flex-start; }
+      .decade-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .rates-table { font-size: 0.78rem; }
+      .rates-table th, .rates-table td { padding: 10px 10px; white-space: nowrap; }
+      .metal-tabs { flex-wrap: wrap; gap: 6px; }
+      .chart-tabs { flex-wrap: wrap; gap: 4px; }
+      .rate-hero .hero-meta { display: none; }
+      .decade-canvas-wrap { height: 260px; }
+      .chart-canvas-wrap { height: 220px; }
+      .scroll-hint { display: inline !important; }
     }
     @media (max-width: 480px) {
-      .milestones { grid-template-columns: 1fr; }
-      .live-price-card { padding: 16px; }
+      .live-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .live-card { padding: 16px 14px; }
+      .lc-price { font-size: 1.35rem; }
+      .lc-per10 { display: none; }
+      .milestones { grid-template-columns: repeat(2,1fr); gap: 8px; }
+      .milestone-card { padding: 12px 10px; }
+      .ms-price { font-size: 0.92rem; }
+      .decade-canvas-wrap { height: 220px; }
+      .chart-canvas-wrap { height: 200px; }
+      .decade-body { padding: 16px; }
+      .chart-body { padding: 12px 16px 20px; }
+      .chart-header { padding: 16px 16px 0; }
+      .stats-panel-header { padding: 14px 16px; font-size: 0.9rem; }
+      .sidebar-card-header { padding: 12px 16px; }
+      .sidebar-card-body { padding: 12px 16px; }
     }
   </style>
 </head>
@@ -393,7 +412,7 @@
         <h1 style="margin-bottom:8px;">Today's Gold <span style="background:linear-gradient(135deg,var(--gold-dark),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Rates</span></h1>
         <p style="max-width:520px;margin:0;">Real-time gold prices in India. Track 24K, 22K &amp; 18K gold rates with live charts and 10-year price history.</p>
       </div>
-      <div style="text-align:right;font-size:.8rem;color:var(--text-muted);">
+      <div class="hero-meta" style="text-align:right;font-size:.8rem;color:var(--text-muted);">
         <div>Last updated: <span id="lastUpdate" style="color:var(--text);font-weight:600;">–</span></div>
         <div style="margin-top:4px;">Source: MCX Spot Price</div>
         <div style="margin-top:4px;">Currency: Indian Rupee (₹)</div>
@@ -535,8 +554,12 @@
 
         <!-- DETAILED RATES TABLE -->
         <div class="stats-panel fade-up" data-delay="2">
-          <div class="stats-panel-header">Today's Detailed Gold & Metal Rates</div>
-          <table class="rates-table">
+          <div class="stats-panel-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <span>Today's Detailed Gold & Metal Rates</span>
+            <span style="font-size:0.72rem;color:var(--text-muted);display:none;" class="scroll-hint">← Scroll to see all →</span>
+          </div>
+          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+          <table class="rates-table" style="min-width:520px;">
             <thead>
               <tr>
                 <th>Metal</th>
@@ -605,6 +628,7 @@
               </tr>
             </tbody>
           </table>
+          </div><!-- /table scroll wrapper -->
         </div>
 
       </div><!-- /main column -->
