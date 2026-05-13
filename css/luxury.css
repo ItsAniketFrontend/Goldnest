@@ -1,0 +1,1127 @@
+/* ============================================================
+   GoldNest – Luxury Redesign Layer
+   Cinematic gold effects + GSAP-ready hooks
+   ============================================================ */
+
+/* ============================================================
+   TYPOGRAPHY CONSISTENCY LAYER
+   Single source of truth for fonts / weights / spacing.
+   Uses !important to neutralize inline overrides scattered
+   across the HTML pages.
+   ============================================================ */
+
+/* --- Font families: enforce the 3-font system everywhere --- */
+body, p, span, div, li, a, td, th, input, textarea, select, button {
+  font-family: var(--font);
+}
+h1, h2, h3, h4, h5, h6,
+.display-num, .price-value,
+.stat-item .s-num, .trust-item .num,
+.testi-text, .blog-title,
+.section-heading h2 {
+  font-family: var(--font-display) !important;
+}
+.label, .eyebrow,
+.section-heading .label,
+.badge {
+  font-family: var(--font-accent) !important;
+}
+
+/* --- Weight tiers: 400 / 500 / 600 / 700 / 800 only --- */
+body, p { font-weight: 400; }
+
+/* Eyebrow / micro-label: always Cinzel medium, identical spacing */
+.label, .eyebrow,
+.section-heading .label {
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  color: var(--gold-dark) !important;
+  display: inline-block;
+}
+
+/* Headings: weight ladder for Cormorant Garamond (max 700) */
+h1 { font-weight: 700 !important; line-height: 1.1;  letter-spacing: -0.015em; }
+h2 { font-weight: 700 !important; line-height: 1.15; letter-spacing: -0.01em;  }
+h3 { font-weight: 600 !important; line-height: 1.25; }
+h4 { font-weight: 600 !important; line-height: 1.3; }
+h5 { font-weight: 600 !important; line-height: 1.3; }
+
+/* Big display numerals — use Manrope (has 800 weight, better numeral rendering) */
+.display-num, .price-value,
+.stat-item .s-num, .trust-item .num,
+#res-invested, #res-gains, #res-total,
+[id^="res-"] {
+  font-family: var(--font) !important;       /* Manrope — sharper numerals than serif */
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.1 !important;
+  font-feature-settings: "tnum" 1, "lnum" 1; /* tabular & lining figures for clean alignment */
+}
+
+/* Buttons: always Inter semi-bold, never serif */
+.btn, button, .store-btn .st-name {
+  font-family: var(--font) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0;
+}
+
+/* Card-style mini-titles inside dark sections */
+.option-title, .feature-title, .ms-year, .ms-price {
+  font-family: var(--font) !important;
+}
+
+/* Body copy size & weight normalization (paragraph text) */
+.hero-text .desc,
+.section-heading p,
+.testi-text {
+  font-weight: 400 !important;
+}
+.testi-text {
+  font-style: italic;
+  font-weight: 400 !important;
+}
+
+/* Badges (Featured, Popular, etc.) */
+.badge {
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase;
+  font-size: 0.7rem !important;
+}
+
+/* Anchor text inherits weight from parent — prevent random "bolder" rendering */
+a { font-weight: inherit; }
+
+/* Strong/b elements: cap at 700 to keep with the weight ladder */
+strong, b { font-weight: 700; }
+
+/* ============================================================
+   END Typography consistency layer
+   ============================================================ */
+
+/* ---------- Cinematic gold gradient text ---------- */
+.gold-gradient-text,
+.hero-text h1 .highlight {
+  background: linear-gradient(120deg,
+    #B07514 0%,
+    #E8B84B 25%,
+    #FFE9A0 45%,
+    #E8B84B 65%,
+    #B07514 100%) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: shimmer-sweep 6s linear infinite;
+}
+@keyframes shimmer-sweep {
+  0%   { background-position: -100% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* Display heading family for hero */
+.hero-text h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+
+/* Hero eyebrow refresh */
+.hero-text .eyebrow {
+  font-family: var(--font-accent);
+  font-size: 0.85rem;
+  letter-spacing: 3px;
+  font-weight: 500;
+}
+
+/* ---------- Hero – upgraded backdrop with ornamental glow ---------- */
+.hero {
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(232,184,75,0.18), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(201,151,28,0.14), transparent 65%),
+    var(--bg);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgba(232,184,75,0.4), transparent 60%),
+    radial-gradient(1.5px 1.5px at 70% 60%, rgba(232,184,75,0.35), transparent 60%),
+    radial-gradient(1px 1px at 40% 80%, rgba(232,184,75,0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 85% 25%, rgba(232,184,75,0.3), transparent 60%);
+  opacity: 0.6;
+  z-index: 0;
+}
+
+/* ---------- Gold orb cinematic upgrade (NON-video variant kept for other pages) ---------- */
+.gold-orb:not(.has-video) {
+  background:
+    radial-gradient(circle at 30% 30%,
+      rgba(255,233,160,0.55) 0%,
+      rgba(232,184,75,0.30) 25%,
+      rgba(201,151,28,0.15) 50%,
+      rgba(160,120,16,0.04) 75%,
+      transparent 100%) !important;
+  box-shadow:
+    inset 0 0 80px rgba(255,233,160,0.25),
+    inset 0 0 30px rgba(232,184,75,0.30),
+    0 30px 80px rgba(201,151,28,0.18);
+  position: relative;
+  overflow: visible;
+}
+
+/* ===============================================
+   NEW: Coin stage — free-floating spinning coin hero
+   =============================================== */
+.coin-stage {
+  position: relative;
+  width: 460px;
+  height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The coin itself — crisp, no soft drop-shadows */
+.coin-img {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  max-width: 100%;
+  z-index: 4;
+  animation: coin-bob 3.5s ease-in-out infinite;
+  pointer-events: none;
+  /* keep the GIF sharp at any DPI */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+@keyframes coin-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+/* Soft radial gold glow behind the coin — subtle, not blurry */
+.coin-halo {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(255,233,160,0.40) 0%,
+      rgba(232,184,75,0.22) 30%,
+      rgba(201,151,28,0.10) 55%,
+      transparent 75%);
+  animation: halo-breathe 4s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+@keyframes halo-breathe {
+  0%, 100% { opacity: 0.7; transform: scale(0.95); }
+  50%      { opacity: 1;   transform: scale(1.05); }
+}
+
+/* Concentric dashed gold rings rotating around the coin */
+.coin-rings { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.coin-rings .ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(201,151,28,0.30);
+  animation: ring-rotate linear infinite;
+}
+.coin-rings .ring.r1 {
+  inset: 30px;
+  border-style: dashed;
+  animation-duration: 22s;
+}
+.coin-rings .ring.r2 {
+  inset: 0;
+  border: 1px dashed rgba(201,151,28,0.20);
+  animation-duration: 36s;
+  animation-direction: reverse;
+}
+.coin-rings .ring.r3 {
+  inset: -30px;
+  border: 1px solid rgba(232,184,75,0.18);
+  animation-duration: 50s;
+}
+@keyframes ring-rotate {
+  to { transform: rotate(360deg); }
+}
+
+/* Floating gold sparkles around the coin */
+.coin-sparkles { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.coin-sparkles .spark {
+  position: absolute;
+  color: #FFE9A0;
+  font-size: 18px;
+  text-shadow: 0 0 12px #E8B84B, 0 0 4px #E8B84B;
+  opacity: 0;
+  animation: spark-twinkle 4s ease-in-out infinite;
+}
+.coin-sparkles .spark.s1 { top:  8%; left: 12%; animation-delay: 0.0s;  font-size: 22px; }
+.coin-sparkles .spark.s2 { top: 18%; right: 6%; animation-delay: 0.8s;  font-size: 14px; }
+.coin-sparkles .spark.s3 { bottom: 14%; left: 4%; animation-delay: 1.4s; font-size: 18px; }
+.coin-sparkles .spark.s4 { bottom: 8%; right: 14%; animation-delay: 2.0s; font-size: 24px; }
+.coin-sparkles .spark.s5 { top: 50%; left: -2%;  animation-delay: 2.6s; font-size: 16px; }
+.coin-sparkles .spark.s6 { top: 40%; right: -2%; animation-delay: 3.2s; font-size: 20px; }
+@keyframes spark-twinkle {
+  0%, 100%      { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  20%, 80%      { opacity: 1; transform: scale(1)   rotate(180deg); }
+}
+
+/* Live pill — top-LEFT of the stage (clears the way for fc1 on the right) */
+.coin-stage .live-pill {
+  position: absolute;
+  top: 26px;
+  left: 16px;
+  right: auto;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(201,151,28,0.35);
+  border-radius: 50px;
+  font-family: var(--font-accent);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--gold-dark);
+  box-shadow: 0 8px 24px rgba(201,151,28,0.20);
+  animation: pill-float 4s ease-in-out infinite;
+}
+@keyframes pill-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.coin-stage .live-pill .live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #4ADE80;
+  box-shadow: 0 0 12px #4ADE80, 0 0 4px #4ADE80;
+  animation: live-pulse 1.4s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%,100% { opacity: 1;   transform: scale(1);   }
+  50%     { opacity: 0.4; transform: scale(1.35);}
+}
+
+/* Price tag — bottom-center, clean modern card */
+.coin-stage .orb-center {
+  position: absolute !important;
+  top: auto !important;
+  bottom: 10px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: block;
+}
+.coin-stage .orb-center .price-tag {
+  display: grid !important;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "label change"
+    "value change";
+  align-items: center;
+  gap: 0 14px;
+  padding: 14px 20px !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,0.96) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(201,151,28,0.32) !important;
+  box-shadow:
+    0 18px 50px rgba(201,151,28,0.30),
+    0 0 0 4px rgba(255,253,245,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.95) !important;
+  white-space: nowrap;
+}
+.coin-stage .orb-center .price-tag .price-label {
+  grid-area: label;
+  font-family: var(--font-accent);
+  font-size: 0.58rem !important;
+  color: var(--text-muted) !important;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  margin: 0;
+}
+.coin-stage .orb-center .price-tag .price-value {
+  grid-area: value;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.7rem !important;
+  background: linear-gradient(135deg, #B07514, #E8B84B);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  line-height: 1.1;
+}
+.coin-stage .orb-center .price-tag .price-change {
+  grid-area: change;
+  align-self: center;
+  font-size: 0.74rem !important;
+  font-weight: 700;
+  color: #16A34A !important;
+  padding: 5px 10px;
+  background: rgba(22,163,74,0.10);
+  border: 1px solid rgba(22,163,74,0.28);
+  border-radius: 50px;
+}
+
+/* Floating cards on opposite quadrants — no overlap with live pill or price tag */
+.floating-card { z-index: 7 !important; }
+.coin-stage .floating-card.fc1 {
+  top: 5% !important;          /* upper-right, sits beside (not under) the LIVE pill */
+  right: -8px !important;
+  bottom: auto !important;
+  left: auto !important;
+}
+.coin-stage .floating-card.fc2 {
+  top: 48% !important;         /* MID-left, comfortably above the bottom price tag */
+  left: -8px !important;
+  transform: translateY(-50%);
+  bottom: auto !important;
+  right: auto !important;
+}
+
+/* Stronger glow pulse on the hero halo backdrop */
+.hero-visual::before {
+  animation: halo-pulse-strong 4s ease-in-out infinite !important;
+}
+@keyframes halo-pulse-strong {
+  0%,100% { transform: scale(1);    opacity: 0.6; }
+  50%     { transform: scale(1.12); opacity: 1; }
+}
+
+/* Concentric gold rings — only for non-video orbs */
+.gold-orb:not(.has-video)::after {
+  content: "";
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  border: 1px dashed rgba(201,151,28,0.18);
+  animation: orbit-rotate 30s linear infinite;
+}
+@keyframes orbit-rotate {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Glow halo behind orb */
+.hero-visual::before {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,184,75,0.25) 0%, transparent 70%);
+  filter: blur(40px);
+  z-index: -1;
+  animation: halo-pulse 5s ease-in-out infinite;
+}
+@keyframes halo-pulse {
+  0%,100% { transform: scale(1); opacity: 0.7; }
+  50%     { transform: scale(1.08); opacity: 1; }
+}
+
+/* Price tag refinement — only for non-video orbs */
+.gold-orb:not(.has-video) .orb-center .price-tag {
+  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.85) !important;
+  border: 1px solid rgba(201,151,28,0.30) !important;
+  box-shadow:
+    0 12px 40px rgba(201,151,28,0.20),
+    inset 0 1px 0 rgba(255,255,255,0.8) !important;
+}
+.gold-orb:not(.has-video) .orb-center .price-value {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2.4rem !important;
+}
+
+/* ---------- Gold dust particles (GSAP-driven) ---------- */
+.gold-dust {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+.dust-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFE9A0 0%, #E8B84B 50%, transparent 70%);
+  box-shadow: 0 0 8px rgba(232,184,75,0.6);
+  opacity: 0;
+}
+
+/* ---------- Magnetic buttons (GSAP-ready) ---------- */
+.btn-gold {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #C9971C, #8A6408) !important;
+  box-shadow: 0 8px 24px rgba(201,151,28,0.30),
+              inset 0 1px 0 rgba(255,255,255,0.25);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease !important;
+}
+.btn-gold::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg,
+    transparent,
+    rgba(255,255,255,0.4),
+    transparent);
+  transform: skewX(-22deg);
+  transition: left 0.6s ease;
+}
+.btn-gold:hover::before { left: 125%; }
+.btn-gold:hover {
+  box-shadow: 0 14px 32px rgba(201,151,28,0.45),
+              inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+.btn-outline {
+  position: relative;
+  overflow: hidden;
+}
+.btn-outline::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+/* ---------- Section heading ornamental serif ---------- */
+/* (font-family, weight, label spacing all handled by the Typography
+   consistency layer near the top of this file — no duplicate rules here) */
+
+/* Animated gold line */
+.gold-line {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent) !important;
+  background-size: 200% 100% !important;
+  animation: line-shimmer 4s linear infinite;
+}
+@keyframes line-shimmer {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* ---------- Why cards – luxury shine ---------- */
+.why-card {
+  position: relative;
+  isolation: isolate;
+}
+.why-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(180px 100px at var(--mx, 50%) var(--my, 50%),
+    rgba(232,184,75,0.18), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.why-card:hover::after { opacity: 1; }
+
+.why-card .wc-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(232,184,75,0.22), rgba(201,151,28,0.08));
+  border: 1px solid rgba(201,151,28,0.25);
+  font-size: 1.7rem !important;
+  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.why-card:hover .wc-icon {
+  transform: rotateY(360deg) scale(1.1);
+}
+
+/* ---------- Service cards – elegant gold ribbon ---------- */
+.service-card {
+  position: relative;
+}
+.service-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold-dark));
+  background-size: 200% 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s ease;
+  animation: line-shimmer 4s linear infinite;
+}
+.service-card:hover::before { transform: scaleX(1); }
+
+.sc-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(232,184,75,0.20), rgba(201,151,28,0.05));
+  border: 1px solid rgba(201,151,28,0.22);
+  margin-bottom: 22px !important;
+}
+
+/* ---------- Stats – gold-coin numerals ---------- */
+.stat-item .s-num {
+  font-family: var(--font-display) !important;
+  font-weight: 900;
+  text-shadow: 0 4px 24px rgba(201,151,28,0.20);
+}
+.stat-item {
+  position: relative;
+}
+.stat-item::after {
+  content: "";
+  position: absolute;
+  bottom: 16px; left: 50%;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform: translateX(-50%) scaleX(0);
+  transition: transform 0.4s ease;
+}
+.stat-item:hover::after { transform: translateX(-50%) scaleX(1); }
+
+/* ---------- How it works – numbered gold badges ---------- */
+.step-num {
+  position: relative;
+  background: linear-gradient(135deg, #FFE9A0, #C9971C) !important;
+  border: 2px solid rgba(160,120,16,0.4) !important;
+  box-shadow: 0 8px 24px rgba(201,151,28,0.25),
+              inset 0 2px 0 rgba(255,255,255,0.3) !important;
+  color: #5C4308;
+  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.step-item:hover .step-num {
+  transform: translateY(-6px) rotate(8deg);
+}
+
+/* ---------- Testimonials – elegant card with quote mark ---------- */
+.testi-card {
+  position: relative;
+  overflow: hidden;
+}
+.testi-card::before {
+  content: "\201C";
+  position: absolute;
+  top: 8px;
+  right: 24px;
+  font-family: var(--font-display);
+  font-size: 6rem;
+  line-height: 1;
+  color: rgba(201,151,28,0.12);
+  font-weight: 900;
+  pointer-events: none;
+}
+.testi-text {
+  font-family: var(--font-display);
+  font-size: 1rem !important;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- CTA upgrade ---------- */
+.cta-section {
+  position: relative;
+  background:
+    radial-gradient(800px 400px at 80% 20%, rgba(255,233,160,0.18), transparent 60%),
+    linear-gradient(135deg, #8A6408 0%, #5C4308 100%) !important;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(2px 2px at 20% 30%, rgba(255,233,160,0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 70% 60%, rgba(255,233,160,0.5), transparent 60%),
+    radial-gradient(1px 1px at 40% 80%, rgba(255,233,160,0.7), transparent 60%),
+    radial-gradient(1.5px 1.5px at 85% 25%, rgba(255,233,160,0.5), transparent 60%),
+    radial-gradient(2px 2px at 60% 90%, rgba(255,233,160,0.4), transparent 60%);
+  opacity: 0.7;
+}
+.cta-section h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+}
+
+/* ---------- Blog cards refresh ---------- */
+.blog-img {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(232,184,75,0.30), transparent 70%),
+    linear-gradient(135deg, rgba(201,151,28,0.10) 0%, rgba(232,184,75,0.06) 100%) !important;
+  font-size: 3.5rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.blog-img::after {
+  content: "";
+  position: absolute;
+  inset: -50% -50% auto auto;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,233,160,0.4), transparent 70%);
+  filter: blur(30px);
+  pointer-events: none;
+}
+.blog-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+/* ---------- Floating cards (hero) refinement ---------- */
+.floating-card {
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.94) !important;
+  border: 1px solid rgba(201,151,28,0.25) !important;
+  box-shadow:
+    0 14px 36px rgba(201,151,28,0.22),
+    0 0 0 4px rgba(255,253,245,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.9) !important;
+  padding: 10px 14px !important;
+  gap: 10px !important;
+  max-width: 170px;
+}
+.floating-card .fc-icon {
+  font-size: 1.35rem !important;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, rgba(232,184,75,0.20), rgba(201,151,28,0.06));
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.floating-card .fc-text .fc-val { font-size: 0.82rem !important; }
+.floating-card .fc-text .fc-sub { font-size: 0.66rem !important; }
+
+/* Reposition cards so they sit clearly OUTSIDE the orb video circle */
+.gold-orb.has-video .floating-card.fc1 {
+  top: 8% !important;
+  right: -10px !important;
+}
+.gold-orb.has-video .floating-card.fc2 {
+  bottom: 14% !important;
+  left: -10px !important;
+}
+
+/* ---------- Coin spinner (decorative element) ---------- */
+.gold-coin {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, #FFE9A0 0%, #E8B84B 30%, #C9971C 60%, #8A6408 100%);
+  position: relative;
+  box-shadow:
+    inset 0 -10px 20px rgba(92,67,8,0.4),
+    inset 0 10px 20px rgba(255,233,160,0.5),
+    0 8px 24px rgba(201,151,28,0.35);
+  transform-style: preserve-3d;
+}
+.gold-coin::before {
+  content: "₹";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  color: #5C4308;
+  font-size: 2.2rem;
+  text-shadow: 0 1px 0 rgba(255,233,160,0.6);
+}
+
+/* ---------- Reveal classes used by GSAP ---------- */
+.reveal-up   { opacity: 0; transform: translateY(40px); }
+.reveal-fade { opacity: 0; }
+.reveal-scale{ opacity: 0; transform: scale(0.92); }
+.reveal-left { opacity: 0; transform: translateX(-40px); }
+.reveal-right{ opacity: 0; transform: translateX(40px); }
+.split-char  { display: inline-block; opacity: 0; transform: translateY(30px); }
+
+/* Words that contain split-chars must NOT break mid-character */
+.split-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Safety net for ALL headings site-wide — never break a word mid-character */
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+
+/* ============================================================
+   HOMEPAGE: Live Rates Section (Gold + Silver cards)
+   ============================================================ */
+.live-rates-section {
+  background:
+    radial-gradient(800px 300px at 50% 0%, rgba(232,184,75,0.08), transparent 60%),
+    var(--bg);
+  padding: 64px 0;
+}
+
+.rates-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.rate-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px 28px 22px;
+  border-radius: 22px;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease;
+  isolation: isolate;
+}
+
+/* Gold variant — warm luxurious palette */
+.rate-card-gold {
+  background:
+    radial-gradient(circle at 80% 0%, rgba(255,233,160,0.45), transparent 60%),
+    linear-gradient(135deg, #FFFDF5 0%, #FBF2D6 100%);
+  border: 1px solid rgba(201,151,28,0.30);
+  box-shadow: 0 14px 40px rgba(201,151,28,0.14), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+.rate-card-gold:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 56px rgba(201,151,28,0.28), inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+/* Silver variant — cool sleek palette */
+.rate-card-silver {
+  background:
+    radial-gradient(circle at 80% 0%, rgba(209,213,219,0.55), transparent 60%),
+    linear-gradient(135deg, #FAFAFB 0%, #E5E7EB 100%);
+  border: 1px solid rgba(107,114,128,0.32);
+  box-shadow: 0 14px 40px rgba(107,114,128,0.16), inset 0 1px 0 rgba(255,255,255,0.85);
+}
+.rate-card-silver:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 56px rgba(107,114,128,0.28), inset 0 1px 0 rgba(255,255,255,0.95);
+}
+
+/* LIVE pulse pill */
+.rc-pulse {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  font-family: var(--font-accent);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(201,151,28,0.30);
+  color: var(--gold-dark);
+  box-shadow: 0 4px 12px rgba(201,151,28,0.18);
+}
+.rc-pulse.silver {
+  border-color: rgba(107,114,128,0.30);
+  color: #4B5563;
+  box-shadow: 0 4px 12px rgba(107,114,128,0.18);
+}
+.rc-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #16A34A;
+  box-shadow: 0 0 8px #16A34A, 0 0 2px #16A34A;
+  animation: rc-blink 1.4s ease-in-out infinite;
+}
+@keyframes rc-blink {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%      { opacity: 0.3; transform: scale(1.4);  }
+}
+
+/* Header row — icon + metal name */
+.rc-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.rc-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(201,151,28,0.25);
+  flex-shrink: 0;
+}
+.rate-card-silver .rc-icon {
+  border-color: rgba(107,114,128,0.25);
+}
+.rc-metal {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--text);
+  line-height: 1.1;
+}
+.rc-purity {
+  font-family: var(--font-accent);
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Big price line */
+.rc-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 4px;
+}
+.rc-currency {
+  font-family: var(--font);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.rc-amount {
+  font-family: var(--font);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.rate-card-gold .rc-amount {
+  background: linear-gradient(135deg, #8A6408, #C9971C, #FFE9A0);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.rate-card-silver .rc-amount {
+  background: linear-gradient(135deg, #4B5563, #6B7280, #D1D5DB);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.rc-unit {
+  font-family: var(--font);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+
+/* Meta row — 10g price + change */
+.rc-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.rc-10g { font-weight: 500; }
+.rc-change {
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.76rem;
+}
+.rc-change.up   { background: rgba(22,163,74,0.10);  color: #16A34A; border: 1px solid rgba(22,163,74,0.28); }
+.rc-change.down { background: rgba(220,38,38,0.10);  color: #DC2626; border: 1px solid rgba(220,38,38,0.28); }
+
+/* Footer CTA row */
+.rc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(201,151,28,0.18);
+}
+.rate-card-silver .rc-footer { border-top-color: rgba(107,114,128,0.20); }
+.rc-cta {
+  font-family: var(--font);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.rate-card-gold .rc-cta   { color: var(--gold-dark); }
+.rate-card-silver .rc-cta { color: #4B5563; }
+.rc-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: transform 0.3s ease;
+}
+.rate-card-gold .rc-arrow {
+  background: linear-gradient(135deg, #C9971C, #8A6408);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(201,151,28,0.35);
+}
+.rate-card-silver .rc-arrow {
+  background: linear-gradient(135deg, #6B7280, #4B5563);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(107,114,128,0.35);
+}
+.rate-card:hover .rc-arrow { transform: translateX(4px); }
+
+/* Responsive — stack on mobile/tablet */
+@media (max-width: 768px) {
+  .live-rates-section { padding: 44px 0; }
+  .rates-pair { grid-template-columns: 1fr; gap: 16px; }
+  .rate-card { padding: 22px 20px 18px; }
+  .rc-amount { font-size: 2.4rem; }
+  .rc-currency { font-size: 1.2rem; }
+  .rc-metal { font-size: 1.15rem; }
+  .rc-icon { width: 44px; height: 44px; font-size: 1.5rem; border-radius: 12px; }
+  .rc-pulse { top: 16px; right: 16px; font-size: 0.56rem; padding: 4px 9px; }
+}
+
+@media (max-width: 480px) {
+  .rate-card { padding: 20px 18px 16px; }
+  .rc-amount { font-size: 2rem; }
+  .rc-meta { font-size: 0.74rem; }
+  .rc-cta  { font-size: 0.82rem; }
+}
+
+/* When GSAP isn't loaded, prevent invisible content forever */
+.no-gsap .reveal-up,
+.no-gsap .reveal-fade,
+.no-gsap .reveal-scale,
+.no-gsap .reveal-left,
+.no-gsap .reveal-right,
+.no-gsap .split-char { opacity: 1 !important; transform: none !important; }
+
+/* ---------- Cursor sparkle ---------- */
+.cursor-sparkle {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFE9A0 0%, #E8B84B 40%, transparent 70%);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  box-shadow: 0 0 12px rgba(232,184,75,0.8);
+}
+
+/* ---------- Ticker shimmer ---------- */
+.ticker {
+  background: linear-gradient(90deg, var(--bg-card2), #F8EFD4, var(--bg-card2)) !important;
+  position: relative;
+}
+.ticker::before,
+.ticker::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+.ticker::before { left: 0;  background: linear-gradient(90deg, var(--bg-card2), transparent); }
+.ticker::after  { right: 0; background: linear-gradient(270deg, var(--bg-card2), transparent); }
+
+/* ---------- Mobile adjustments ---------- */
+@media (max-width: 768px) {
+  .hero-visual::before { width: 320px; height: 320px; }
+  .testi-card::before { font-size: 4rem; right: 16px; top: 8px; }
+  .gold-orb:not(.has-video) { width: 260px !important; height: 260px !important; }
+  .coin-stage { width: 320px !important; height: 320px !important; }
+  .coin-img   { width: 240px !important; height: 240px !important; }
+  .coin-stage .live-pill { top: 14px; left: 10px; right: auto; font-size: 0.55rem; padding: 5px 10px; letter-spacing: 1.5px; }
+  .coin-stage .orb-center .price-tag { padding: 11px 16px !important; }
+  .coin-stage .orb-center .price-tag .price-value { font-size: 1.4rem !important; }
+  .coin-stage .orb-center .price-tag .price-label { font-size: 0.55rem !important; }
+  .coin-stage .orb-center .price-tag .price-change { font-size: 0.68rem !important; padding: 4px 9px; }
+  /* Tighter card sizing on mobile and clear quadrants */
+  .coin-stage .floating-card.fc1 {
+    top: 12% !important;          /* below the LIVE pill */
+    right: -4px !important;
+    left: auto !important;
+  }
+  .coin-stage .floating-card.fc2 {
+    top: 50% !important;
+    left: -4px !important;
+    right: auto !important;
+    transform: translateY(-50%);
+  }
+  .floating-card { padding: 7px 10px !important; max-width: 130px !important; gap: 7px !important; }
+  .floating-card .fc-icon { font-size: 1rem !important; width: 26px !important; height: 26px !important; border-radius: 7px !important; }
+  .floating-card .fc-text .fc-val { font-size: 0.66rem !important; line-height: 1.2; }
+  .floating-card .fc-text .fc-sub { font-size: 0.55rem !important; line-height: 1.2; }
+  .cta-section h2 { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+}
+
+@media (max-width: 480px) {
+  .gold-orb:not(.has-video) { width: 220px !important; height: 220px !important; }
+  .coin-stage { width: 280px !important; height: 280px !important; }
+  .coin-img   { width: 210px !important; height: 210px !important; }
+  .coin-stage .floating-card.fc1 {
+    top: 11% !important;
+    right: 0 !important;
+    left: auto !important;
+  }
+  .coin-stage .floating-card.fc2 {
+    top: 52% !important;
+    left: 0 !important;
+    right: auto !important;
+    transform: translateY(-50%);
+  }
+  .floating-card { max-width: 118px !important; }
+}

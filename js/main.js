@@ -52,9 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Scroll-to-top button ---------- */
   const scrollTopBtn = document.querySelector('.scroll-top');
   if (scrollTopBtn) {
-    window.addEventListener('scroll', () => {
-      scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
-    });
+    const updateScrollBtn = () => {
+      const scrolled = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight;
+      const winHeight = window.innerHeight;
+      const distFromBottom = docHeight - (scrolled + winHeight);
+      // Show when scrolled > 400px, but hide when within 120px of the bottom
+      const shouldShow = scrolled > 400 && distFromBottom > 120;
+      scrollTopBtn.classList.toggle('visible', shouldShow);
+    };
+    window.addEventListener('scroll', updateScrollBtn);
+    window.addEventListener('resize', updateScrollBtn);
     scrollTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
@@ -72,17 +80,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.fade-up, .fade-in').forEach(el => observer.observe(el));
 
-  /* ---------- Counter animation ---------- */
-  const counterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateCounter(entry.target);
-        counterObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.5 });
-
-  document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+  /* ---------- Counter animation (skipped if GSAP handles it) ---------- */
+  if (typeof window.gsap === 'undefined') {
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+  }
 
   function animateCounter(el) {
     const target = parseFloat(el.dataset.count);
@@ -141,7 +150,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+
+    // Sync the homepage live-rate cards with the ticker
+    syncHomeRateCards();
   }
+
+  function syncHomeRateCards() {
+    const gold = prices['24K Gold'];
+    const silver = prices['Silver'];
+    if (!gold || !silver) return;
+
+    // Gold card
+    const gPrice  = document.getElementById('homeGoldPrice');
+    const g10g    = document.getElementById('homeGold10g');
+    const gChange = document.getElementById('homeGoldChange');
+    if (gPrice)  gPrice.textContent  = Math.round(gold.price).toLocaleString('en-IN');
+    if (g10g)    g10g.textContent    = Math.round(gold.price * 10).toLocaleString('en-IN');
+    if (gChange) {
+      const up = gold.change >= 0;
+      gChange.className = 'rc-change ' + (up ? 'up' : 'down');
+      gChange.textContent = (up ? '▲ +' : '▼ ') + Math.abs(gold.change).toFixed(2) + '% today';
+    }
+
+    // Silver card — kg = price * 1000
+    const sPrice  = document.getElementById('homeSilverPrice');
+    const sKg     = document.getElementById('homeSilver10g');
+    const sChange = document.getElementById('homeSilverChange');
+    if (sPrice)  sPrice.textContent  = Math.round(silver.price).toLocaleString('en-IN');
+    if (sKg)     sKg.textContent     = Math.round(silver.price * 1000).toLocaleString('en-IN');
+    if (sChange) {
+      const up = silver.change >= 0;
+      sChange.className = 'rc-change ' + (up ? 'up' : 'down');
+      sChange.textContent = (up ? '▲ +' : '▼ ') + Math.abs(silver.change).toFixed(2) + '% today';
+    }
+  }
+
+  // Run an initial sync so cards reflect the seeded values immediately
+  syncHomeRateCards();
   setInterval(updateTicker, 4000);
 
   /* ---------- Contact form ---------- */

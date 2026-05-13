@@ -46,26 +46,23 @@
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@400;500;600;700;800&family=Marcellus&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="icon" type="image/png" href="FrontendLogo.png" />
+  <link rel="stylesheet" href="css/luxury.css" />
+  <link rel="icon" type="image/png" href="images/GOLD-NEST-FAV%20%281%29.png" />
 </head>
 <body>
 
 <!-- ============================================================ NAVBAR -->
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <div class="navbar-inner">
-    <a href="index.html" class="navbar-logo" aria-label="GoldNest Home">
-      <img src="FrontendLogo.png" alt="GoldNest Logo" width="40" height="40" />
-      
-    </a>
-
+    <a href="index.html" class="navbar-logo" aria-label="GoldNest Home"><img src="FrontendLogo.png" alt="GoldNest Logo" width="40" height="40" /></a>
     <div class="navbar-links">
       <a href="index.html" class="active">Home</a>
       <a href="about.html">About</a>
-      <div class="has-dropdown">
-        <a href="services.html">Services</a>
+      <div class="has-dropdown"><a href="services.html">Services</a>
         <div class="dropdown-menu">
           <a href="digital-gold.html">🪙 Digital Gold</a>
           <a href="gold-sip.html">📈 Gold SIP</a>
@@ -75,19 +72,12 @@
       </div>
       <a href="how-it-works.html">How It Works</a>
       <a href="gold-rates.html">Gold Rates</a>
-      <a href="blog.html">Blog</a>
-      <a href="faq.html">FAQ</a>
-      <a href="partner.html">Partner With Us</a>
+      <a href="silver-rates.html">Silver Rates</a>
     </div>
-
     <div class="navbar-cta">
       <a href="contact.html" class="btn btn-outline btn-sm">Contact</a>
-      <a href="#download" class="btn btn-gold btn-sm">Download App</a>
     </div>
-
-    <button class="hamburger" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
@@ -102,6 +92,7 @@
   <a href="custom-jewelry.html">Custom Jewelry</a>
   <a href="how-it-works.html">How It Works</a>
   <a href="gold-rates.html">Gold Rates</a>
+  <a href="silver-rates.html">Silver Rates</a>
   <a href="blog.html">Blog</a>
   <a href="faq.html">FAQ</a>
   <div class="divider"></div>
@@ -144,12 +135,28 @@
       </div>
 
       <div class="hero-visual" aria-hidden="true">
-        <div class="gold-orb">
+        <div class="coin-stage">
+          <div class="coin-halo"></div>
+          <div class="coin-rings">
+            <span class="ring r1"></span>
+            <span class="ring r2"></span>
+            <span class="ring r3"></span>
+          </div>
+          <div class="coin-sparkles">
+            <span class="spark s1">✦</span>
+            <span class="spark s2">✦</span>
+            <span class="spark s3">✦</span>
+            <span class="spark s4">✦</span>
+            <span class="spark s5">✦</span>
+            <span class="spark s6">✦</span>
+          </div>
+          <img class="coin-img" src="images/coin.gif" alt="" />
+          <div class="live-pill"><span class="live-dot"></span>LIVE · 24K GOLD</div>
           <div class="orb-center">
             <div class="price-tag">
-              <div class="price-label">24K Gold Price / gram</div>
+              <div class="price-label">Today's Rate / gram</div>
               <div class="price-value">₹9,245</div>
-              <div class="price-change">▲ 0.42% Today</div>
+              <div class="price-change">▲ 0.42%</div>
             </div>
           </div>
           <div class="floating-card fc1">
@@ -319,6 +326,70 @@
   </div>
 </section>
 
+<!-- ============================================================ LIVE RATES (Gold + Silver) -->
+<section class="live-rates-section" aria-label="Live precious metal rates">
+  <div class="container">
+    <div class="section-heading">
+      <span class="label">Live Market Rates</span>
+      <h2>Today's Precious Metal Prices</h2>
+      <div class="gold-line"></div>
+      <p>Real-time gold and silver rates in India. Updated every few seconds from MCX spot.</p>
+    </div>
+
+    <div class="rates-pair">
+
+      <!-- GOLD CARD -->
+      <a href="gold-rates.html" class="rate-card rate-card-gold fade-up" data-delay="1">
+        <div class="rc-pulse"><span class="rc-dot"></span>LIVE</div>
+        <div class="rc-header">
+          <div class="rc-icon" aria-hidden="true">🪙</div>
+          <div>
+            <div class="rc-metal">24K Gold</div>
+            <div class="rc-purity">99.9% Pure · MCX Spot</div>
+          </div>
+        </div>
+        <div class="rc-price">
+          <span class="rc-currency">₹</span><span class="rc-amount" id="homeGoldPrice">9,245</span>
+          <span class="rc-unit">/ gram</span>
+        </div>
+        <div class="rc-meta">
+          <span class="rc-10g">₹<span id="homeGold10g">92,450</span> / 10g</span>
+          <span class="rc-change up" id="homeGoldChange">▲ +0.42% today</span>
+        </div>
+        <div class="rc-footer">
+          <span class="rc-cta">View Gold Rates &amp; Charts</span>
+          <span class="rc-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- SILVER CARD -->
+      <a href="silver-rates.html" class="rate-card rate-card-silver fade-up" data-delay="2">
+        <div class="rc-pulse silver"><span class="rc-dot"></span>LIVE</div>
+        <div class="rc-header">
+          <div class="rc-icon" aria-hidden="true">🥈</div>
+          <div>
+            <div class="rc-metal">Silver 999</div>
+            <div class="rc-purity">99.9% Fine · MCX Spot</div>
+          </div>
+        </div>
+        <div class="rc-price">
+          <span class="rc-currency">₹</span><span class="rc-amount" id="homeSilverPrice">107</span>
+          <span class="rc-unit">/ gram</span>
+        </div>
+        <div class="rc-meta">
+          <span class="rc-10g">₹<span id="homeSilver10g">1,07,000</span> / kg</span>
+          <span class="rc-change up" id="homeSilverChange">▲ +0.80% today</span>
+        </div>
+        <div class="rc-footer">
+          <span class="rc-cta">View Silver Rates &amp; Charts</span>
+          <span class="rc-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
 <!-- ============================================================ STATS -->
 <section class="stats-section" aria-label="GoldNest statistics">
   <div class="container">
@@ -381,7 +452,7 @@
 </section>
 
 <!-- ============================================================ SIP CALCULATOR -->
-<section style="background: var(--bg); padding: 80px 0;">
+<section style="background: var(--bg); padding: 64px 0;">
   <div class="container">
     <div class="section-heading">
       <span class="label">Gold SIP Calculator</span>
@@ -405,7 +476,7 @@
       <div class="calc-result-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:24px; padding-top:24px; border-top:1px solid var(--border);">
         <div style="text-align:center; padding:20px; background:var(--bg-card2); border-radius:12px;">
           <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Invested</div>
-          <div id="res-invested" style="font-size:1.3rem; font-weight:800; color:var(--white);">₹30,000</div>
+          <div id="res-invested" style="font-size:1.3rem; font-weight:800; color:var(--text);">₹30,000</div>
         </div>
         <div style="text-align:center; padding:20px; background:var(--bg-card2); border-radius:12px;">
           <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Est. Gains</div>
@@ -416,7 +487,10 @@
           <div id="res-total" style="font-size:1.3rem; font-weight:800; color:var(--gold);">₹42,386</div>
         </div>
       </div>
-      <p style="font-size:0.75rem; text-align:center; margin-top:16px; color:var(--text-muted);">* Estimated at 12% annual returns. Actual returns may vary. This is not financial advice.</p>
+      <p style="font-size:0.82rem; text-align:center; margin-top:20px; padding:12px 18px; background:rgba(201,151,28,0.08); border:1px solid rgba(201,151,28,0.22); border-radius:10px; color:var(--text); font-weight:500;">
+        <span style="color:var(--gold-dark); font-weight:700;">* Estimated at 12% annual returns.</span>
+        Actual returns may vary. This is not financial advice.
+      </p>
     </div>
   </div>
 </section>
@@ -473,42 +547,13 @@
     <div class="app-inner">
       <div class="app-mockup" aria-hidden="true">
         <div class="app-screen">
-          <div class="app-screen-inner">
-            <div class="app-screen-bar"></div>
-            <div class="app-screen-line"></div>
-            <div class="app-screen-line w60"></div>
-            <div class="app-screen-card">
-              <div class="app-screen-gold"></div>
-              <div class="app-screen-line w40"></div>
-            </div>
-          </div>
+          <img src="images/Shop%20List.png" alt="GoldNest Shop List screen" loading="lazy" />
         </div>
         <div class="app-screen main">
-          <div class="app-screen-inner">
-            <div class="app-screen-bar"></div>
-            <div class="app-screen-line"></div>
-            <div class="app-screen-line w60"></div>
-            <div class="app-screen-card">
-              <div class="app-screen-gold"></div>
-              <div class="app-screen-line w40"></div>
-              <div class="app-screen-line"></div>
-            </div>
-            <div style="margin-top:10px">
-              <div class="app-screen-line"></div>
-              <div class="app-screen-line w60"></div>
-            </div>
-          </div>
+          <img src="images/Shopkeeper%20Dashboard.png" alt="GoldNest Shopkeeper Dashboard screen" loading="lazy" />
         </div>
         <div class="app-screen">
-          <div class="app-screen-inner">
-            <div class="app-screen-bar"></div>
-            <div class="app-screen-line"></div>
-            <div class="app-screen-line w40"></div>
-            <div class="app-screen-card">
-              <div class="app-screen-gold"></div>
-              <div class="app-screen-line w60"></div>
-            </div>
-          </div>
+          <img src="images/Shopkeeper%20Register.png" alt="GoldNest Shopkeeper Register screen" loading="lazy" />
         </div>
       </div>
       <div class="fade-up">
@@ -540,20 +585,20 @@
           </div>
         </div>
         <div class="store-btns">
-          <div class="store-btn">
+          <a class="store-btn" href="https://play.google.com/store/apps/details?id=com.app.goldnest" target="_blank" rel="noopener noreferrer" aria-label="Get GoldNest on Google Play">
             <div class="store-icon">🤖</div>
             <div class="store-text">
               <div class="st-sub">Download on</div>
               <div class="st-name">Google Play</div>
             </div>
-          </div>
-          <div class="store-btn">
+          </a>
+          <a class="store-btn" href="https://apps.apple.com/in/app/goldnest/id6677018937" target="_blank" rel="noopener noreferrer" aria-label="Get GoldNest on the App Store">
             <div class="store-icon">🍎</div>
             <div class="store-text">
               <div class="st-sub">Download on</div>
               <div class="st-name">App Store</div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>
@@ -646,17 +691,13 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="logo">
-          <img src="FrontendLogo.png" alt="GoldNest" width="36" height="36" />
-          
-        </div>
+        <div class="logo"><img src="images/GOLD-NEST-LOGO.png" alt="GoldNest" width="160" height="40" style="max-width:160px;width:auto;height:40px;object-fit:contain;" /></div>
         <p>India's trusted digital gold investment platform. Secure, transparent, and accessible to everyone.</p>
         <div class="footer-social">
-          <div class="social-btn" aria-label="Facebook">f</div>
-          <div class="social-btn" aria-label="Instagram">in</div>
-          <div class="social-btn" aria-label="Twitter">𝕏</div>
-          <div class="social-btn" aria-label="LinkedIn">li</div>
-          <div class="social-btn" aria-label="YouTube">▶</div>
+          <a class="social-btn" href="https://www.facebook.com/Goldnestsip" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+          <a class="social-btn" href="https://www.instagram.com/_goldnest_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">in</a>
+          <a class="social-btn" href="https://www.linkedin.com/in/soni-gyanesh-43b97a85/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">li</a>
+          <a class="social-btn" href="https://www.youtube.com/@mrgoldsmithsays" target="_blank" rel="noopener noreferrer" aria-label="YouTube">▶</a>
         </div>
       </div>
       <div class="footer-col">
@@ -674,38 +715,32 @@
           <li><a href="about.html">About Us</a></li>
           <li><a href="how-it-works.html">How It Works</a></li>
           <li><a href="gold-rates.html">Gold Rates</a></li>
+          <li><a href="silver-rates.html">Silver Rates</a></li>
           <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
           <li><a href="faq.html">FAQ</a></li>
           <li><a href="partner.html">Partner With Us</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h5>Contact Us</h5>
-        <div class="footer-contact-item">
-          <span class="icon">📞</span>
-          <span>+91 8460050987</span>
-        </div>
-        <div class="footer-contact-item">
-          <span class="icon">✉️</span>
-          <span>admin@goldsnest.com</span>
-        </div>
-        <div class="footer-contact-item">
-          <span class="icon">📍</span>
-          <span>Vadodara, Gujarat, India</span>
-        </div>
-        <div class="footer-contact-item">
-          <span class="icon">🕐</span>
-          <span>Mon–Sat: 9am – 6pm</span>
-        </div>
+        <div class="footer-contact-item"><span class="icon">📞</span><span>+91 8460050987</span></div>
+        <div class="footer-contact-item"><span class="icon">✉️</span><span>admin@goldsnest.com</span></div>
+        <div class="footer-contact-item"><span class="icon">📍</span><span>Vadodara, Gujarat, India</span></div>
+        <div class="footer-contact-item"><span class="icon">🕐</span><span>Mon–Sat: 9am – 6pm</span></div>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 GoldNest. All rights reserved. Founded 2024.</span>
+      <span>© 2026 GoldNest. All rights reserved.</span>
       <div class="footer-legal">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Refund Policy</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-and-conditions.html">Terms of Service</a>
       </div>
     </div>
   </div>
@@ -715,6 +750,9 @@
 <button class="scroll-top" aria-label="Scroll to top">↑</button>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="js/main.js"></script>
+<script src="js/gsap-animations.js"></script>
 </body>
 </html>

@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($files = @\\('digital-gold.html','custom-jewelry.html','faq.html','physical-gold.html','gold-sip.html','partner.html','contact.html','how-it-works.html','blog.html','services.html','gold-rates.html'\\); $old = '<a href=\"gold-rates.html\">Gold Rates</a><a href=\"blog.html\">Blog</a><a href=\"faq.html\">FAQ</a><a href=\"partner.html\">Partner With Us</a>'; $new = '<a href=\"gold-rates.html\">Gold Rates</a>'; $count = 0; foreach \\($f in $files\\) { $path = \"d:\\\\Cogent\\\\Goldnest\\\\$f\"; $c = [System.IO.File]::ReadAllText\\($path\\); if \\($c.Contains\\($old\\)\\) { $c = $c.Replace\\($old, $new\\); [System.IO.File]::WriteAllText\\($path, $c\\); Write-Output \"Trimmed navbar: $f\"; $count++ } else { Write-Output \"SKIP: $f\" } }; Write-Output \"Total updated: $count\")"
+    ]
+  }
+}
