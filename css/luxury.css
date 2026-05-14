@@ -200,7 +200,7 @@ strong, b { font-weight: 700; }
   /* keep the GIF sharp at any DPI */
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
-  /* video element fits */
+  /* video element fits — WebM has native VP9 alpha, no blend-mode hacks needed */
   object-fit: contain;
   background: transparent;
   border: 0;

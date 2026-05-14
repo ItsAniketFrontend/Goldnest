@@ -72,27 +72,53 @@ function isValidSilver(v) { return Number.isFinite(v) && v >= SILV_MIN && v <= S
 
 /* ------------------------------------------------------------ */
 function parseRates(html) {
+  // CRITICAL: Strip HTML comments first. ibja.co keeps an archived
+  // rate-template inside <!-- ... --> whose old 2020 values (₹4054)
+  // would otherwise be picked up by text-anchored regex.
+  html = html.replace(/<!--[\s\S]*?-->/g, '');
+
   const gold = [];
   const silver = [];
 
-  // Strategy A — ibja.co homepage:  <h3>16098 (1 Gram) ...</h3>
+  // === GOLD ===
+  // Strategy 0 — ID-anchored (MOST RELIABLE, listed FIRST).
+  //   ibja.co:        <span id="lblFineGold999">₹ 16135</span>
+  //   ibjarates.com:  <span id="GoldRatesCompare999">16135</span>
+  for (const m of html.matchAll(/id\s*=\s*["']lblFineGold999["'][^>]*>\s*(?:₹|&#8377;|Rs\.?|INR)?\s*([\d,]{3,})/gi)) {
+    gold.push(perGram(toNum(m[1])));
+  }
+  for (const m of html.matchAll(/id\s*=\s*["']GoldRatesCompare999["'][^>]*>\s*(?:₹|&#8377;|Rs\.?|INR)?\s*([\d,]{3,})/gi)) {
+    gold.push(perGram(toNum(m[1])));
+  }
+  // Strategy A — ibja.co alt:  <h3>16098 (1 Gram) ...</h3>
   for (const m of html.matchAll(/<h3[^>]*>\s*([\d,]+)\s*\(\s*1\s*Gram/gi)) {
     gold.push(perGram(toNum(m[1])));
   }
-  // Strategy B — anchored on "Fine Gold"; require 4+ digits (rules out purity labels)
-  for (const m of html.matchAll(/Fine\s*Gold[\s\S]{0,160}?(\d{4,6}(?:\.\d+)?)/gi)) {
+  // Strategy B — "Fine Gold" anchored; REQUIRE currency symbol so we
+  // skip the no-₹ archived markup pattern.
+  for (const m of html.matchAll(/Fine\s*Gold[\s\S]{0,200}?(?:₹|&#8377;|Rs\.?|INR)\s*([\d,]{4,6}(?:\.\d+)?)/gi)) {
     gold.push(perGram(toNum(m[1])));
   }
   // Strategy C — table cell containing "999" followed by the next 4-6 digit number
   for (const m of html.matchAll(/(?:^|>)\s*999\s*(?:<[^>]*>\s*){1,4}([\d,]{4,})/g)) {
     gold.push(perGram(toNum(m[1])));
   }
-  // Strategy D — explicit currency markers (₹ / Rs. / INR)
+  // Strategy D — explicit currency markers (₹ / Rs. / INR), last resort
   for (const m of html.matchAll(/(?:₹|Rs\.?|INR)\s*([\d,]{4,}(?:\.\d+)?)/g)) {
     gold.push(perGram(toNum(m[1])));
   }
 
-  // Silver — require 4+ digits after "Silver"
+  // === SILVER ===
+  // Strategy 0 — ID-anchored on ibjarates.com.
+  //   <span id="lblSilver999_AM">287350</span>  (per-kg, ₹/kg)
+  //   <span id="lblSilver999_PM">287350</span>
+  for (const m of html.matchAll(/id\s*=\s*["']lblSilver999_(?:AM|PM)["'][^>]*>\s*(?:₹|&#8377;|Rs\.?|INR)?\s*([\d,]{3,})/gi)) {
+    silver.push(perGramSilver(toNum(m[1])));
+  }
+  for (const m of html.matchAll(/id\s*=\s*["']SilverRatesCompare999["'][^>]*>\s*(?:₹|&#8377;|Rs\.?|INR)?\s*([\d,]{3,})/gi)) {
+    silver.push(perGramSilver(toNum(m[1])));
+  }
+  // Fallback — anchored on "Silver" text
   for (const m of html.matchAll(/Silver[\s\S]{0,160}?(\d{4,8}(?:\.\d+)?)/gi)) {
     silver.push(perGramSilver(toNum(m[1])));
   }
