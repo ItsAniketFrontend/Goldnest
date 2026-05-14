@@ -1,0 +1,10 @@
+{
+  "gold999_per_gram": 9245,
+  "gold22k_per_gram": 8469,
+  "gold18k_per_gram": 6934,
+  "silver999_per_gram": 107,
+  "source": "seed",
+  "session": "seed",
+  "fetched_at": "2026-05-13T00:00:00.000Z",
+  "source_url": "fallback"
+}

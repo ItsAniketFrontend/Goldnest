@@ -710,6 +710,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="js/rates-api.js"></script>
 <script src="js/main.js"></script>
 <script src="js/gsap-animations.js"></script>
 <script>
@@ -717,6 +718,7 @@
    SILVER RATES PAGE – JavaScript
    ================================================================ */
 
+/* Base prices — overridden by real IBJA fetch when available */
 const BASE = { '999': 107, '925': 99, '900': 96 };
 let current = { ...BASE };
 let dayHigh  = { '999': 107.40, '925': 99.30, '900': 96.30 };
@@ -808,6 +810,28 @@ function updatePrices() {
   }
 }
 setInterval(updatePrices, 3000);
+
+/* ---- Seed BASE from real IBJA rates when they arrive ---- */
+if (window.GoldNestRates) {
+  function applyIBJA(r) {
+    if (!r || !r.silver999_per_gram) return;
+    BASE['999'] = r.silver999_per_gram;
+    BASE['925'] = Math.round(r.silver999_per_gram * 0.925 * 100) / 100;  // sterling
+    BASE['900'] = Math.round(r.silver999_per_gram * 0.900 * 100) / 100;
+    current = { ...BASE };
+    dayHigh = { '999': BASE['999'] * 1.008, '925': BASE['925'] * 1.008, '900': BASE['900'] * 1.008 };
+    dayLow  = { '999': BASE['999'] * 0.992, '925': BASE['925'] * 0.992, '900': BASE['900'] * 0.992 };
+    updatePrices();
+
+    const meta = document.getElementById('lastUpdate');
+    if (meta && r.source === 'IBJA') {
+      const age = window.GoldNestRates.formatAge(r.timestamp);
+      meta.title = 'Source: IBJA · fetched ' + age;
+    }
+  }
+  window.GoldNestRates.onUpdate(applyIBJA);
+  window.GoldNestRates.fetch().then(applyIBJA).catch(() => {});
+}
 
 /* ---- Silver Converter ---- */
 function convertSilver() {

@@ -1,0 +1,54 @@
+name: Update IBJA Rates
+
+# Runs after each IBJA publishing window (12:00 PM and 5:00 PM IST,
+# weekdays only). Also runnable on demand via the Actions tab.
+on:
+  schedule:
+    - cron: '0 7 * * 1-5'    # 07:00 UTC = 12:30 PM IST  (after AM rate)
+    - cron: '0 12 * * 1-5'   # 12:00 UTC = 05:30 PM IST  (after PM rate)
+    - cron: '30 3 * * *'     # 03:30 UTC = 09:00 AM IST  (daily safety net)
+  workflow_dispatch: {}      # manual trigger button
+
+permissions:
+  contents: write            # required to commit rates.json back
+
+concurrency:
+  group: update-rates
+  cancel-in-progress: false  # let each scheduled run finish
+
+jobs:
+  scrape-and-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # fetch-depth: 1 is fine; we're just committing one file
+          persist-credentials: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Scrape IBJA → rates.json
+        id: scrape
+        run: |
+          node scripts/update-rates.js
+          echo "scraped=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "goldnest-rate-bot"
+          git config user.email "bot@goldsnest.com"
+          git add rates.json
+          if git diff --cached --quiet; then
+            echo "No rate change — nothing to commit."
+          else
+            STAMP=$(TZ=Asia/Kolkata date +'%Y-%m-%d %H:%M IST')
+            git commit -m "chore(rates): IBJA update ${STAMP}"
+            git push
+            echo "Committed and pushed."
+          fi

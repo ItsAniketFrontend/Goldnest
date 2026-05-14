@@ -200,6 +200,11 @@ strong, b { font-weight: 700; }
   /* keep the GIF sharp at any DPI */
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+  /* video element fits */
+  object-fit: contain;
+  background: transparent;
+  border: 0;
+  outline: 0;
 }
 @keyframes coin-bob {
   0%, 100% { transform: translateY(0); }
@@ -1124,4 +1129,445 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(-50%);
   }
   .floating-card { max-width: 118px !important; }
+}
+
+/* ============================================================
+   TRUST STRIP — credentials banner (home page)
+   ============================================================ */
+.trust-strip {
+  position: relative;
+  padding: 56px 0 60px;
+  background:
+    radial-gradient(900px 220px at 50% 0%, rgba(232,184,75,0.18), transparent 60%),
+    linear-gradient(180deg, #FFFDF5 0%, #FFF8E1 50%, #FFFDF5 100%);
+  border-top: 1px solid rgba(201,151,28,0.18);
+  border-bottom: 1px solid rgba(201,151,28,0.18);
+  overflow: hidden;
+}
+.trust-strip::before,
+.trust-strip::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(201,151,28,0.35) 20%,
+    rgba(232,184,75,0.9) 50%,
+    rgba(201,151,28,0.35) 80%,
+    transparent 100%);
+}
+.trust-strip::before { top: 0; }
+.trust-strip::after  { bottom: 0; }
+
+.trust-strip-head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.trust-strip-head .trust-eyebrow {
+  display: inline-block;
+  font-family: var(--font-accent), 'Marcellus', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 50%, var(--gold-dark) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding: 0 4px;
+}
+.trust-strip-head .gold-line {
+  width: 64px;
+  height: 2px;
+  margin: 10px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  border-radius: 2px;
+}
+
+.trust-badges {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+  margin: 0 auto 34px;
+  max-width: 1080px;
+}
+.trust-badge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFFBEC 100%);
+  border: 1px solid rgba(201,151,28,0.28);
+  border-radius: 14px;
+  box-shadow:
+    0 2px 8px rgba(180,140,20,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  overflow: hidden;
+}
+.trust-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255,255,255,0.6) 50%,
+    transparent 65%,
+    transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.trust-badge:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold);
+  box-shadow:
+    0 10px 24px rgba(201,151,28,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+}
+.trust-badge:hover::before { transform: translateX(100%); }
+
+.trust-badge .tb-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  background: radial-gradient(circle at 30% 30%, #FFF6D0, #F5E08C);
+  border: 1px solid rgba(201,151,28,0.35);
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(201,151,28,0.18);
+}
+.trust-badge .tb-text {
+  font-family: var(--font-accent), 'Marcellus', serif;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.trust-badge .tb-text span {
+  display: inline-block;
+  font-family: var(--font), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--gold-dark);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.trust-statement {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 18px 28px;
+  background: linear-gradient(135deg,
+    rgba(201,151,28,0.06) 0%,
+    rgba(232,184,75,0.14) 50%,
+    rgba(201,151,28,0.06) 100%);
+  border: 1px solid rgba(201,151,28,0.3);
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(201,151,28,0.10);
+  text-align: center;
+}
+.trust-statement p {
+  margin: 0;
+  font-family: var(--font), sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.trust-statement strong {
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.trust-statement em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--gold-dark);
+}
+.trust-statement .ts-mark {
+  color: var(--gold);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  animation: tsTwinkle 2.6s ease-in-out infinite;
+}
+.trust-statement .ts-mark:last-child { animation-delay: 1.3s; }
+
+@keyframes tsTwinkle {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.18); }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .trust-badges { grid-template-columns: repeat(3, 1fr); max-width: 760px; }
+}
+@media (max-width: 768px) {
+  .trust-strip { padding: 44px 0 48px; }
+  .trust-badges { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .trust-badge { padding: 14px; }
+  .trust-badge .tb-icon { width: 40px; height: 40px; font-size: 1.3rem; }
+  .trust-badge .tb-text { font-size: 0.9rem; }
+  .trust-badge .tb-text span { font-size: 0.72rem; }
+  .trust-statement {
+    border-radius: 18px;
+    padding: 16px 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .trust-statement p { font-size: 0.88rem; flex: 1 1 70%; }
+}
+@media (max-width: 480px) {
+  .trust-badges { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .trust-badge .tb-text { font-size: 0.85rem; }
+  .trust-badge .tb-text br { display: none; }
+  .trust-badge .tb-text span { margin-left: 4px; margin-top: 0; }
+  .trust-statement p { font-size: 0.82rem; }
+}
+
+/* ============================================================
+   DARK SECTION OVERRIDES — alternating light/dark theme
+   Sections flipped to dark luxury: Hero, Live Rates
+   (CTA + Footer were already dark)
+   Local palette:
+     --dk-bg:        #0E0B07   (warm near-black)
+     --dk-bg-2:      #1A1610   (espresso card)
+     --dk-bg-3:      #221C13   (raised card)
+     --dk-text:      #F2E9D2   (warm cream)
+     --dk-text-soft: #B8AC91   (muted cream)
+     --dk-border:    rgba(232,184,75,0.22)
+     --dk-gold:      #E8B84B   (brighter to glow on dark)
+   ============================================================ */
+
+/* ---------- HERO (dark) ---------- */
+.hero { background: #0E0B07; }
+.hero .hero-bg {
+  background:
+    radial-gradient(ellipse 70% 60% at 65% 35%, rgba(232,184,75,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 50% at 15% 80%, rgba(201,151,28,0.16) 0%, transparent 60%),
+    linear-gradient(180deg, #0E0B07 0%, #14100A 100%);
+}
+.hero .hero-particles .particle {
+  background: #E8B84B;
+  opacity: 0.45;
+  box-shadow: 0 0 6px rgba(232,184,75,0.6);
+}
+
+.hero .hero-text .eyebrow {
+  color: #E8B84B;
+}
+.hero .hero-text .eyebrow::before {
+  background: linear-gradient(90deg, transparent, #E8B84B);
+}
+.hero .hero-text h1 { color: #F2E9D2 !important; }
+.hero .hero-text h1 .highlight {
+  background: linear-gradient(135deg, #F5DA7C 0%, #FFE9A8 50%, #C9971C 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(232,184,75,0.25);
+}
+.hero .hero-text .desc { color: #B8AC91 !important; }
+.hero .hero-text .desc strong { color: #F2E9D2; }
+
+.hero .hero-actions .btn-outline {
+  border-color: rgba(232,184,75,0.55);
+  color: #F2E9D2;
+}
+.hero .hero-actions .btn-outline:hover {
+  background: rgba(232,184,75,0.10);
+  border-color: #E8B84B;
+  color: #FFE9A8;
+}
+
+.hero .hero-trust {
+  border-top-color: rgba(232,184,75,0.18);
+}
+.hero .trust-item .num {
+  background: linear-gradient(135deg, #F5DA7C, #E8B84B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero .trust-item .lbl { color: #B8AC91; }
+
+/* Floating cards on the dark hero — keep readable */
+.hero .floating-card {
+  background: rgba(26,22,16,0.92);
+  border: 1px solid rgba(232,184,75,0.30);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(232,184,75,0.08),
+    inset 0 1px 0 rgba(232,184,75,0.15);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.hero .floating-card .fc-text .fc-val { color: #F2E9D2; }
+.hero .floating-card .fc-text .fc-sub { color: #B8AC91; }
+.hero .floating-card .fc-icon { filter: drop-shadow(0 0 6px rgba(232,184,75,0.4)); }
+
+/* Orb / coin center labels on dark */
+.hero .orb-center .price-label { color: #B8AC91; }
+.hero .orb-center .price-value {
+  background: linear-gradient(135deg, #F5DA7C, #E8B84B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---------- TICKER (dark, sits flush under hero) ---------- */
+.ticker {
+  background: linear-gradient(180deg, #14100A 0%, #1A1610 100%);
+  border-top: 1px solid rgba(232,184,75,0.20);
+  border-bottom: 1px solid rgba(232,184,75,0.20);
+}
+.ticker .ticker-item .t-name  { color: #E8B84B; }
+.ticker .ticker-item .t-price { color: #F2E9D2; }
+.ticker .ticker-sep           { color: rgba(232,184,75,0.30); }
+.ticker .ticker-item .t-up    { color: #4ADE80; }
+.ticker .ticker-item .t-down  { color: #F87171; }
+
+/* ---------- LIVE RATES SECTION (dark) ---------- */
+.live-rates-section {
+  background:
+    radial-gradient(900px 360px at 50% 0%, rgba(232,184,75,0.14), transparent 65%),
+    radial-gradient(700px 280px at 50% 100%, rgba(160,120,16,0.10), transparent 60%),
+    linear-gradient(180deg, #0E0B07 0%, #14100A 100%);
+  position: relative;
+}
+.live-rates-section::before,
+.live-rates-section::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,184,75,0.4), transparent);
+}
+.live-rates-section::before { top: 0; }
+.live-rates-section::after  { bottom: 0; }
+
+.live-rates-section .section-heading .label {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.live-rates-section .section-heading h2 { color: #F2E9D2 !important; }
+.live-rates-section .section-heading p  { color: #B8AC91 !important; }
+
+/* Rate cards — dark variants */
+.live-rates-section .rate-card-gold {
+  background:
+    radial-gradient(circle at 80% 0%, rgba(232,184,75,0.22), transparent 60%),
+    linear-gradient(135deg, #1A1610 0%, #2A2014 100%);
+  border: 1px solid rgba(232,184,75,0.40);
+  box-shadow:
+    0 14px 40px rgba(0,0,0,0.45),
+    0 0 0 1px rgba(232,184,75,0.08),
+    inset 0 1px 0 rgba(232,184,75,0.15);
+}
+.live-rates-section .rate-card-gold:hover {
+  box-shadow:
+    0 22px 56px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(232,184,75,0.20),
+    inset 0 1px 0 rgba(232,184,75,0.25);
+}
+.live-rates-section .rate-card-silver {
+  background:
+    radial-gradient(circle at 80% 0%, rgba(209,213,219,0.20), transparent 60%),
+    linear-gradient(135deg, #15161A 0%, #1F2226 100%);
+  border: 1px solid rgba(209,213,219,0.32);
+  box-shadow:
+    0 14px 40px rgba(0,0,0,0.45),
+    0 0 0 1px rgba(209,213,219,0.06),
+    inset 0 1px 0 rgba(209,213,219,0.10);
+}
+.live-rates-section .rate-card-silver:hover {
+  box-shadow:
+    0 22px 56px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(209,213,219,0.18),
+    inset 0 1px 0 rgba(209,213,219,0.18);
+}
+
+/* LIVE pulse pill on dark cards */
+.live-rates-section .rc-pulse {
+  background: rgba(26,22,16,0.85);
+  border-color: rgba(232,184,75,0.45);
+  color: #E8B84B;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.live-rates-section .rc-pulse.silver {
+  background: rgba(21,22,26,0.85);
+  border-color: rgba(209,213,219,0.40);
+  color: #D1D5DB;
+}
+
+/* Card icon tile on dark */
+.live-rates-section .rc-icon {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(232,184,75,0.30);
+}
+.live-rates-section .rate-card-silver .rc-icon {
+  border-color: rgba(209,213,219,0.30);
+}
+
+/* Card text on dark */
+.live-rates-section .rc-metal  { color: #F2E9D2; }
+.live-rates-section .rc-purity { color: #B8AC91; }
+
+/* Currency symbol + price unit */
+.live-rates-section .rate-card-gold .rc-currency   { color: #E8B84B; }
+.live-rates-section .rate-card-silver .rc-currency { color: #D1D5DB; }
+.live-rates-section .rc-unit                       { color: #B8AC91; }
+
+/* Brighter gold gradient on dark for the big number */
+.live-rates-section .rate-card-gold .rc-amount {
+  background: linear-gradient(135deg, #C9971C 0%, #F5DA7C 50%, #FFE9A8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.live-rates-section .rate-card-silver .rc-amount {
+  background: linear-gradient(135deg, #9CA3AF 0%, #D1D5DB 50%, #F3F4F6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Meta row (10g price + change) */
+.live-rates-section .rc-meta { color: #B8AC91; }
+.live-rates-section .rc-change.up {
+  background: rgba(22,163,74,0.18);
+  color: #4ADE80;
+  border-color: rgba(22,163,74,0.40);
+}
+.live-rates-section .rc-change.down {
+  background: rgba(220,38,38,0.18);
+  color: #F87171;
+  border-color: rgba(220,38,38,0.40);
+}
+
+/* Footer row borders + CTA */
+.live-rates-section .rate-card-gold .rc-footer   { border-top-color: rgba(232,184,75,0.22); }
+.live-rates-section .rate-card-silver .rc-footer { border-top-color: rgba(209,213,219,0.22); }
+.live-rates-section .rate-card-gold .rc-cta      { color: #F5DA7C; }
+.live-rates-section .rate-card-silver .rc-cta    { color: #D1D5DB; }
+
+/* ---------- Responsive tweaks for dark hero ---------- */
+@media (max-width: 768px) {
+  .hero .floating-card {
+    background: rgba(26,22,16,0.95);
+  }
 }

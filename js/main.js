@@ -124,13 +124,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- Gold price ticker simulation ---------- */
-  const prices = {
+  /* ---------- Gold price ticker simulation ----------
+     Exposed on window so js/rates-api.js can seed real
+     values fetched from IBJA. */
+  window.prices = window.prices || {
     '24K Gold': { price: 9245, change: +0.42 },
     '22K Gold': { price: 8475, change: +0.38 },
     '18K Gold': { price: 6934, change: +0.31 },
-    'Silver': { price: 107, change: -0.15 },
+    'Silver':   { price: 107,  change: -0.15 },
   };
+  const prices = window.prices;
 
   function updateTicker() {
     document.querySelectorAll('.ticker-item').forEach(item => {
