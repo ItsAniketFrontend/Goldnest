@@ -188,27 +188,71 @@ strong, b { font-weight: 700; }
   justify-content: center;
 }
 
-/* The coin itself — crisp, no soft drop-shadows */
+/* GoldNest app phone — pure SVG, perfect transparency, no media file */
 .coin-img {
   position: relative;
   width: 320px;
   height: 320px;
   max-width: 100%;
   z-index: 4;
-  animation: coin-bob 3.5s ease-in-out infinite;
   pointer-events: none;
-  /* keep the GIF sharp at any DPI */
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  /* video element fits — WebM has native VP9 alpha, no blend-mode hacks needed */
-  object-fit: contain;
   background: transparent;
   border: 0;
   outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 22px 38px rgba(0,0,0,0.5)) drop-shadow(0 0 22px rgba(232,184,75,0.18));
+  animation: phone-float 5s ease-in-out infinite;
 }
-@keyframes coin-bob {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-12px); }
+.coin-img svg {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+}
+
+@keyframes phone-float {
+  0%, 100% { transform: perspective(1100px) translateY(0)     rotateY(-4deg) rotateX(2deg); }
+  50%      { transform: perspective(1100px) translateY(-10px) rotateY( 4deg) rotateX(-2deg); }
+}
+
+/* Decorative gold coin — right-middle of the hero stage, clear of all other elements */
+.coin-stage .hero-coin {
+  position: absolute;
+  right: 6px;
+  top: 56%;           /* below Vault card (top: 5%), above price tag (bottom: 10px) */
+  transform: translateY(-50%);
+  width: 145px;
+  height: 145px;
+  z-index: 6;         /* above phone, below floating cards (z-index: 7) */
+  pointer-events: none;
+  filter: drop-shadow(0 14px 26px rgba(180,140,20,0.55)) drop-shadow(0 0 22px rgba(232,184,75,0.45));
+  animation: hero-coin-float 5s ease-in-out infinite;
+}
+.coin-stage .hero-coin svg {
+  width: 100%;
+  height: 100%;
+  animation: hero-coin-spin 14s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+/* Z-axis spin — "GOLDNEST" text swirls around the coin slowly */
+@keyframes hero-coin-spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+/* Subtle independent bob on the wrapper, layered over the spin.
+   Keyframe values include translateY(-50%) so the vertical centering is preserved. */
+@keyframes hero-coin-float {
+  0%, 100% { transform: translateY(-50%)              rotate(-4deg); }
+  50%      { transform: translateY(calc(-50% - 8px))  rotate(4deg);  }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .coin-img,
+  .coin-stage .hero-coin,
+  .coin-stage .hero-coin svg { animation: none; }
 }
 
 /* Soft radial gold glow behind the coin — subtle, not blurry */
@@ -385,13 +429,14 @@ strong, b { font-weight: 700; }
   border-radius: 50px;
 }
 
-/* Floating cards on opposite quadrants — no overlap with live pill or price tag */
+/* Two floating cards on opposite quadrants — no overlap with live pill or price tag */
 .floating-card { z-index: 7 !important; }
 .coin-stage .floating-card.fc1 {
   top: 5% !important;          /* upper-right, sits beside (not under) the LIVE pill */
   right: -8px !important;
   bottom: auto !important;
   left: auto !important;
+  animation-delay: 0s !important;
 }
 .coin-stage .floating-card.fc2 {
   top: 48% !important;         /* MID-left, comfortably above the bottom price tag */
@@ -399,6 +444,7 @@ strong, b { font-weight: 700; }
   transform: translateY(-50%);
   bottom: auto !important;
   right: auto !important;
+  animation-delay: 1.5s !important;
 }
 
 /* Stronger glow pulse on the hero halo backdrop */
@@ -1094,17 +1140,22 @@ h1, h2, h3, h4, h5, h6 {
   .coin-stage .orb-center .price-tag .price-value { font-size: 1.4rem !important; }
   .coin-stage .orb-center .price-tag .price-label { font-size: 0.55rem !important; }
   .coin-stage .orb-center .price-tag .price-change { font-size: 0.68rem !important; padding: 4px 9px; }
-  /* Tighter card sizing on mobile and clear quadrants */
-  .coin-stage .floating-card.fc1 {
-    top: 12% !important;          /* below the LIVE pill */
-    right: -4px !important;
+  /* Floating cards hidden on mobile — phone is the focus */
+  .coin-stage .floating-card { display: none !important; }
+  /* Decorative coin stays on mobile, but moves to a small corner badge slot */
+  .coin-stage .hero-coin {
+    top: 14px !important;
+    right: 8px !important;
     left: auto !important;
+    bottom: auto !important;
+    width: 72px !important;
+    height: 72px !important;
+    transform: none !important;
+    animation: hero-coin-float-mobile 5s ease-in-out infinite !important;
   }
-  .coin-stage .floating-card.fc2 {
-    top: 50% !important;
-    left: -4px !important;
-    right: auto !important;
-    transform: translateY(-50%);
+  @keyframes hero-coin-float-mobile {
+    0%, 100% { transform: translateY(0)    rotate(-4deg); }
+    50%      { transform: translateY(-4px) rotate(4deg);  }
   }
   .floating-card { padding: 7px 10px !important; max-width: 130px !important; gap: 7px !important; }
   .floating-card .fc-icon { font-size: 1rem !important; width: 26px !important; height: 26px !important; border-radius: 7px !important; }
@@ -1117,18 +1168,6 @@ h1, h2, h3, h4, h5, h6 {
   .gold-orb:not(.has-video) { width: 220px !important; height: 220px !important; }
   .coin-stage { width: 280px !important; height: 280px !important; }
   .coin-img   { width: 210px !important; height: 210px !important; }
-  .coin-stage .floating-card.fc1 {
-    top: 11% !important;
-    right: 0 !important;
-    left: auto !important;
-  }
-  .coin-stage .floating-card.fc2 {
-    top: 52% !important;
-    left: 0 !important;
-    right: auto !important;
-    transform: translateY(-50%);
-  }
-  .floating-card { max-width: 118px !important; }
 }
 
 /* ============================================================

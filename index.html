@@ -150,15 +150,96 @@
             <span class="spark s5">✦</span>
             <span class="spark s6">✦</span>
           </div>
-          <video class="coin-img" autoplay loop muted playsinline preload="auto" aria-hidden="true">
-            <source src="images/ecfe6b8778a84982920645235d25b295.webm" type="video/webm" />
-            <source src="images/coin%20video%20.mp4" type="video/mp4" />
-          </video>
+          <div class="coin-img coin-phone" role="img" aria-label="GoldNest mobile app">
+            <svg viewBox="0 0 200 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient id="phoneBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%"   stop-color="#2A2014"/>
+                  <stop offset="50%"  stop-color="#1A1610"/>
+                  <stop offset="100%" stop-color="#0E0B07"/>
+                </linearGradient>
+                <linearGradient id="phoneRim" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%"   stop-color="#FFE9A0"/>
+                  <stop offset="50%"  stop-color="#C9971C"/>
+                  <stop offset="100%" stop-color="#6F4E07"/>
+                </linearGradient>
+                <linearGradient id="phoneScreen" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%"   stop-color="#1F1A12"/>
+                  <stop offset="50%"  stop-color="#2A2014"/>
+                  <stop offset="100%" stop-color="#1A1610"/>
+                </linearGradient>
+                <linearGradient id="buyBtn" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%"   stop-color="#FFE9A0"/>
+                  <stop offset="50%"  stop-color="#E8B84B"/>
+                  <stop offset="100%" stop-color="#C9971C"/>
+                </linearGradient>
+                <radialGradient id="logoGrad" cx="40%" cy="35%" r="65%">
+                  <stop offset="0%"   stop-color="#FFF6C2"/>
+                  <stop offset="60%"  stop-color="#E8B84B"/>
+                  <stop offset="100%" stop-color="#8A6408"/>
+                </radialGradient>
+              </defs>
+
+              <!-- Phone body with gold rim -->
+              <rect x="3" y="3" width="194" height="374" rx="32" ry="32" fill="url(#phoneBody)" stroke="url(#phoneRim)" stroke-width="2.5"/>
+              <!-- Screen -->
+              <rect x="11" y="11" width="178" height="358" rx="26" ry="26" fill="url(#phoneScreen)"/>
+              <!-- Notch -->
+              <rect x="80" y="14" width="40" height="8" rx="4" fill="#0A0805"/>
+
+              <!-- Status bar -->
+              <text x="22" y="36" fill="#B8AC91" font-family="sans-serif" font-size="9" font-weight="700">9:41</text>
+              <g transform="translate(160 32)" fill="#B8AC91">
+                <rect x="0" y="-5" width="3" height="5" rx="0.5"/>
+                <rect x="5" y="-6" width="3" height="6" rx="0.5"/>
+                <rect x="10" y="-7" width="3" height="7" rx="0.5"/>
+                <rect x="16" y="-3" width="10" height="5" rx="1" fill="none" stroke="#B8AC91" stroke-width="0.8"/>
+                <rect x="17" y="-2" width="7" height="3" rx="0.4"/>
+              </g>
+
+              <!-- Logo circle -->
+              <circle cx="100" cy="70" r="22" fill="url(#logoGrad)" stroke="#5C4006" stroke-width="1.2"/>
+              <text x="100" y="80" text-anchor="middle" fill="#5C4006" font-family="'Cormorant Garamond', serif" font-size="28" font-weight="700">G</text>
+
+              <!-- Brand wordmark -->
+              <text x="100" y="115" text-anchor="middle" fill="#FFE9A0" font-family="Marcellus, serif" font-size="13" font-weight="700" letter-spacing="3">GOLDNEST</text>
+              <text x="100" y="130" text-anchor="middle" fill="#B8AC91" font-family="sans-serif" font-size="7" font-weight="600" letter-spacing="2.5">24K · 999 FINE GOLD</text>
+
+              <!-- Divider -->
+              <line x1="35" y1="145" x2="165" y2="145" stroke="rgba(232,184,75,0.20)" stroke-width="0.6"/>
+
+              <!-- Live price section -->
+              <text x="100" y="165" text-anchor="middle" fill="#B8AC91" font-family="sans-serif" font-size="7" font-weight="600" letter-spacing="2">LIVE · PER GRAM</text>
+              <text x="100" y="208" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="38" font-weight="800">
+                <tspan fill="#E8B84B">₹</tspan><tspan fill="#FFE9A0" id="phoneLivePrice">16,135</tspan>
+              </text>
+
+              <!-- Change pill -->
+              <rect x="65" y="223" width="70" height="20" rx="10" fill="rgba(74,222,128,0.14)" stroke="rgba(74,222,128,0.45)" stroke-width="0.8"/>
+              <text x="100" y="237" text-anchor="middle" fill="#4ADE80" font-family="sans-serif" font-size="9" font-weight="700">▲ +0.42%</text>
+
+              <!-- Mini sparkline chart -->
+              <polyline points="22,275 42,268 62,278 82,260 102,253 122,238 142,242 162,228 178,232"
+                        fill="none" stroke="#E8B84B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="22,275 42,268 62,278 82,260 102,253 122,238 142,242 162,228 178,232 178,288 22,288"
+                        fill="rgba(232,184,75,0.10)" stroke="none"/>
+
+              <!-- BUY button -->
+              <rect x="22" y="305" width="156" height="42" rx="21" fill="url(#buyBtn)"/>
+              <text x="100" y="331" text-anchor="middle" fill="#3D2A04" font-family="sans-serif" font-size="13" font-weight="800" letter-spacing="3">BUY GOLD</text>
+
+              <!-- Footer hint -->
+              <text x="100" y="362" text-anchor="middle" fill="#8C7E63" font-family="sans-serif" font-size="7" font-weight="600" letter-spacing="1.5">START FROM ONLY ₹100</text>
+
+              <!-- Subtle screen shine -->
+              <ellipse cx="60" cy="40" rx="50" ry="22" fill="rgba(255,255,255,0.05)" transform="rotate(-18 60 40)"/>
+            </svg>
+          </div>
           <div class="live-pill"><span class="live-dot"></span>LIVE · 24K GOLD</div>
           <div class="orb-center">
             <div class="price-tag">
               <div class="price-label">Today's Rate / gram</div>
-              <div class="price-value">₹9,245</div>
+              <div class="price-value">₹<span id="heroLivePrice">16,135</span></div>
               <div class="price-change">▲ 0.42%</div>
             </div>
           </div>
@@ -175,6 +256,39 @@
               <div class="fc-val">Real-Time Price</div>
               <div class="fc-sub">Live Market Rates</div>
             </div>
+          </div>
+
+          <!-- Decorative gold coin — sits bottom-left, slowly rotates -->
+          <div class="hero-coin" aria-hidden="true">
+            <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="hcFace" cx="42%" cy="34%" r="70%">
+                  <stop offset="0%"   stop-color="#FFF6C2"/>
+                  <stop offset="30%"  stop-color="#FFE9A0"/>
+                  <stop offset="65%"  stop-color="#E8B84B"/>
+                  <stop offset="100%" stop-color="#8A6408"/>
+                </radialGradient>
+                <linearGradient id="hcRim" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%"   stop-color="#FFE9A0"/>
+                  <stop offset="50%"  stop-color="#C9971C"/>
+                  <stop offset="100%" stop-color="#6F4E07"/>
+                </linearGradient>
+                <path id="hcTopArc" d="M 30 122 A 90 90 0 0 1 210 122" fill="none"/>
+                <path id="hcBtmArc" d="M 38 124 A 82 82 0 0 0 202 124" fill="none"/>
+              </defs>
+              <circle cx="120" cy="120" r="116" fill="url(#hcRim)"/>
+              <circle cx="120" cy="120" r="110" fill="none" stroke="#6F4E07" stroke-width="6" stroke-dasharray="2 4"/>
+              <circle cx="120" cy="120" r="100" fill="url(#hcFace)"/>
+              <circle cx="120" cy="120" r="94"  fill="none" stroke="rgba(110,78,7,0.45)" stroke-width="1"/>
+              <text fill="#5C4006" font-family="Marcellus, 'Cormorant Garamond', serif" font-size="20" font-weight="700" letter-spacing="6">
+                <textPath href="#hcTopArc" startOffset="50%" text-anchor="middle">GOLDNEST</textPath>
+              </text>
+              <text x="120" y="142" text-anchor="middle" fill="#5C4006" font-family="'Cormorant Garamond', serif" font-size="92" font-weight="700">G</text>
+              <text fill="#5C4006" font-family="Marcellus, serif" font-size="13" font-weight="600" letter-spacing="4">
+                <textPath href="#hcBtmArc" startOffset="50%" text-anchor="middle">999 · 24K · FINE GOLD</textPath>
+              </text>
+              <ellipse cx="84" cy="66" rx="38" ry="18" fill="rgba(255,255,255,0.32)" transform="rotate(-22 84 66)"/>
+            </svg>
           </div>
         </div>
       </div>

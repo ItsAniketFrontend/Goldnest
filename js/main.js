@@ -175,6 +175,13 @@ document.addEventListener('DOMContentLoaded', () => {
       gChange.textContent = (up ? '▲ +' : '▼ ') + Math.abs(gold.change).toFixed(2) + '% today';
     }
 
+    // Hero price tag + SVG phone-mockup price — also reflect live gold
+    const heroPrice  = document.getElementById('heroLivePrice');
+    const phonePrice = document.getElementById('phoneLivePrice');
+    const goldFmt    = Math.round(gold.price).toLocaleString('en-IN');
+    if (heroPrice)  heroPrice.textContent  = goldFmt;
+    if (phonePrice) phonePrice.textContent = goldFmt;
+
     // Silver card — kg = price * 1000
     const sPrice  = document.getElementById('homeSilverPrice');
     const sKg     = document.getElementById('homeSilver10g');
