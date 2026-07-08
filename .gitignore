@@ -1,0 +1,18 @@
+# Editor / IDE
+.vscode/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Node (Lambda deps for aws/)
+node_modules/
+
+# Secrets — never commit API tokens
+.env
+.env.*
+*.token
+
+# Large unused media (kept locally, not in repo)
+images/gold nest loop video (1).gif
+images/hf_20260514_123510_682b0a49-426c-47c3-b201-44dd6c4c37fc.mp4

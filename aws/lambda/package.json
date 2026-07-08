@@ -1,0 +1,12 @@
+{
+  "name": "goldnest-update-rates-lambda",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "GoldNest IBJA rate scraper — AWS Lambda handler",
+  "main": "update-rates-lambda.mjs",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/client-cloudfront": "^3.600.0"
+  }
+}

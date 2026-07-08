@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  GoldNest — AWS-native IBJA rate refresher. A Node 20 Lambda scrapes the
+  official IBJA rate 3x daily on an EventBridge schedule and writes
+  rates.json into the S3 bucket that serves the static site, then
+  invalidates CloudFront so visitors see the fresh rate immediately.
+
+Parameters:
+  SiteBucketName:
+    Type: String
+    Description: Name of the existing S3 bucket that serves the GoldNest static site.
+  RatesKey:
+    Type: String
+    Default: rates.json
+    Description: Object key for the rates JSON within the bucket.
+  CloudFrontDistributionId:
+    Type: String
+    Default: ''
+    Description: >
+      (Optional) CloudFront distribution id fronting the bucket. If set, the
+      Lambda invalidates /rates.json after each write. Leave blank for
+      S3-only hosting.
+
+Conditions:
+  HasCloudFront: !Not [!Equals [!Ref CloudFrontDistributionId, '']]
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: nodejs20.x
+
+Resources:
+  UpdateRatesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: goldnest-update-rates
+      Description: Scrape IBJA and write rates.json to the site bucket.
+      Handler: update-rates-lambda.handler
+      CodeUri: lambda/
+      Architectures: [arm64]
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref SiteBucketName
+          RATES_KEY: !Ref RatesKey
+          CLOUDFRONT_DISTRIBUTION: !Ref CloudFrontDistributionId
+      Policies:
+        - Statement:
+            - Sid: WriteRatesObject
+              Effect: Allow
+              Action:
+                - s3:PutObject
+              Resource: !Sub 'arn:aws:s3:::${SiteBucketName}/${RatesKey}'
+        - !If
+          - HasCloudFront
+          - Statement:
+              - Sid: InvalidateCloudFront
+                Effect: Allow
+                Action:
+                  - cloudfront:CreateInvalidation
+                Resource: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId}'
+          - !Ref 'AWS::NoValue'
+      Events:
+        # Times are UTC. IBJA publishes AM ~12:00 IST and PM ~17:00 IST.
+        MorningSafetyNet:
+          Type: Schedule
+          Properties:
+            # 03:30 UTC = 09:00 IST — daily safety net (incl. weekends)
+            Schedule: cron(30 3 * * ? *)
+            Name: goldnest-rates-0900-ist
+            Description: Daily 09:00 IST safety-net refresh.
+        AfterAmRate:
+          Type: Schedule
+          Properties:
+            # 07:00 UTC = 12:30 IST — after IBJA AM publish, weekdays
+            Schedule: cron(0 7 ? * MON-FRI *)
+            Name: goldnest-rates-1230-ist
+            Description: Refresh after IBJA AM rate.
+        AfterPmRate:
+          Type: Schedule
+          Properties:
+            # 12:00 UTC = 17:30 IST — after IBJA PM publish, weekdays
+            Schedule: cron(0 12 ? * MON-FRI *)
+            Name: goldnest-rates-1730-ist
+            Description: Refresh after IBJA PM rate.
+
+  # Alarm if the function errors (e.g. IBJA markup changed / all sources down).
+  UpdateRatesErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: goldnest-update-rates-errors
+      AlarmDescription: >
+        Fires when the IBJA rate refresher errors. Likely IBJA HTML changed or
+        both sources are unreachable. rates.json keeps its last good value.
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref UpdateRatesFunction
+      Statistic: Sum
+      Period: 3600
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+
+Outputs:
+  FunctionName:
+    Description: Lambda function name (invoke manually to force a refresh).
+    Value: !Ref UpdateRatesFunction
+  InvokeCommand:
+    Description: Force an immediate refresh from the CLI.
+    Value: !Sub 'aws lambda invoke --function-name ${UpdateRatesFunction} /dev/stdout'
