@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CT3PP0CWL5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-CT3PP0CWL5');
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Live Gold Rates Today | 10-Year Gold Price Chart India | GoldNest</title>
@@ -327,29 +336,29 @@
     <div class="live-grid">
       <div class="live-card primary">
         <div class="lc-metal">24K Gold (99.9%)</div>
-        <div class="lc-price" id="p24">₹9,245</div>
-        <div class="lc-per10" id="p24-10g">per gram &nbsp;|&nbsp; ₹92,450 / 10g</div>
+        <div class="lc-price" id="p24">₹14,551</div>
+        <div class="lc-per10" id="p24-10g">per gram &nbsp;|&nbsp; ₹1,45,510 / 10g</div>
         <div class="lc-change up" id="c24">▲ ₹38 &nbsp; +0.42%</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
       <div class="live-card">
         <div class="lc-metal">22K Gold (91.6%)</div>
-        <div class="lc-price" id="p22">₹8,475</div>
-        <div class="lc-per10" id="p22-10g">per gram &nbsp;|&nbsp; ₹84,750 / 10g</div>
+        <div class="lc-price" id="p22">₹13,329</div>
+        <div class="lc-per10" id="p22-10g">per gram &nbsp;|&nbsp; ₹1,33,290 / 10g</div>
         <div class="lc-change up" id="c22">▲ ₹32 &nbsp; +0.38%</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
       <div class="live-card">
         <div class="lc-metal">18K Gold (75.0%)</div>
-        <div class="lc-price" id="p18">₹6,934</div>
-        <div class="lc-per10" id="p18-10g">per gram &nbsp;|&nbsp; ₹69,340 / 10g</div>
+        <div class="lc-price" id="p18">₹10,913</div>
+        <div class="lc-per10" id="p18-10g">per gram &nbsp;|&nbsp; ₹1,09,130 / 10g</div>
         <div class="lc-change up" id="c18">▲ ₹22 &nbsp; +0.31%</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
       <div class="live-card">
         <div class="lc-metal">Silver (99.9%)</div>
-        <div class="lc-price" id="pSilver">₹107</div>
-        <div class="lc-per10" id="pSilver-10g">per gram &nbsp;|&nbsp; ₹1,070 / 10g</div>
+        <div class="lc-price" id="pSilver">₹231.81</div>
+        <div class="lc-per10" id="pSilver-10g">per gram &nbsp;|&nbsp; ₹2,318 / 10g</div>
         <div class="lc-change down" id="cSilver">▼ ₹0.16 &nbsp; -0.15%</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
@@ -361,91 +370,18 @@
       <!-- MAIN COLUMN -->
       <div>
 
-        <!-- LIVE CHART -->
+        <!-- 1-YEAR GOLD CHART -->
         <div class="chart-panel fade-up">
           <div class="chart-header">
             <div>
-              <div class="chart-title">24K Gold – Live Price Movement</div>
-              <div class="chart-subtitle">Intraday price in ₹ per gram</div>
+              <div class="chart-title">24K Gold – 1 Year Price History</div>
+              <div class="chart-subtitle">Daily 24K gold close in ₹ per gram · last 12 months</div>
             </div>
-            <div class="chart-tabs">
-              <button class="chart-tab active" data-range="1D">1D</button>
-              <button class="chart-tab" data-range="1W">1W</button>
-              <button class="chart-tab" data-range="1M">1M</button>
-              <button class="chart-tab" data-range="3M">3M</button>
-              <button class="chart-tab" data-range="6M">6M</button>
-              <button class="chart-tab" data-range="1Y">1Y</button>
-            </div>
+            <span class="decade-badge">1 Year View</span>
           </div>
           <div class="chart-body">
-            <div class="metal-tabs">
-              <button class="metal-tab active" data-metal="24K">24K Gold</button>
-              <button class="metal-tab" data-metal="22K">22K Gold</button>
-              <button class="metal-tab" data-metal="18K">18K Gold</button>
-              <button class="metal-tab" data-metal="Silver">Silver</button>
-            </div>
             <div class="chart-canvas-wrap">
               <canvas id="liveChart"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <!-- 10-YEAR CHART -->
-        <div class="decade-panel fade-up" data-delay="1">
-          <div class="decade-header">
-            <div>
-              <div class="chart-title">10-Year Gold Price History in India</div>
-              <div class="chart-subtitle">Annual average 24K gold price (₹ per gram) · 2015 – 2025</div>
-            </div>
-            <span class="decade-badge">10 Year View</span>
-          </div>
-          <div class="decade-body">
-            <div class="decade-canvas-wrap">
-              <canvas id="decadeChart"></canvas>
-            </div>
-
-            <!-- Year milestone cards -->
-            <div class="milestones">
-              <div class="milestone-card">
-                <div class="ms-year">2015</div>
-                <div class="ms-price">₹2,524/g</div>
-                <div class="ms-change pos">Base Year</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2017</div>
-                <div class="ms-price">₹2,900/g</div>
-                <div class="ms-change pos">+14.9% vs 2015</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2020</div>
-                <div class="ms-price">₹4,840/g</div>
-                <div class="ms-change pos">+66.8% (COVID)</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2022</div>
-                <div class="ms-price">₹5,220/g</div>
-                <div class="ms-change pos">+7.9% vs 2021</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2023</div>
-                <div class="ms-price">₹6,180/g</div>
-                <div class="ms-change pos">+18.4% vs 2022</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2024</div>
-                <div class="ms-price">₹7,490/g</div>
-                <div class="ms-change pos">+21.2% vs 2023</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2025</div>
-                <div class="ms-price">₹9,245/g</div>
-                <div class="ms-change pos">+23.4% YTD</div>
-              </div>
-              <div class="milestone-card" style="border-color:var(--gold);background:rgba(212,175,55,0.05);">
-                <div class="ms-year" style="color:var(--gold-dark);">10Y Return</div>
-                <div class="ms-price" style="color:var(--gold-dark);">+266%</div>
-                <div class="ms-change pos">₹2,524 → ₹9,245</div>
-              </div>
             </div>
           </div>
         </div>
@@ -473,27 +409,27 @@
               <tr>
                 <td class="td-metal">Gold 24K</td>
                 <td class="td-purity">99.9%</td>
-                <td class="td-price" id="t24g">₹9,245</td>
-                <td id="t24-8g">₹73,960</td>
-                <td id="t24-10g">₹92,450</td>
-                <td id="t24-100g">₹9,24,500</td>
+                <td class="td-price" id="t24g">₹14,551</td>
+                <td id="t24-8g">₹1,16,408</td>
+                <td id="t24-10g">₹1,45,510</td>
+                <td id="t24-100g">₹14,55,100</td>
                 <td class="td-up" id="t24-ch">▲ +0.42%</td>
               </tr>
               <tr>
                 <td class="td-metal">Gold 22K</td>
                 <td class="td-purity">91.6%</td>
-                <td class="td-price" id="t22g">₹8,475</td>
-                <td id="t22-8g">₹67,800</td>
-                <td id="t22-10g">₹84,750</td>
+                <td class="td-price" id="t22g">₹13,329</td>
+                <td id="t22-8g">₹1,06,632</td>
+                <td id="t22-10g">₹1,33,290</td>
                 <td id="t22-100g">₹8,47,500</td>
                 <td class="td-up" id="t22-ch">▲ +0.38%</td>
               </tr>
               <tr>
                 <td class="td-metal">Gold 18K</td>
                 <td class="td-purity">75.0%</td>
-                <td class="td-price" id="t18g">₹6,934</td>
-                <td id="t18-8g">₹55,472</td>
-                <td id="t18-10g">₹69,340</td>
+                <td class="td-price" id="t18g">₹10,913</td>
+                <td id="t18-8g">₹87,304</td>
+                <td id="t18-10g">₹1,09,130</td>
                 <td id="t18-100g">₹6,93,400</td>
                 <td class="td-up" id="t18-ch">▲ +0.31%</td>
               </tr>
@@ -509,9 +445,9 @@
               <tr>
                 <td class="td-metal">Silver</td>
                 <td class="td-purity">99.9%</td>
-                <td class="td-price" id="tSig">₹107</td>
+                <td class="td-price" id="tSig">₹231.81</td>
                 <td id="tSi-8g">₹856</td>
-                <td id="tSi-10g">₹1,070</td>
+                <td id="tSi-10g">₹2,318</td>
                 <td id="tSi-100g">₹10,700</td>
                 <td class="td-down" id="tSi-ch">▼ -0.15%</td>
               </tr>
@@ -573,7 +509,7 @@
             <div style="margin-top:16px;">
               <div class="range-label"><span>52W Low: ₹6,850</span><span>52W High: ₹9,480</span></div>
               <div class="range-bar"><div class="range-fill" style="width:72%;" id="rangeBar"></div></div>
-              <div style="font-size:.7rem;color:var(--text-muted);margin-top:4px;text-align:center;">Current: ₹9,245 (72% of 52W range)</div>
+              <div style="font-size:.7rem;color:var(--text-muted);margin-top:4px;text-align:center;">Current: ₹14,551 (72% of 52W range)</div>
             </div>
           </div>
         </div>
@@ -594,15 +530,15 @@
             </div>
             <div class="converter-row">
               <select id="convMetal" onchange="convertGold()" style="width:100%;">
-                <option value="9245">24K Gold (99.9%)</option>
-                <option value="8475">22K Gold (91.6%)</option>
-                <option value="6934">18K Gold (75.0%)</option>
-                <option value="107">Silver (99.9%)</option>
+                <option value="14551">24K Gold (99.9%)</option>
+                <option value="13329">22K Gold (91.6%)</option>
+                <option value="10913">18K Gold (75.0%)</option>
+                <option value="231.81">Silver (99.9%)</option>
               </select>
             </div>
             <div class="converter-result">
               <div class="cr-label">Estimated Value</div>
-              <div class="cr-val" id="convResult">₹9,245</div>
+              <div class="cr-val" id="convResult">₹14,551</div>
             </div>
             <p style="font-size:.68rem;color:var(--text-muted);margin-top:10px;margin-bottom:0;">Based on indicative spot price. Actual transaction price may vary slightly.</p>
           </div>
@@ -616,7 +552,7 @@
               <tbody>
                 <tr style="border-bottom:1px solid var(--border-light);">
                   <td style="padding:11px 20px;font-weight:600;color:var(--text);">Vadodara</td>
-                  <td style="padding:11px 20px;text-align:right;font-weight:700;color:var(--gold-dark);">₹9,245</td>
+                  <td style="padding:11px 20px;text-align:right;font-weight:700;color:var(--gold-dark);">₹14,551</td>
                 </tr>
                 <tr style="border-bottom:1px solid var(--border-light);">
                   <td style="padding:11px 20px;font-weight:600;color:var(--text);">Ahmedabad</td>
@@ -740,10 +676,10 @@
    ================================================================ */
 
 /* ---- Base Prices (overridden by IBJA fetch when available) ---- */
-const BASE = { '24K': 9245, '22K': 8475, '18K': 6934, 'Silver': 107 };
+const BASE = { '24K': 14551, '22K': 13329, '18K': 10913, 'Silver': 231.81 };
 let current = { ...BASE };
-let dayHigh  = { '24K': 9258, '22K': 8486, '18K': 6942, 'Silver': 108 };
-let dayLow   = { '24K': 9196, '22K': 8432, '18K': 6905, 'Silver': 106.5 };
+let dayHigh  = { '24K': 14580, '22K': 13360, '18K': 10940, 'Silver': 232.5 };
+let dayLow   = { '24K': 14510, '22K': 13290, '18K': 10880, 'Silver': 231.0 };
 
 /* ---- Live timestamp ---- */
 function updateTime() {
@@ -780,10 +716,10 @@ function updatePrices() {
   document.getElementById('pSilver-10g').textContent = `per gram | ${fmt(pSi * 10)} / 10g`;
 
   // Changes vs open
-  const chg24 = p24 - 9207, pct24 = (chg24 / 9207 * 100);
-  const chg22 = p22 - 8443, pct22 = (chg22 / 8443 * 100);
-  const chg18 = p18 - 6912, pct18 = (chg18 / 6912 * 100);
-  const chgSi = pSi - 107.16, pctSi = (chgSi / 107.16 * 100);
+  const chg24 = p24 - 14500, pct24 = (chg24 / 14500 * 100);
+  const chg22 = p22 - 13284, pct22 = (chg22 / 13284 * 100);
+  const chg18 = p18 - 10876, pct18 = (chg18 / 10876 * 100);
+  const chgSi = pSi - 231.0, pctSi = (chgSi / 231.0 * 100);
 
   function setChange(id, change, pct) {
     const el = document.getElementById(id);
@@ -814,20 +750,6 @@ function updatePrices() {
 
   // Converter update
   convertGold();
-
-  // Push to live chart
-  const now = new Date();
-  if (liveChart && liveChart.data.datasets.length) {
-    const ds = liveChart.data.datasets[0];
-    const metal = activeMetal;
-    const price = metal === '24K' ? p24 : metal === '22K' ? p22 : metal === '18K' ? p18 : pSi;
-    if (activeRange === '1D') {
-      ds.data.push(Math.round(price * 100) / 100);
-      liveChart.data.labels.push(now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }));
-      if (ds.data.length > 60) { ds.data.shift(); liveChart.data.labels.shift(); }
-      liveChart.update('none');
-    }
-  }
 }
 
 setInterval(updatePrices, 3000);
@@ -861,7 +783,7 @@ if (window.GoldNestRates) {
 function convertGold() {
   const amt   = parseFloat(document.getElementById('convAmount')?.value) || 1;
   const unit  = document.getElementById('convUnit')?.value;
-  const price = parseFloat(document.getElementById('convMetal')?.value) || 9245;
+  const price = parseFloat(document.getElementById('convMetal')?.value) || 14551;
   const grams = unit === 'gram' ? amt : unit === 'tola' ? amt * 8 : unit === '10g' ? amt * 10 : unit === '100g' ? amt * 100 : amt * 1000;
   const val   = grams * price;
   const el = document.getElementById('convResult');
@@ -876,42 +798,20 @@ convertGold();
 Chart.defaults.font.family = "'Inter', sans-serif";
 Chart.defaults.color = '#6B6255';
 
-/* ---- Generate time-series data for live chart ---- */
-let activeMetal = '24K';
-let activeRange = '1D';
-
-function generateLiveData(metal, range) {
-  const bases = { '24K': 9207, '22K': 8443, '18K': 6912, 'Silver': 107.16 };
-  const base = bases[metal];
-  const configs = {
-    '1D': { pts: 48, step: 30, vol: 0.003 },
-    '1W': { pts: 42, step: 1440 * 0.167, vol: 0.008 },
-    '1M': { pts: 30, step: 1440, vol: 0.015 },
-    '3M': { pts: 90, step: 1440, vol: 0.018 },
-    '6M': { pts: 180, step: 1440, vol: 0.02 },
-    '1Y': { pts: 52, step: 10080, vol: 0.025 },
-  };
-  const { pts, vol } = configs[range];
-  const prices = [], labels = [];
-  let p = base * (0.94 + Math.random() * 0.02);
-  const now = new Date();
-
-  for (let i = pts; i >= 0; i--) {
-    const d = new Date(now - i * configs[range].step * 60000);
-    p = p * (1 + (Math.random() - 0.49) * vol);
-    prices.push(Math.round(p * 100) / 100);
-    if (range === '1D') labels.push(d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }));
-    else if (range === '1W') labels.push(d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' }));
-    else if (['1M', '3M', '6M'].includes(range)) labels.push(d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }));
-    else labels.push(d.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' }));
-  }
-  return { prices, labels };
-}
-
-/* ---- Live Chart ---- */
+/* ---- 1-Year Gold Chart (real data) ----
+   Reads same-origin /gold-history.json — a compact daily 24K gold
+   series (₹/gram) produced server-side from the GoldNest yearly-chart
+   API, so the API token is never exposed to the browser.
+   Shape: { series: [{ d: "YYYY-MM-DD", c: <close ₹/g> }, ... ] } */
 let liveChart;
-function buildLiveChart(metal, range) {
-  const { prices, labels } = generateLiveData(metal, range);
+
+function buildGoldYearChart(series) {
+  const labels = series.map(pt => {
+    const d = new Date(pt.d + 'T00:00:00');
+    return d.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' });
+  });
+  const prices = series.map(pt => pt.c);
+
   const isUp = prices[prices.length - 1] >= prices[0];
   const color = isUp ? '#16A34A' : '#DC2626';
   const bgColor = isUp ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.08)';
@@ -924,13 +824,13 @@ function buildLiveChart(metal, range) {
     data: {
       labels,
       datasets: [{
-        label: metal + ' Gold (₹/g)',
+        label: '24K Gold (₹/g)',
         data: prices,
         borderColor: color,
         borderWidth: 2,
         backgroundColor: bgColor,
         fill: true,
-        tension: 0.35,
+        tension: 0.3,
         pointRadius: 0,
         pointHoverRadius: 5,
         pointHoverBackgroundColor: color,
@@ -952,6 +852,11 @@ function buildLiveChart(metal, range) {
           bodyColor: '#6B6255',
           padding: 12,
           callbacks: {
+            title: items => {
+              const i = items[0].dataIndex;
+              const d = new Date(series[i].d + 'T00:00:00');
+              return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+            },
             label: ctx => '  ₹' + ctx.raw.toLocaleString('en-IN') + ' / gram'
           }
         }
@@ -959,139 +864,41 @@ function buildLiveChart(metal, range) {
       scales: {
         x: {
           grid: { color: 'rgba(234,217,138,0.2)' },
-          ticks: { maxTicksLimit: 6, font: { size: 10 }, maxRotation: 0 }
+          ticks: { maxTicksLimit: 8, font: { size: 10 }, maxRotation: 0, autoSkip: true }
         },
         y: {
           position: 'right',
           grid: { color: 'rgba(234,217,138,0.2)' },
           ticks: {
             font: { size: 10 },
-            callback: v => '₹' + (v >= 1000 ? Math.round(v/1000)+'K' : v)
+            callback: v => '₹' + (v >= 1000 ? Math.round(v / 1000) + 'K' : v)
           }
         }
       }
     }
   });
 }
-buildLiveChart('24K', '1D');
 
-/* ---- Chart tab handlers ---- */
-document.querySelectorAll('.chart-tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.chart-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeRange = btn.dataset.range;
-    buildLiveChart(activeMetal, activeRange);
-  });
-});
-
-document.querySelectorAll('.metal-tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.metal-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeMetal = btn.dataset.metal;
-    buildLiveChart(activeMetal, activeRange);
-  });
-});
-
-/* ---- 10-YEAR CHART ---- */
-(function buildDecadeChart() {
-  // Approximate annual average 24K gold price per gram in India (₹)
-  const years    = ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025*'];
-  const annual   = [2524,  2752,  2900,  3142,  3499,  4840,  4742,  5220,  6180,  7490,  9245];
-  const sipValue = [2524,  5454,  8422,  11709, 15357, 20443, 25355, 30851, 37346, 45250, 54960]; // ₹500/mo Gold SIP total value
-
-  const ctx = document.getElementById('decadeChart').getContext('2d');
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: years,
-      datasets: [
-        {
-          type: 'bar',
-          label: 'Gold Price (₹/gram)',
-          data: annual,
-          backgroundColor: years.map((_, i) => i === years.length - 1
-            ? 'rgba(212,175,55,0.90)'
-            : 'rgba(212,175,55,0.55)'),
-          borderColor: 'rgba(212,175,55,1)',
-          borderWidth: 1,
-          borderRadius: 6,
-          yAxisID: 'yPrice',
-          order: 2,
-        },
-        {
-          type: 'line',
-          label: 'SIP Value (₹500/mo)',
-          data: sipValue,
-          borderColor: '#16A34A',
-          backgroundColor: 'rgba(22,163,74,0.06)',
-          borderWidth: 2.5,
-          fill: false,
-          tension: 0.4,
-          pointRadius: 5,
-          pointBackgroundColor: '#16A34A',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          yAxisID: 'ySip',
-          order: 1,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-          labels: { font: { size: 11 }, padding: 12, usePointStyle: true, boxWidth: 10 }
-        },
-        tooltip: {
-          backgroundColor: '#fff',
-          borderColor: 'rgba(212,175,55,0.25)',
-          borderWidth: 1,
-          titleColor: '#1C1914',
-          bodyColor: '#6B6255',
-          padding: 14,
-          callbacks: {
-            label: ctx => {
-              if (ctx.datasetIndex === 0) return '  Gold Price: ₹' + ctx.raw.toLocaleString('en-IN') + '/g';
-              return '  SIP Value: ₹' + ctx.raw.toLocaleString('en-IN');
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: { color: 'rgba(234,217,138,0.25)' },
-          ticks: { font: { size: 10, weight: '600' }, maxRotation: 0, autoSkip: true, maxTicksLimit: 8 }
-        },
-        yPrice: {
-          type: 'linear',
-          position: 'left',
-          grid: { color: 'rgba(234,217,138,0.25)' },
-          ticks: {
-            font: { size: 10 },
-            callback: v => '₹' + Math.round(v / 1000) + 'K'
-          },
-          title: { display: false }
-        },
-        ySip: {
-          type: 'linear',
-          position: 'right',
-          grid: { display: false },
-          ticks: {
-            font: { size: 10 },
-            callback: v => '₹' + Math.round(v / 1000) + 'K'
-          },
-          title: { display: false }
-        }
+(function loadGoldHistory() {
+  const wrap = document.querySelector('.chart-panel .chart-subtitle');
+  fetch('gold-history.json?v=' + Math.floor(Date.now() / 3600000))
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(j => {
+      const series = (j && Array.isArray(j.series) ? j.series : [])
+        .filter(pt => pt && pt.d && Number.isFinite(pt.c));
+      if (!series.length) throw new Error('empty series');
+      buildGoldYearChart(series);
+      if (wrap && j.to) {
+        const to = new Date(j.to + 'T00:00:00');
+        wrap.textContent = 'Daily 24K gold close in ₹ per gram · ' +
+          series.length + ' days to ' +
+          to.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
       }
-    }
-  });
+    })
+    .catch(err => {
+      console.warn('[gold-history] failed:', err.message);
+      if (wrap) wrap.textContent = 'Gold price history is temporarily unavailable.';
+    });
 })();
 
 </script>
