@@ -353,90 +353,18 @@
       <!-- MAIN COLUMN -->
       <div>
 
-        <!-- LIVE CHART -->
+        <!-- 1-YEAR SILVER CHART -->
         <div class="chart-panel fade-up">
           <div class="chart-header">
             <div>
-              <div class="chart-title">Silver 999 – Live Price Movement</div>
-              <div class="chart-subtitle">Intraday price in ₹ per gram</div>
+              <div class="chart-title">Silver 999 – 1 Year Price History</div>
+              <div class="chart-subtitle">Daily 999 silver close in ₹ per gram · last 12 months</div>
             </div>
-            <div class="chart-tabs">
-              <button class="chart-tab active" data-range="1D">1D</button>
-              <button class="chart-tab" data-range="1W">1W</button>
-              <button class="chart-tab" data-range="1M">1M</button>
-              <button class="chart-tab" data-range="3M">3M</button>
-              <button class="chart-tab" data-range="6M">6M</button>
-              <button class="chart-tab" data-range="1Y">1Y</button>
-            </div>
+            <span class="decade-badge">1 Year View</span>
           </div>
           <div class="chart-body">
-            <div class="metal-tabs">
-              <button class="metal-tab active" data-metal="999">Silver 999</button>
-              <button class="metal-tab" data-metal="925">Silver 925 (Sterling)</button>
-              <button class="metal-tab" data-metal="900">Silver 900</button>
-            </div>
             <div class="chart-canvas-wrap">
               <canvas id="liveChart"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <!-- 10-YEAR CHART -->
-        <div class="decade-panel fade-up" data-delay="1">
-          <div class="decade-header">
-            <div>
-              <div class="chart-title">10-Year Silver Price History in India</div>
-              <div class="chart-subtitle">Annual average 999 silver price (₹ per gram) · 2015 – 2025</div>
-            </div>
-            <span class="decade-badge">10 Year View</span>
-          </div>
-          <div class="decade-body">
-            <div class="decade-canvas-wrap">
-              <canvas id="decadeChart"></canvas>
-            </div>
-
-            <!-- Year milestone cards -->
-            <div class="milestones">
-              <div class="milestone-card">
-                <div class="ms-year">2015</div>
-                <div class="ms-price">₹38/g</div>
-                <div class="ms-change pos">Base Year</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2017</div>
-                <div class="ms-price">₹40/g</div>
-                <div class="ms-change pos">+5.3% vs 2015</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2020</div>
-                <div class="ms-price">₹62/g</div>
-                <div class="ms-change pos">+63.2% (COVID)</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2022</div>
-                <div class="ms-price">₹65/g</div>
-                <div class="ms-change pos">+4.8% vs 2021</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2023</div>
-                <div class="ms-price">₹74/g</div>
-                <div class="ms-change pos">+13.8% vs 2022</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2024</div>
-                <div class="ms-price">₹86/g</div>
-                <div class="ms-change pos">+16.2% vs 2023</div>
-              </div>
-              <div class="milestone-card">
-                <div class="ms-year">2025</div>
-                <div class="ms-price">₹107/g</div>
-                <div class="ms-change pos">+24.4% YTD</div>
-              </div>
-              <div class="milestone-card" style="border-color:var(--silver-dark);background:rgba(156,163,175,0.06);">
-                <div class="ms-year" style="color:var(--silver-dark);">10Y Return</div>
-                <div class="ms-price" style="color:var(--silver-dark);">+182%</div>
-                <div class="ms-change pos">₹38 → ₹107</div>
-              </div>
             </div>
           </div>
         </div>
@@ -807,19 +735,6 @@ function updatePrices() {
   document.getElementById('t900-kg').textContent   = fmt(p900 * 1000);
 
   convertSilver();
-
-  // Push to live chart
-  const now = new Date();
-  if (liveChart && liveChart.data.datasets.length) {
-    const ds = liveChart.data.datasets[0];
-    const price = activeMetal === '999' ? p999 : activeMetal === '925' ? p925 : p900;
-    if (activeRange === '1D') {
-      ds.data.push(Math.round(price * 100) / 100);
-      liveChart.data.labels.push(now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }));
-      if (ds.data.length > 60) { ds.data.shift(); liveChart.data.labels.shift(); }
-      liveChart.update('none');
-    }
-  }
 }
 setInterval(updatePrices, 3000);
 
@@ -863,40 +778,20 @@ convertSilver();
 Chart.defaults.font.family = "'Manrope', 'Inter', sans-serif";
 Chart.defaults.color = '#6B6255';
 
-let activeMetal = '999';
-let activeRange = '1D';
-
-function generateLiveData(metal, range) {
-  const bases = { '999': 231.00, '925': 213.68, '900': 207.90 };
-  const base = bases[metal];
-  const configs = {
-    '1D': { pts: 48, step: 30,         vol: 0.004 },
-    '1W': { pts: 42, step: 1440 * 0.167, vol: 0.010 },
-    '1M': { pts: 30, step: 1440,       vol: 0.018 },
-    '3M': { pts: 90, step: 1440,       vol: 0.022 },
-    '6M': { pts: 180, step: 1440,      vol: 0.025 },
-    '1Y': { pts: 52, step: 10080,      vol: 0.030 },
-  };
-  const { pts, vol } = configs[range];
-  const prices = [], labels = [];
-  let p = base * (0.94 + Math.random() * 0.02);
-  const now = new Date();
-
-  for (let i = pts; i >= 0; i--) {
-    const d = new Date(now - i * configs[range].step * 60000);
-    p = p * (1 + (Math.random() - 0.49) * vol);
-    prices.push(Math.round(p * 100) / 100);
-    if (range === '1D') labels.push(d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }));
-    else if (range === '1W') labels.push(d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' }));
-    else if (['1M', '3M', '6M'].includes(range)) labels.push(d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }));
-    else labels.push(d.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' }));
-  }
-  return { prices, labels };
-}
-
+/* ---- 1-Year Silver Chart (real data) ----
+   Reads same-origin /silver-history.json — a compact daily 999 silver
+   series (₹/gram) produced server-side from the GoldNest
+   yearly-silver-chart API, so the API token is never exposed to the
+   browser. Shape: { series: [{ d: "YYYY-MM-DD", c: <close ₹/g> }, ... ] } */
 let liveChart;
-function buildLiveChart(metal, range) {
-  const { prices, labels } = generateLiveData(metal, range);
+
+function buildSilverYearChart(series) {
+  const labels = series.map(pt => {
+    const d = new Date(pt.d + 'T00:00:00');
+    return d.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' });
+  });
+  const prices = series.map(pt => pt.c);
+
   const isUp = prices[prices.length - 1] >= prices[0];
   const color = isUp ? '#16A34A' : '#DC2626';
   const bgColor = isUp ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.08)';
@@ -909,13 +804,13 @@ function buildLiveChart(metal, range) {
     data: {
       labels,
       datasets: [{
-        label: 'Silver ' + metal + ' (₹/g)',
+        label: 'Silver 999 (₹/g)',
         data: prices,
         borderColor: color,
         borderWidth: 2,
         backgroundColor: bgColor,
         fill: true,
-        tension: 0.35,
+        tension: 0.3,
         pointRadius: 0,
         pointHoverRadius: 5,
         pointHoverBackgroundColor: color,
@@ -936,112 +831,44 @@ function buildLiveChart(metal, range) {
           titleColor: '#1C1914',
           bodyColor: '#6B6255',
           padding: 12,
-          callbacks: { label: ctx => '  ₹' + ctx.raw.toFixed(2) + ' / gram' }
+          callbacks: {
+            title: items => {
+              const i = items[0].dataIndex;
+              const d = new Date(series[i].d + 'T00:00:00');
+              return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+            },
+            label: ctx => '  ₹' + ctx.raw.toFixed(2) + ' / gram'
+          }
         }
       },
       scales: {
-        x: { grid: { color: 'rgba(156,163,175,0.18)' }, ticks: { maxTicksLimit: 6, font: { size: 10 }, maxRotation: 0 } },
+        x: { grid: { color: 'rgba(156,163,175,0.18)' }, ticks: { maxTicksLimit: 8, font: { size: 10 }, maxRotation: 0, autoSkip: true } },
         y: { position: 'right', grid: { color: 'rgba(156,163,175,0.18)' }, ticks: { font: { size: 10 }, callback: v => '₹' + v.toFixed(0) } }
       }
     }
   });
 }
-buildLiveChart('999', '1D');
 
-document.querySelectorAll('.chart-tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.chart-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeRange = btn.dataset.range;
-    buildLiveChart(activeMetal, activeRange);
-  });
-});
-
-document.querySelectorAll('.metal-tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.metal-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeMetal = btn.dataset.metal;
-    buildLiveChart(activeMetal, activeRange);
-  });
-});
-
-/* ---- 10-YEAR CHART ---- */
-(function buildDecadeChart() {
-  const years    = ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025*'];
-  const annual   = [38, 39, 40, 42, 47, 62, 60, 65, 74, 86, 107]; // ₹/gram silver 999
-  const sipValue = [6000, 12625, 19250, 26500, 34750, 47000, 57950, 70500, 85000, 102000, 124000]; // ₹500/mo silver SIP cumulative value
-
-  const ctx = document.getElementById('decadeChart').getContext('2d');
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: years,
-      datasets: [
-        {
-          type: 'bar',
-          label: 'Silver Price (₹/gram)',
-          data: annual,
-          backgroundColor: years.map((_, i) => i === years.length - 1
-            ? 'rgba(107,114,128,0.90)'
-            : 'rgba(156,163,175,0.65)'),
-          borderColor: 'rgba(107,114,128,1)',
-          borderWidth: 1,
-          borderRadius: 6,
-          yAxisID: 'yPrice',
-          order: 2,
-        },
-        {
-          type: 'line',
-          label: 'SIP Value (₹500/mo)',
-          data: sipValue,
-          borderColor: '#16A34A',
-          backgroundColor: 'rgba(22,163,74,0.06)',
-          borderWidth: 2.5,
-          fill: false,
-          tension: 0.4,
-          pointRadius: 5,
-          pointBackgroundColor: '#16A34A',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          yAxisID: 'ySip',
-          order: 1,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-          labels: { font: { size: 11 }, padding: 12, usePointStyle: true, boxWidth: 10 }
-        },
-        tooltip: {
-          backgroundColor: '#fff',
-          borderColor: 'rgba(156,163,175,0.30)',
-          borderWidth: 1,
-          titleColor: '#1C1914',
-          bodyColor: '#6B6255',
-          padding: 14,
-          callbacks: {
-            label: ctx => {
-              if (ctx.datasetIndex === 0) return '  Silver Price: ₹' + ctx.raw + '/g';
-              return '  SIP Value: ₹' + ctx.raw.toLocaleString('en-IN');
-            }
-          }
-        }
-      },
-      scales: {
-        x: { grid: { color: 'rgba(156,163,175,0.18)' }, ticks: { font: { size: 10, weight: '600' }, maxRotation: 0, autoSkip: true, maxTicksLimit: 8 } },
-        yPrice: { type: 'linear', position: 'left', grid: { color: 'rgba(156,163,175,0.18)' }, ticks: { font: { size: 10 }, callback: v => '₹' + v } },
-        ySip:   { type: 'linear', position: 'right', grid: { display: false },               ticks: { font: { size: 10 }, callback: v => '₹' + Math.round(v / 1000) + 'K' } }
+(function loadSilverHistory() {
+  const sub = document.querySelector('.chart-panel .chart-subtitle');
+  fetch('silver-history.json?v=' + Math.floor(Date.now() / 3600000))
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(j => {
+      const series = (j && Array.isArray(j.series) ? j.series : [])
+        .filter(pt => pt && pt.d && Number.isFinite(pt.c));
+      if (!series.length) throw new Error('empty series');
+      buildSilverYearChart(series);
+      if (sub && j.to) {
+        const to = new Date(j.to + 'T00:00:00');
+        sub.textContent = 'Daily 999 silver close in ₹ per gram · ' +
+          series.length + ' days to ' +
+          to.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
       }
-    }
-  });
+    })
+    .catch(err => {
+      console.warn('[silver-history] failed:', err.message);
+      if (sub) sub.textContent = 'Silver price history is temporarily unavailable.';
+    });
 })();
 </script>
 </body>

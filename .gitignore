@@ -12,6 +12,8 @@ node_modules/
 .env
 .env.*
 *.token
+# Local one-time fetch helper — contains a hardcoded local API token
+scripts/fetch-silver-local.php
 
 # Large unused media (kept locally, not in repo)
 images/gold nest loop video (1).gif
