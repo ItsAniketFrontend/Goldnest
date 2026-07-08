@@ -36,13 +36,15 @@
     'https://ibja.co/',
   ];
 
-  // Reasonable fallback values (updated periodically; matches the
-  // hardcoded values currently shown on gold-rates / silver-rates).
+  // Reasonable fallback values — used ONLY if same-origin rates.json,
+  // cache, and all proxies fail. Keep roughly in line with the latest
+  // IBJA rate so a visitor never sees a wildly wrong number.
+  // Last synced: 2026-07-06 (IBJA: gold 999 ≈ ₹14,551/g, silver ≈ ₹232/g).
   const FALLBACK = Object.freeze({
-    gold999_per_gram:   9245,
-    gold22k_per_gram:   8475,
-    gold18k_per_gram:   6934,
-    silver999_per_gram: 107,
+    gold999_per_gram:   14551,
+    gold22k_per_gram:   13329,
+    gold18k_per_gram:   10913,
+    silver999_per_gram: 232,
     source:             'fallback',
     timestamp:          0,
     isStale:            true,
