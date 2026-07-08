@@ -21,7 +21,7 @@
   --border:      #E8D689;
   --border-light: #F1E5B0;
   --text:        #1C1914;
-  --text-muted:  #6B6255;
+  --text-muted:  #3D2A0A;   /* deep warm brown — strong contrast on cream + gold gradients */
   --white:       #FFFFFF;
   --radius:      12px;
   --radius-lg:   20px;
@@ -41,8 +41,12 @@ body {
   font-family: var(--font) !important;
   background-color: var(--bg);
   color: var(--text);
-  line-height: 1.65;
+  line-height: 1.7;
+  font-weight: 500;            /* richer text weight reads cleaner on cream + gold */
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 a { color: var(--gold-dark); text-decoration: none; transition: color var(--transition); }
@@ -71,7 +75,12 @@ h4 { font-size: 1.15rem; font-weight: 600; }
   font-weight: 500 !important;
 }
 
-p { color: var(--text-muted); margin-bottom: 1rem; }
+p {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  font-weight: 500;            /* heavier paragraphs for prominence on cream/gold bgs */
+  line-height: 1.7;
+}
 section { padding: 64px 0; }
 
 .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
@@ -118,7 +127,7 @@ section { padding: 64px 0; }
   margin-bottom: 12px;
 }
 .section-heading h2 { color: var(--text); }
-.section-heading p  { max-width: 580px; margin: 16px auto 0; }
+.section-heading p  { max-width: 580px; margin: 16px auto 0; font-size: 1rem; font-weight: 500; color: var(--text-muted); }
 
 /* ---------- Buttons ---------- */
 .btn {

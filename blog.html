@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CT3PP0CWL5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-CT3PP0CWL5');
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Blog – Gold Investment Tips, Market Insights & Guides | GoldNest</title>
@@ -105,116 +114,6 @@
   </div>
 </section>
 
-<!-- FILTER TABS -->
-<section style="background:var(--bg);padding:0 0 60px;">
-  <div class="container">
-
-    <!-- Filter -->
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px;">
-      <button onclick="filterPosts('all', this)" style="padding:8px 18px;border-radius:50px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;border:none;cursor:pointer;font-size:.83rem;font-weight:600;" class="filter-active">All Articles</button>
-      <button onclick="filterPosts('investment', this)" style="padding:8px 18px;border-radius:50px;background:transparent;color:var(--text-muted);border:1px solid var(--border);cursor:pointer;font-size:.83rem;font-weight:600;">Investment</button>
-      <button onclick="filterPosts('market', this)" style="padding:8px 18px;border-radius:50px;background:transparent;color:var(--text-muted);border:1px solid var(--border);cursor:pointer;font-size:.83rem;font-weight:600;">Market Insights</button>
-      <button onclick="filterPosts('guide', this)" style="padding:8px 18px;border-radius:50px;background:transparent;color:var(--text-muted);border:1px solid var(--border);cursor:pointer;font-size:.83rem;font-weight:600;">Guides</button>
-      <button onclick="filterPosts('sip', this)" style="padding:8px 18px;border-radius:50px;background:transparent;color:var(--text-muted);border:1px solid var(--border);cursor:pointer;font-size:.83rem;font-weight:600;">Gold SIP</button>
-    </div>
-
-    <!-- Articles Grid -->
-    <div class="blog-grid" id="blogGrid">
-
-      <article class="blog-card fade-up" data-category="investment" data-delay="1">
-        <div class="blog-img">📊</div>
-        <div class="blog-body">
-          <div class="blog-meta"><span class="blog-cat">Investment</span><span class="blog-date">Apr 10, 2025</span></div>
-          <h3 class="blog-title">Why Digital Gold is Better Than Gold ETFs for Small Investors</h3>
-          <p class="blog-excerpt">Compare digital gold and gold ETFs across liquidity, storage, purity, and minimum investment. Find out which is right for your portfolio.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;"><a href="#" class="blog-read">Read More →</a><span style="font-size:.72rem;color:var(--text-muted);">8 min read</span></div>
-        </div>
-      </article>
-
-      <article class="blog-card fade-up" data-category="market" data-delay="2">
-        <div class="blog-img">📈</div>
-        <div class="blog-body">
-          <div class="blog-meta"><span class="blog-cat">Market Insight</span><span class="blog-date">Apr 5, 2025</span></div>
-          <h3 class="blog-title">Gold Prices in 2025: What to Expect and How to Position</h3>
-          <p class="blog-excerpt">Expert analysis on gold price trends, global inflation outlook, and how Indian investors can optimize their portfolios for 2025.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;"><a href="#" class="blog-read">Read More →</a><span style="font-size:.72rem;color:var(--text-muted);">6 min read</span></div>
-        </div>
-      </article>
-
-      <article class="blog-card fade-up" data-category="sip" data-delay="3">
-        <div class="blog-img">🎯</div>
-        <div class="blog-body">
-          <div class="blog-meta"><span class="blog-cat">Gold SIP</span><span class="blog-date">Mar 28, 2025</span></div>
-          <h3 class="blog-title">Gold SIP vs Fixed Deposit: Which Gives Better Long-Term Returns?</h3>
-          <p class="blog-excerpt">A detailed, data-backed comparison of Gold SIP returns vs traditional FD rates over 5, 10, and 20-year horizons.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;"><a href="#" class="blog-read">Read More →</a><span style="font-size:.72rem;color:var(--text-muted);">7 min read</span></div>
-        </div>
-      </article>
-
-      <article class="blog-card fade-up" data-category="guide" data-delay="1">
-        <div class="blog-img">🧭</div>
-        <div class="blog-body">
-          <div class="blog-meta"><span class="blog-cat">Guide</span><span class="blog-date">Mar 20, 2025</span></div>
-          <h3 class="blog-title">Complete Beginner's Guide to Digital Gold Investment in India 2025</h3>
-          <p class="blog-excerpt">New to gold investment? This step-by-step guide covers everything from account setup to your first purchase and beyond.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;"><a href="#" class="blog-read">Read More →</a><span style="font-size:.72rem;color:var(--text-muted);">12 min read</span></div>
-        </div>
-      </article>
-
-      <article class="blog-card fade-up" data-category="investment" data-delay="2">
-        <div class="blog-img">🏛️</div>
-        <div class="blog-body">
-          <div class="blog-meta"><span class="blog-cat">Investment</span><span class="blog-date">Mar 15, 2025</span></div>
-          <h3 class="blog-title">How Much of Your Portfolio Should Be in Gold? The Experts' Answer</h3>
-          <p class="blog-excerpt">Financial planners recommend 10-20% gold allocation. Here's why, and how digital gold makes this easier than ever.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;"><a href="#" class="blog-read">Read More →</a><span style="font-size:.72rem;color:var(--text-muted);">5 min read</span></div>
-        </div>
-      </article>
-
-      <article class="blog-card fade-up" data-category="market" data-delay="3">
-        <div class="blog-img">🌏</div>
-        <div class="blog-body">
-          <div class="blog-meta"><span class="blog-cat">Market Insight</span><span class="blog-date">Mar 8, 2025</span></div>
-          <h3 class="blog-title">Why Central Banks Are Buying Record Amounts of Gold — And What It Means for You</h3>
-          <p class="blog-excerpt">Global central banks bought 1,136 tonnes of gold in 2024. Understand what this means for gold prices and retail investors.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;"><a href="#" class="blog-read">Read More →</a><span style="font-size:.72rem;color:var(--text-muted);">9 min read</span></div>
-        </div>
-      </article>
-
-      <article class="blog-card fade-up" data-category="sip" data-delay="1">
-        <div class="blog-img">🔄</div>
-        <div class="blog-body">
-          <div class="blog-meta"><span class="blog-cat">Gold SIP</span><span class="blog-date">Feb 25, 2025</span></div>
-          <h3 class="blog-title">Rupee Cost Averaging: Why Investing During Gold Price Dips is Smart</h3>
-          <p class="blog-excerpt">Understand how Gold SIP's rupee cost averaging works in your favour during market volatility, with real examples.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;"><a href="#" class="blog-read">Read More →</a><span style="font-size:.72rem;color:var(--text-muted);">6 min read</span></div>
-        </div>
-      </article>
-
-      <article class="blog-card fade-up" data-category="guide" data-delay="2">
-        <div class="blog-img">🎁</div>
-        <div class="blog-body">
-          <div class="blog-meta"><span class="blog-cat">Guide</span><span class="blog-date">Feb 14, 2025</span></div>
-          <h3 class="blog-title">Gifting Gold This Festive Season: Digital vs Physical — Which is Better?</h3>
-          <p class="blog-excerpt">Planning to gift gold for Diwali, a wedding, or birthday? Discover whether digital gold or physical jewelry makes a more thoughtful gift.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;"><a href="#" class="blog-read">Read More →</a><span style="font-size:.72rem;color:var(--text-muted);">5 min read</span></div>
-        </div>
-      </article>
-
-      <article class="blog-card fade-up" data-category="investment" data-delay="3">
-        <div class="blog-img">💰</div>
-        <div class="blog-body">
-          <div class="blog-meta"><span class="blog-cat">Investment</span><span class="blog-date">Feb 5, 2025</span></div>
-          <h3 class="blog-title">Tax on Digital Gold in India: Capital Gains, ITR Filing, and What You Need to Know</h3>
-          <p class="blog-excerpt">Digital gold is taxed like physical gold in India. Learn how long-term and short-term capital gains apply, and how to file correctly.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;"><a href="#" class="blog-read">Read More →</a><span style="font-size:.72rem;color:var(--text-muted);">8 min read</span></div>
-        </div>
-      </article>
-
-    </div>
-  </div>
-</section>
-
 <!-- NEWSLETTER -->
 <section style="background:var(--bg-card2);">
   <div class="container">
@@ -301,24 +200,5 @@
   </div>
 </footer>
 <button class="scroll-top" aria-label="Scroll to top">↑</button>
-
-<script>
-function filterPosts(cat, btn) {
-  document.querySelectorAll('#blogGrid .blog-card').forEach(card => {
-    card.style.display = (cat === 'all' || card.dataset.category === cat) ? 'flex' : 'none';
-    card.style.flexDirection = 'column';
-  });
-  document.querySelectorAll('.filter-active').forEach(b => {
-    b.style.background = 'transparent';
-    b.style.color = 'var(--text-muted)';
-    b.style.border = '1px solid var(--border)';
-    b.classList.remove('filter-active');
-  });
-  btn.style.background = 'linear-gradient(135deg,var(--gold),var(--gold-dark))';
-  btn.style.color = '#000';
-  btn.style.border = 'none';
-  btn.classList.add('filter-active');
-}
-</script>
 </body>
 </html>
