@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CT3PP0CWL5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-CT3PP0CWL5');
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact GoldNest – Get in Touch | Vadodara, Gujarat</title>
@@ -148,48 +157,23 @@
       <div class="contact-form-card">
         <h3 style="margin-bottom:6px;">Send Us a Message</h3>
         <p style="font-size:.85rem;margin-bottom:28px;">Fill in the form below and we'll get back to you as soon as possible.</p>
-        <form id="contactForm">
-          <div class="row g-3 mb-0">
-            <div class="col-12 col-sm-6">
-              <div class="form-group">
-                <label class="form-label">First Name *</label>
-                <input type="text" class="form-input" placeholder="Rahul" required />
-              </div>
-            </div>
-            <div class="col-12 col-sm-6">
-              <div class="form-group">
-                <label class="form-label">Last Name *</label>
-                <input type="text" class="form-input" placeholder="Sharma" required />
-              </div>
-            </div>
+        <form id="contactForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="name">Full Name *</label>
+            <input type="text" id="name" name="name" class="form-input" placeholder="Rahul Sharma" required />
           </div>
           <div class="form-group">
-            <label class="form-label">Email Address *</label>
-            <input type="email" class="form-input" placeholder="rahul@example.com" required />
+            <label class="form-label" for="email">Email Address *</label>
+            <input type="email" id="email" name="email" class="form-input" placeholder="rahul@example.com" required />
           </div>
           <div class="form-group">
-            <label class="form-label">Phone Number</label>
-            <input type="tel" class="form-input" placeholder="+91 98765 43210" />
+            <label class="form-label" for="message">Message *</label>
+            <textarea id="message" name="message" class="form-textarea" placeholder="Tell us how we can help you..." required></textarea>
           </div>
-          <div class="form-group">
-            <label class="form-label">Subject *</label>
-            <select class="form-select" required>
-              <option value="" disabled selected>Select a topic</option>
-              <option>Digital Gold Investment</option>
-              <option>Gold SIP Enquiry</option>
-              <option>Physical Gold Redemption</option>
-              <option>Custom Jewelry Order</option>
-              <option>Partner Shop Enquiry</option>
-              <option>App Technical Support</option>
-              <option>KYC / Account Issue</option>
-              <option>General Enquiry</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Message *</label>
-            <textarea class="form-textarea" placeholder="Tell us how we can help you..." required></textarea>
-          </div>
-          <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;font-size:1rem;padding:15px;">Send Message</button>
+          <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;font-size:1rem;padding:15px;">
+            <span id="loading" class="hidden" aria-hidden="true" style="display:none;width:16px;height:16px;border:2px solid rgba(0,0,0,.25);border-top-color:#000;border-radius:50%;margin-right:8px;vertical-align:-2px;animation:cf-spin .7s linear infinite;"></span>
+            Send Message
+          </button>
         </form>
       </div>
 
@@ -291,7 +275,98 @@
 </footer>
 <button class="scroll-top" aria-label="Scroll to top">↑</button>
 
+<!-- Contact form popup + spinner -->
+<div id="popup-message" role="status" aria-live="polite" class="hidden"></div>
+<style>
+  @keyframes cf-spin { to { transform: rotate(360deg); } }
+  #popup-message {
+    position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
+    z-index: 9999; max-width: 340px; width: calc(100% - 32px);
+    padding: 14px 20px; border-radius: 12px; color: #fff;
+    font-size: .9rem; line-height: 1.4; box-shadow: 0 10px 30px rgba(0,0,0,.22);
+  }
+  #popup-message.hidden { display: none; }
+  #popup-message.cf-success { background: linear-gradient(135deg,#22C55E,#16A34A); }
+  #popup-message.cf-error   { background: linear-gradient(135deg,#EF4444,#DC2626); }
+</style>
 
+<!-- Contact Us form submission -->
+<script>
+document.getElementById('contactForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const loading = document.getElementById('loading');
+  const popup = document.getElementById('popup-message');
+  const submitBtn = this.querySelector('button[type="submit"]');
+  loading.style.display = 'inline-block';
+  loading.classList.remove('hidden');
+  popup.classList.add('hidden');
+  submitBtn.disabled = true;
+
+  const stop = () => { loading.style.display = 'none'; loading.classList.add('hidden'); submitBtn.disabled = false; };
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  if (!name) {
+    showPopup("error", "Please enter your name.");
+    stop();
+    return;
+  }
+
+  if (!email) {
+    showPopup("error", "Please enter your email.");
+    stop();
+    return;
+  }
+
+  if (!email.includes('@')) {
+    showPopup("error", "Please include '@' in the email address.");
+    stop();
+    return;
+  }
+
+  if (!message) {
+    showPopup("error", "Please enter your message.");
+    stop();
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/contact-us', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name, email, message })
+    });
+
+    stop();
+
+    if (response.ok) {
+      document.getElementById('contactForm').reset();
+      showPopup("success", "Your message has been sent. Thank you!");
+    } else {
+      showPopup("error", "Failed to send message. Please try again.");
+    }
+  } catch (error) {
+    console.error(error);
+    stop();
+    showPopup("error", "An error occurred. Please try again.");
+  }
+});
+
+function showPopup(type, message) {
+  const popup = document.getElementById('popup-message');
+  popup.innerHTML = `<strong>${type === 'success' ? 'Success' : 'Error'}:</strong> ${message}`;
+  popup.className = type === 'success' ? 'cf-success' : 'cf-error';
+  popup.classList.remove('hidden');
+
+  clearTimeout(showPopup._t);
+  showPopup._t = setTimeout(() => {
+    popup.classList.add('hidden');
+  }, 4000);
+}
+</script>
 
 </body>
 </html>
