@@ -233,12 +233,8 @@
               <!-- Live price section -->
               <text x="100" y="165" text-anchor="middle" fill="#A88A2A" font-family="sans-serif" font-size="7" font-weight="600" letter-spacing="2">LIVE · PER GRAM</text>
               <text x="100" y="208" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="38" font-weight="800">
-                <tspan fill="#D4AF37">₹</tspan><tspan fill="#735C1B" id="phoneLivePrice">16,135</tspan>
+                <tspan fill="#D4AF37">₹</tspan><tspan fill="#735C1B" id="phoneLivePrice">—</tspan>
               </text>
-
-              <!-- Change pill -->
-              <rect x="65" y="223" width="70" height="20" rx="10" fill="rgba(74,222,128,0.14)" stroke="rgba(74,222,128,0.45)" stroke-width="0.8"/>
-              <text x="100" y="237" text-anchor="middle" fill="#4ADE80" font-family="sans-serif" font-size="9" font-weight="700">▲ +0.42%</text>
 
               <!-- Mini sparkline chart -->
               <polyline points="22,275 42,268 62,278 82,260 102,253 122,238 142,242 162,228 178,232"
@@ -261,8 +257,7 @@
           <div class="orb-center">
             <div class="price-tag">
               <div class="price-label">Today's Rate / gram</div>
-              <div class="price-value">₹<span id="heroLivePrice">16,135</span></div>
-              <div class="price-change">▲ 0.42%</div>
+              <div class="price-value">₹<span id="heroLivePrice">—</span></div>
             </div>
           </div>
           <div class="floating-card fc1">
@@ -323,14 +318,14 @@
 <!-- ============================================================ GOLD TICKER -->
 <div class="ticker" aria-label="Live gold price ticker">
   <div class="ticker-track">
-    <div class="ticker-item"><span class="t-name">24K Gold</span><span class="t-price">₹14551/g</span><span class="t-up">▲ 0.42%</span></div>
+    <div class="ticker-item"><span class="t-name">24K Gold</span><span class="t-price">—</span></div>
     <div class="ticker-sep">|</div>
-    <div class="ticker-item"><span class="t-name">Silver</span><span class="t-price">₹231.81/g</span><span class="t-down">▼ 0.15%</span></div>
+    <div class="ticker-item"><span class="t-name">Silver</span><span class="t-price">—</span></div>
     <div class="ticker-sep">|</div>
     <!-- duplicate for seamless loop -->
-    <div class="ticker-item"><span class="t-name">24K Gold</span><span class="t-price">₹14551/g</span><span class="t-up">▲ 0.42%</span></div>
+    <div class="ticker-item"><span class="t-name">24K Gold</span><span class="t-price">—</span></div>
     <div class="ticker-sep">|</div>
-    <div class="ticker-item"><span class="t-name">Silver</span><span class="t-price">₹231.81/g</span><span class="t-down">▼ 0.15%</span></div>
+    <div class="ticker-item"><span class="t-name">Silver</span><span class="t-price">—</span></div>
   </div>
 </div>
 
@@ -521,12 +516,11 @@
           </div>
         </div>
         <div class="rc-price">
-          <span class="rc-currency">₹</span><span class="rc-amount" id="homeGoldPrice">14,551</span>
+          <span class="rc-currency">₹</span><span class="rc-amount" id="homeGoldPrice">—</span>
           <span class="rc-unit">/ gram</span>
         </div>
         <div class="rc-meta">
-          <span class="rc-10g">₹<span id="homeGold10g">1,45,510</span> / 10g</span>
-          <span class="rc-change up" id="homeGoldChange">▲ +0.42% today</span>
+          <span class="rc-10g">₹<span id="homeGold10g">—</span> / 10g</span>
         </div>
         <div class="rc-footer">
           <span class="rc-cta">View Gold Rates &amp; Charts</span>
@@ -545,12 +539,11 @@
           </div>
         </div>
         <div class="rc-price">
-          <span class="rc-currency">₹</span><span class="rc-amount" id="homeSilverPrice">231.81</span>
+          <span class="rc-currency">₹</span><span class="rc-amount" id="homeSilverPrice">—</span>
           <span class="rc-unit">/ gram</span>
         </div>
         <div class="rc-meta">
-          <span class="rc-10g">₹<span id="homeSilver10g">2,31,810</span> / kg</span>
-          <span class="rc-change up" id="homeSilverChange">▲ +0.80% today</span>
+          <span class="rc-10g">₹<span id="homeSilver10g">—</span> / kg</span>
         </div>
         <div class="rc-footer">
           <span class="rc-cta">View Silver Rates &amp; Charts</span>
@@ -909,8 +902,6 @@
 <script>
 /* Seed the homepage live-rate cards + ticker prices from IBJA */
 (function () {
-  if (!window.GoldNestRates) return;
-
   function applyRates(r) {
     if (!r || !r.gold999_per_gram) return;
 
@@ -921,19 +912,32 @@
     const sKg = document.getElementById('homeSilver10g');
     if (gP)  gP.textContent  = Math.round(r.gold999_per_gram).toLocaleString('en-IN');
     if (g10) g10.textContent = Math.round(r.gold999_per_gram * 10).toLocaleString('en-IN');
-    if (sP)  sP.textContent  = Math.round(r.silver999_per_gram).toLocaleString('en-IN');
-    if (sKg) sKg.textContent = Math.round(r.silver999_per_gram * 1000).toLocaleString('en-IN');
+    if (sP && r.silver999_per_gram)  sP.textContent  = (Math.round(r.silver999_per_gram * 100) / 100).toLocaleString('en-IN');
+    if (sKg && r.silver999_per_gram) sKg.textContent = Math.round(r.silver999_per_gram * 1000).toLocaleString('en-IN');
 
-    // 2. Sync main.js ticker so the floating ticker uses real numbers
-    if (window.prices || typeof prices !== 'undefined') {
-      const p = window.prices || prices;
+    // 2. Hero + phone-mockup price tags
+    const goldFmt = Math.round(r.gold999_per_gram).toLocaleString('en-IN');
+    const heroEl  = document.getElementById('heroLivePrice');
+    const phoneEl = document.getElementById('phoneLivePrice');
+    if (heroEl)  heroEl.textContent  = goldFmt;
+    if (phoneEl) phoneEl.textContent = goldFmt;
+
+    // 3. Feed main.js's ticker the real numbers and re-render it
+    const p = window.prices;
+    if (p) {
       if (p['24K Gold']) p['24K Gold'].price = r.gold999_per_gram;
       if (p['Silver'])   p['Silver'].price   = r.silver999_per_gram;
+      if (typeof window.updateTicker === 'function') window.updateTicker();
     }
   }
 
-  window.GoldNestRates.onUpdate(applyRates);
-  window.GoldNestRates.fetch().then(applyRates).catch(() => {});
+  // Deferred scripts (rates-api.js) execute before DOMContentLoaded,
+  // so wait for it before reaching for window.GoldNestRates.
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.GoldNestRates) return;
+    window.GoldNestRates.onUpdate(applyRates);
+    window.GoldNestRates.fetch().then(applyRates).catch(function () {});
+  });
 })();
 </script>
 </body>

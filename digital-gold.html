@@ -103,13 +103,11 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;max-width:640px;margin:0 auto;">
       <div style="background:var(--bg-card);border:1px solid rgba(212,175,55,.25);border-radius:var(--radius);padding:20px;text-align:center;">
         <div style="font-size:.72rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">24K Gold</div>
-        <div style="font-size:1.4rem;font-weight:800;color:var(--gold);">₹14,551/g</div>
-        <div style="font-size:.75rem;color:#22C55E;margin-top:4px;">▲ 0.42% today</div>
+        <div id="dgGold" style="font-size:1.4rem;font-weight:800;color:var(--gold);">—</div>
       </div>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
         <div style="font-size:.72rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Silver</div>
-        <div style="font-size:1.4rem;font-weight:800;color:var(--white);">₹231.81/g</div>
-        <div style="font-size:.75rem;color:#EF4444;margin-top:4px;">▼ 0.15% today</div>
+        <div id="dgSilver" style="font-size:1.4rem;font-weight:800;color:var(--white);">—</div>
       </div>
     </div>
     <p style="text-align:center;font-size:.72rem;color:var(--text-muted);margin-top:12px;margin-bottom:0;">Indicative prices. Actual rates visible on app at time of transaction.</p>
@@ -298,7 +296,27 @@
 </footer>
 <button class="scroll-top" aria-label="Scroll to top">↑</button>
 
+<script>
+/* Live 24K gold + silver rates for the LIVE PRICE cards.
+   Deferred scripts run before DOMContentLoaded, so wait for it. */
+document.addEventListener('DOMContentLoaded', function () {
+  if (!window.GoldNestRates) return;
 
+  function applyRates(r) {
+    if (!r) return;
+    const g = document.getElementById('dgGold');
+    const s = document.getElementById('dgSilver');
+    if (g && r.gold999_per_gram) {
+      g.textContent = '₹' + Math.round(r.gold999_per_gram).toLocaleString('en-IN') + '/g';
+    }
+    if (s && r.silver999_per_gram) {
+      s.textContent = '₹' + (Math.round(r.silver999_per_gram * 100) / 100).toLocaleString('en-IN') + '/g';
+    }
+  }
 
+  window.GoldNestRates.onUpdate(applyRates);
+  window.GoldNestRates.fetch().then(applyRates).catch(function () {});
+});
+</script>
 </body>
 </html>

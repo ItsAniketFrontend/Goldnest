@@ -320,16 +320,14 @@
     <div class="live-grid">
       <div class="live-card primary">
         <div class="lc-metal">Silver 999 (99.9%)</div>
-        <div class="lc-price" id="p999">₹231.81</div>
-        <div class="lc-per10" id="p999-10g">per gram &nbsp;|&nbsp; ₹2,318 / 10g</div>
-        <div class="lc-change up" id="c999">▲ ₹0.85 &nbsp; +0.80%</div>
+        <div class="lc-price" id="p999">—</div>
+        <div class="lc-per10" id="p999-10g">per gram &nbsp;|&nbsp; — / 10g</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
       <div class="live-card">
         <div class="lc-metal">Silver per KG</div>
-        <div class="lc-price" id="pKg">₹2,31,810</div>
+        <div class="lc-price" id="pKg">—</div>
         <div class="lc-per10" id="pKg-bar">999 fine silver bar</div>
-        <div class="lc-change up" id="cKg">▲ ₹848 &nbsp; +0.80%</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
     </div>
@@ -372,18 +370,16 @@
                 <th>Per 10g</th>
                 <th>Per 100g</th>
                 <th>Per KG</th>
-                <th>Change</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="td-metal">Silver 999</td>
                 <td class="td-purity">99.9% Fine</td>
-                <td class="td-price" id="t999g">₹231.81</td>
-                <td id="t999-10g">₹2,318</td>
-                <td id="t999-100g">₹10,700</td>
-                <td id="t999-kg">₹2,31,810</td>
-                <td class="td-up" id="t999-ch">▲ +0.80%</td>
+                <td class="td-price" id="t999g">—</td>
+                <td id="t999-10g">—</td>
+                <td id="t999-100g">—</td>
+                <td id="t999-kg">—</td>
               </tr>
             </tbody>
           </table>
@@ -411,12 +407,12 @@
             </div>
             <div class="converter-row">
               <select id="convMetal" onchange="convertSilver()" style="width:100%;">
-                <option value="231.81">Silver 999 (99.9%)</option>
+                <option value="999">Silver 999 (99.9%)</option>
               </select>
             </div>
             <div class="converter-result">
               <div class="cr-label">Estimated Value</div>
-              <div class="cr-val" id="convResult">₹2,31,810</div>
+              <div class="cr-val" id="convResult">—</div>
             </div>
             <p style="font-size:.68rem;color:var(--text-muted);margin-top:10px;margin-bottom:0;">Based on indicative spot price. Actual transaction price may vary slightly.</p>
           </div>
@@ -514,8 +510,9 @@
    SILVER RATES PAGE – JavaScript
    ================================================================ */
 
-/* Base prices — overridden by real IBJA fetch when available */
-const BASE = { '999': 231.81 };
+/* Live price — stays null until the API answers. Never seed a
+   hardcoded rate: a wrong number must never be shown. */
+const BASE = { '999': null };
 let current = { ...BASE };
 
 function updateTime() {
@@ -533,66 +530,61 @@ const fmtDec = (n) => '₹' + n.toFixed(2);
 /* Rates come from the API once per page load. No simulated drift:
    the number shown is exactly what the API returned, so the website
    always matches the app. */
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
 function updatePrices() {
   const p999 = current['999'];
+  if (!p999) { convertSilver(); return; }
 
   // Cards
-  document.getElementById('p999').textContent = fmtDec(p999);
-  document.getElementById('p999-10g').textContent = `per gram | ${fmt(p999 * 10)} / 10g`;
-  document.getElementById('pKg').textContent = fmt(p999 * 1000);
-
-  // Changes vs open
-  const chg999 = p999 - 231.00, pct999 = (chg999 / 231.00 * 100);
-
-  function setChange(id, change, pct, isKg=false) {
-    const el = document.getElementById(id);
-    const up = change >= 0;
-    el.className = 'lc-change ' + (up ? 'up' : 'down');
-    const amt = isKg ? Math.abs(change * 1000).toFixed(0) : Math.abs(change).toFixed(2);
-    el.textContent = (up ? '▲' : '▼') + ' ₹' + amt + '  ' + (up ? '+' : '') + pct.toFixed(2) + '%';
-  }
-  setChange('c999', chg999, pct999);
-  setChange('cKg', chg999, pct999, true);
+  setText('p999', fmtDec(p999));
+  setText('p999-10g', `per gram | ${fmt(p999 * 10)} / 10g`);
+  setText('pKg', fmt(p999 * 1000));
 
   // Table
-  document.getElementById('t999g').textContent   = fmtDec(p999);
-  document.getElementById('t999-10g').textContent  = fmt(p999 * 10);
-  document.getElementById('t999-100g').textContent = fmt(p999 * 100);
-  document.getElementById('t999-kg').textContent   = fmt(p999 * 1000);
-  document.getElementById('t999-ch').className = chg999 >= 0 ? 'td-up' : 'td-down';
-  document.getElementById('t999-ch').textContent = (chg999 >= 0 ? '▲ +' : '▼ ') + pct999.toFixed(2) + '%';
+  setText('t999g', fmtDec(p999));
+  setText('t999-10g', fmt(p999 * 10));
+  setText('t999-100g', fmt(p999 * 100));
+  setText('t999-kg', fmt(p999 * 1000));
 
   convertSilver();
 }
 // No polling: rate is fetched once per page load, not simulated.
 
-/* ---- Seed BASE from real IBJA rates when they arrive ---- */
-if (window.GoldNestRates) {
-  function applyIBJA(r) {
-    if (!r || !r.silver999_per_gram) return;
-    BASE['999'] = r.silver999_per_gram;
-    current = { ...BASE };
-    updatePrices();
+/* ---- Fill BASE from the live API. Until this fires the page shows "—". ---- */
+function applyIBJA(r) {
+  if (!r || !r.silver999_per_gram) return;
+  BASE['999'] = r.silver999_per_gram;
+  current = { ...BASE };
+  updatePrices();
 
-    const meta = document.getElementById('lastUpdate');
-    if (meta && r.source === 'IBJA') {
-      const age = window.GoldNestRates.formatAge(r.timestamp);
-      meta.title = 'Source: IBJA · fetched ' + age;
-    }
+  const meta = document.getElementById('lastUpdate');
+  if (meta && r.source === 'IBJA') {
+    const age = window.GoldNestRates.formatAge(r.timestamp);
+    meta.title = 'Source: IBJA · fetched ' + age;
   }
+}
+// js/rates-api.js is deferred, so it only exists by DOMContentLoaded.
+document.addEventListener('DOMContentLoaded', function () {
+  if (!window.GoldNestRates) return;
   window.GoldNestRates.onUpdate(applyIBJA);
   window.GoldNestRates.fetch().then(applyIBJA).catch(() => {});
-}
+});
 
-/* ---- Silver Converter ---- */
+/* ---- Silver Converter — priced off the live rate only ---- */
 function convertSilver() {
+  const el = document.getElementById('convResult');
+  if (!el) return;
   const amt   = parseFloat(document.getElementById('convAmount')?.value) || 1;
   const unit  = document.getElementById('convUnit')?.value;
-  const price = parseFloat(document.getElementById('convMetal')?.value) || 231.81;
+  const metal = document.getElementById('convMetal')?.value;
+  const price = current[metal];
+  if (!price) { el.textContent = '—'; return; }   // no live rate yet
   const grams = unit === 'gram' ? amt : unit === 'tola' ? amt * 8 : unit === '10g' ? amt * 10 : unit === '100g' ? amt * 100 : amt * 1000;
-  const val   = grams * price;
-  const el = document.getElementById('convResult');
-  if (el) el.textContent = '₹' + Math.round(val).toLocaleString('en-IN');
+  el.textContent = '₹' + Math.round(grams * price).toLocaleString('en-IN');
 }
 convertSilver();
 

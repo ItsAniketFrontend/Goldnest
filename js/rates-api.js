@@ -57,14 +57,14 @@
     'https://ibja.co/',
   ];
 
-  // Reasonable fallback values — used ONLY if same-origin rates.json,
-  // cache, and all proxies fail. Keep roughly in line with the latest
-  // IBJA rate so a visitor never sees a wildly wrong number.
-  // Last synced: 2026-07-06 (IBJA: gold 999 ≈ ₹14,551/g, silver ≈ ₹232/g).
+  // NO hardcoded rate fallback.
+  // The site must never display an invented gold/silver price, so if
+  // every live source fails we resolve with null values and pages keep
+  // showing their "—" placeholder instead of a stale number.
   const FALLBACK = Object.freeze({
-    gold999_per_gram:   14551,
-    silver999_per_gram: 232,
-    source:             'fallback',
+    gold999_per_gram:   null,
+    silver999_per_gram: null,
+    source:             'unavailable',
     timestamp:          0,
     isStale:            true,
   });
@@ -78,7 +78,7 @@
        2. localStorage cache (< 2 hours old)
        3. CORS proxy → IBJA scrape  (best-effort fallback)
        4. Stale localStorage cache
-       5. Hard-coded FALLBACK
+       5. Null rates (pages keep their "—" placeholder)
   ------------------------------------------------------------ */
   async function fetchIBJARates(opts = {}) {
     // 0 — GoldNest API (same source as the mobile app) — PREFERRED

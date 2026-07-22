@@ -124,78 +124,66 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- Gold price ticker simulation ----------
-     Exposed on window so js/rates-api.js can seed real
-     values fetched from IBJA. */
+  /* ---------- Gold / silver ticker ----------
+     NO simulation, NO seed values: prices stay empty until
+     js/rates-api.js delivers a real rate. Anything else would
+     put an invented number in front of the user. */
   window.prices = window.prices || {
-    '24K Gold': { price: 9245, change: +0.42 },
-    'Silver':   { price: 107,  change: -0.15 },
+    '24K Gold': { price: null },
+    'Silver':   { price: null },
   };
   const prices = window.prices;
 
   function updateTicker() {
     document.querySelectorAll('.ticker-item').forEach(item => {
       const name = item.querySelector('.t-name')?.textContent;
-      if (prices[name]) {
-        const data = prices[name];
-        // Small random fluctuation
-        data.price += (Math.random() - 0.5) * 2;
-        data.change += (Math.random() - 0.5) * 0.05;
-        const priceEl = item.querySelector('.t-price');
-        const changeEl = item.querySelector('.t-up, .t-down');
-        if (priceEl) priceEl.textContent = '₹' + data.price.toFixed(0) + '/g';
-        if (changeEl) {
-          const isUp = data.change >= 0;
-          changeEl.className = isUp ? 't-up' : 't-down';
-          changeEl.textContent = (isUp ? '▲' : '▼') + ' ' + Math.abs(data.change).toFixed(2) + '%';
-        }
+      const data = prices[name];
+      if (!data || !data.price) return;
+      const priceEl = item.querySelector('.t-price');
+      if (priceEl) {
+        const v = name === 'Silver'
+          ? (Math.round(data.price * 100) / 100).toLocaleString('en-IN')
+          : Math.round(data.price).toLocaleString('en-IN');
+        priceEl.textContent = '₹' + v + '/g';
       }
     });
 
-    // Sync the homepage live-rate cards with the ticker
+    // Sync the homepage live-rate cards with the live rate
     syncHomeRateCards();
   }
+  window.updateTicker = updateTicker;
 
   function syncHomeRateCards() {
     const gold = prices['24K Gold'];
     const silver = prices['Silver'];
-    if (!gold || !silver) return;
 
-    // Gold card
-    const gPrice  = document.getElementById('homeGoldPrice');
-    const g10g    = document.getElementById('homeGold10g');
-    const gChange = document.getElementById('homeGoldChange');
-    if (gPrice)  gPrice.textContent  = Math.round(gold.price).toLocaleString('en-IN');
-    if (g10g)    g10g.textContent    = Math.round(gold.price * 10).toLocaleString('en-IN');
-    if (gChange) {
-      const up = gold.change >= 0;
-      gChange.className = 'rc-change ' + (up ? 'up' : 'down');
-      gChange.textContent = (up ? '▲ +' : '▼ ') + Math.abs(gold.change).toFixed(2) + '% today';
+    if (gold && gold.price) {
+      const gPrice  = document.getElementById('homeGoldPrice');
+      const g10g    = document.getElementById('homeGold10g');
+      if (gPrice)  gPrice.textContent  = Math.round(gold.price).toLocaleString('en-IN');
+      if (g10g)    g10g.textContent    = Math.round(gold.price * 10).toLocaleString('en-IN');
+
+      // Hero price tag + SVG phone-mockup price — also reflect live gold
+      const heroPrice  = document.getElementById('heroLivePrice');
+      const phonePrice = document.getElementById('phoneLivePrice');
+      const goldFmt    = Math.round(gold.price).toLocaleString('en-IN');
+      if (heroPrice)  heroPrice.textContent  = goldFmt;
+      if (phonePrice) phonePrice.textContent = goldFmt;
     }
 
-    // Hero price tag + SVG phone-mockup price — also reflect live gold
-    const heroPrice  = document.getElementById('heroLivePrice');
-    const phonePrice = document.getElementById('phoneLivePrice');
-    const goldFmt    = Math.round(gold.price).toLocaleString('en-IN');
-    if (heroPrice)  heroPrice.textContent  = goldFmt;
-    if (phonePrice) phonePrice.textContent = goldFmt;
-
-    // Silver card — kg = price * 1000
-    const sPrice  = document.getElementById('homeSilverPrice');
-    const sKg     = document.getElementById('homeSilver10g');
-    const sChange = document.getElementById('homeSilverChange');
-    if (sPrice)  sPrice.textContent  = Math.round(silver.price).toLocaleString('en-IN');
-    if (sKg)     sKg.textContent     = Math.round(silver.price * 1000).toLocaleString('en-IN');
-    if (sChange) {
-      const up = silver.change >= 0;
-      sChange.className = 'rc-change ' + (up ? 'up' : 'down');
-      sChange.textContent = (up ? '▲ +' : '▼ ') + Math.abs(silver.change).toFixed(2) + '% today';
+    if (silver && silver.price) {
+      // Silver card — kg = price * 1000
+      const sPrice  = document.getElementById('homeSilverPrice');
+      const sKg     = document.getElementById('homeSilver10g');
+      if (sPrice)  sPrice.textContent  = (Math.round(silver.price * 100) / 100).toLocaleString('en-IN');
+      if (sKg)     sKg.textContent     = Math.round(silver.price * 1000).toLocaleString('en-IN');
     }
   }
+  window.syncHomeRateCards = syncHomeRateCards;
 
-  // Run an initial sync so cards reflect the seeded values immediately
+  // Render whatever the rates API has already delivered (if anything).
   syncHomeRateCards();
-  setInterval(updateTicker, 4000);
+  updateTicker();
 
   /* ---------- Contact form ---------- */
   const contactForm = document.querySelector('#contactForm');

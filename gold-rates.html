@@ -337,16 +337,14 @@
     <div class="live-grid">
       <div class="live-card primary">
         <div class="lc-metal">24K Gold (99.9%)</div>
-        <div class="lc-price" id="p24">₹14,551</div>
-        <div class="lc-per10" id="p24-10g">per gram &nbsp;|&nbsp; ₹1,45,510 / 10g</div>
-        <div class="lc-change up" id="c24">▲ ₹38 &nbsp; +0.42%</div>
+        <div class="lc-price" id="p24">—</div>
+        <div class="lc-per10" id="p24-10g">per gram &nbsp;|&nbsp; — / 10g</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
       <div class="live-card">
         <div class="lc-metal">Silver (99.9%)</div>
-        <div class="lc-price" id="pSilver">₹231.81</div>
-        <div class="lc-per10" id="pSilver-10g">per gram &nbsp;|&nbsp; ₹2,318 / 10g</div>
-        <div class="lc-change down" id="cSilver">▼ ₹0.16 &nbsp; -0.15%</div>
+        <div class="lc-price" id="pSilver">—</div>
+        <div class="lc-per10" id="pSilver-10g">per gram &nbsp;|&nbsp; — / 10g</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
     </div>
@@ -389,27 +387,24 @@
                 <th>Per 8g (Tola)</th>
                 <th>Per 10g</th>
                 <th>Per 100g</th>
-                <th>Change</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="td-metal">Gold 24K</td>
                 <td class="td-purity">99.9%</td>
-                <td class="td-price" id="t24g">₹14,551</td>
-                <td id="t24-8g">₹1,16,408</td>
-                <td id="t24-10g">₹1,45,510</td>
-                <td id="t24-100g">₹14,55,100</td>
-                <td class="td-up" id="t24-ch">▲ +0.42%</td>
+                <td class="td-price" id="t24g">—</td>
+                <td id="t24-8g">—</td>
+                <td id="t24-10g">—</td>
+                <td id="t24-100g">—</td>
               </tr>
               <tr>
                 <td class="td-metal">Silver</td>
                 <td class="td-purity">99.9%</td>
-                <td class="td-price" id="tSig">₹231.81</td>
-                <td id="tSi-8g">₹856</td>
-                <td id="tSi-10g">₹2,318</td>
-                <td id="tSi-100g">₹10,700</td>
-                <td class="td-down" id="tSi-ch">▼ -0.15%</td>
+                <td class="td-price" id="tSig">—</td>
+                <td id="tSi-8g">—</td>
+                <td id="tSi-10g">—</td>
+                <td id="tSi-100g">—</td>
               </tr>
             </tbody>
           </table>
@@ -437,13 +432,13 @@
             </div>
             <div class="converter-row">
               <select id="convMetal" onchange="convertGold()" style="width:100%;">
-                <option value="14551">24K Gold (99.9%)</option>
-                <option value="231.81">Silver (99.9%)</option>
+                <option value="24K">24K Gold (99.9%)</option>
+                <option value="Silver">Silver (99.9%)</option>
               </select>
             </div>
             <div class="converter-result">
               <div class="cr-label">Estimated Value</div>
-              <div class="cr-val" id="convResult">₹14,551</div>
+              <div class="cr-val" id="convResult">—</div>
             </div>
             <p style="font-size:.68rem;color:var(--text-muted);margin-top:10px;margin-bottom:0;">Based on indicative spot price. Actual transaction price may vary slightly.</p>
           </div>
@@ -541,8 +536,9 @@
    GOLD RATES PAGE – JavaScript
    ================================================================ */
 
-/* ---- Base Prices (overridden by IBJA fetch when available) ---- */
-const BASE = { '24K': 14551, 'Silver': 231.81 };
+/* ---- Live prices — stay null until the API answers.
+   Never seed a hardcoded rate: a wrong number must never be shown. ---- */
+const BASE = { '24K': null, 'Silver': null };
 let current = { ...BASE };
 
 /* ---- Live timestamp ---- */
@@ -561,38 +557,31 @@ const fmtDec = (n) => '₹' + n.toFixed(2);
    Rates come from the API once per page load (see applyIBJA below).
    No simulated drift: the number shown is exactly what the API
    returned, so the website always matches the app. */
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
 function updatePrices() {
   const p24 = current['24K'], pSi = current['Silver'];
 
-  // Cards
-  document.getElementById('p24').textContent = fmt(p24);
-  document.getElementById('p24-10g').textContent = `per gram | ${fmt(p24 * 10)} / 10g`;
-  document.getElementById('pSilver').textContent = fmtDec(pSi);
-  document.getElementById('pSilver-10g').textContent = `per gram | ${fmt(pSi * 10)} / 10g`;
-
-  // Changes vs open
-  const chg24 = p24 - 14500, pct24 = (chg24 / 14500 * 100);
-  const chgSi = pSi - 231.0, pctSi = (chgSi / 231.0 * 100);
-
-  function setChange(id, change, pct) {
-    const el = document.getElementById(id);
-    const up = change >= 0;
-    el.className = 'lc-change ' + (up ? 'up' : 'down');
-    el.textContent = (up ? '▲' : '▼') + ' ₹' + Math.abs(change).toFixed(0) + '  ' + (up ? '+' : '') + pct.toFixed(2) + '%';
+  if (p24) {
+    setText('p24', fmt(p24));
+    setText('p24-10g', `per gram | ${fmt(p24 * 10)} / 10g`);
+    setText('t24g', fmt(p24));
+    setText('t24-8g', fmt(p24 * 8));
+    setText('t24-10g', fmt(p24 * 10));
+    setText('t24-100g', fmt(p24 * 100));
   }
-  setChange('c24', chg24, pct24);
-  setChange('cSilver', chgSi, pctSi);
 
-  // Table
-  document.getElementById('t24g').textContent  = fmt(p24);
-  document.getElementById('t24-8g').textContent  = fmt(p24 * 8);
-  document.getElementById('t24-10g').textContent = fmt(p24 * 10);
-  document.getElementById('t24-100g').textContent = fmt(p24 * 100);
-  const cl24 = chg24 >= 0 ? 'td-up' : 'td-down';
-  document.getElementById('t24-ch').className = cl24;
-  document.getElementById('t24-ch').textContent = (chg24 >= 0 ? '▲ +' : '▼ ') + pct24.toFixed(2) + '%';
-
-  document.getElementById('tSig').textContent  = fmtDec(pSi);
+  if (pSi) {
+    setText('pSilver', fmtDec(pSi));
+    setText('pSilver-10g', `per gram | ${fmt(pSi * 10)} / 10g`);
+    setText('tSig', fmtDec(pSi));
+    setText('tSi-8g', fmt(pSi * 8));
+    setText('tSi-10g', fmt(pSi * 10));
+    setText('tSi-100g', fmt(pSi * 100));
+  }
 
   // Converter update
   convertGold();
@@ -600,36 +589,39 @@ function updatePrices() {
 
 // No polling: rate is fetched once per page load, not simulated.
 
-/* ---- Seed BASE from real IBJA rates when they arrive ---- */
-if (window.GoldNestRates) {
-  function applyIBJA(r) {
-    if (!r || !r.gold999_per_gram) return;
-    BASE['24K']    = r.gold999_per_gram;
-    BASE['Silver'] = r.silver999_per_gram;
-    // reset current so the next tick reflects new baseline
-    current = { ...BASE };
-    updatePrices();
+/* ---- Fill BASE from the live API. Until this fires the page shows "—". ---- */
+function applyIBJA(r) {
+  if (!r || !r.gold999_per_gram) return;
+  BASE['24K']    = r.gold999_per_gram;
+  BASE['Silver'] = r.silver999_per_gram;
+  current = { ...BASE };
+  updatePrices();
 
-    // Show source attribution
-    const meta = document.getElementById('lastUpdate');
-    if (meta && r.source === 'IBJA') {
-      const age = window.GoldNestRates.formatAge(r.timestamp);
-      meta.title = 'Source: IBJA · fetched ' + age;
-    }
+  // Show source attribution
+  const meta = document.getElementById('lastUpdate');
+  if (meta && r.source === 'IBJA') {
+    const age = window.GoldNestRates.formatAge(r.timestamp);
+    meta.title = 'Source: IBJA · fetched ' + age;
   }
+}
+// js/rates-api.js is deferred, so it only exists by DOMContentLoaded.
+document.addEventListener('DOMContentLoaded', function () {
+  if (!window.GoldNestRates) return;
   window.GoldNestRates.onUpdate(applyIBJA);
   window.GoldNestRates.fetch().then(applyIBJA).catch(() => {});
-}
+});
 
-/* ---- Gold Converter ---- */
+/* ---- Gold Converter — priced off the live rate only ---- */
 function convertGold() {
+  const el = document.getElementById('convResult');
+  if (!el) return;
   const amt   = parseFloat(document.getElementById('convAmount')?.value) || 1;
   const unit  = document.getElementById('convUnit')?.value;
-  const price = parseFloat(document.getElementById('convMetal')?.value) || 14551;
+  const metal = document.getElementById('convMetal')?.value;
+  const price = current[metal];
+  if (!price) { el.textContent = '—'; return; }   // no live rate yet
   const grams = unit === 'gram' ? amt : unit === 'tola' ? amt * 8 : unit === '10g' ? amt * 10 : unit === '100g' ? amt * 100 : amt * 1000;
-  const val   = grams * price;
-  const el = document.getElementById('convResult');
-  if (el) el.textContent = '₹' + Math.round(val).toLocaleString('en-IN');
+  el.textContent = '₹' + Math.round(grams * price).toLocaleString('en-IN');
 }
 convertGold();
 
