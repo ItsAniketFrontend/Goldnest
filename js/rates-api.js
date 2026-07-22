@@ -22,8 +22,29 @@
 (function () {
   'use strict';
 
-  const CACHE_KEY     = 'goldnest_ibja_rates_v1';
+  const CACHE_KEY     = 'goldnest_rates_v2';
   const CACHE_TTL_MS  = 2 * 60 * 60 * 1000; // 2 hours
+
+  /* ------------------------------------------------------------
+     GOLDNEST API — primary source (same source the mobile app uses)
+     ------------------------------------------------------------
+     Per the backend team: "inme jo last record hai wo live rate hai"
+     — the LAST entry of the yearly series is today's live rate.
+     So we read the series and take series[series.length - 1].
+
+     The API sends `Access-Control-Allow-Origin: *`, so the browser can
+     call it directly. On goldsnest.com it is same-origin anyway.
+
+     NOTE: this token is intentionally client-side. It is read-only and
+     only exposes public gold/silver prices. Replace it below if the
+     backend issues a new one.
+  ------------------------------------------------------------ */
+  const API_BASE  = 'https://goldsnest.com/api';
+  const API_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4IiwianRpIjoiZDk2MzMwNDZiNmE3OTk0MzkyMDVjZDUzYzE3NTFiZjY3OTEwZmM4N2U0ZmVlOTFmMmIzM2IzNmMwOTZiNjIxYTZlNjA4MTA2NjY0NzE4MWMiLCJpYXQiOjE3ODMzMzcyMzIuOTA5NDgxLCJuYmYiOjE3ODMzMzcyMzIuOTA5NDg0LCJleHAiOjE4MTQ4NzMyMzIuODg3NzIyLCJzdWIiOiI0MDQiLCJzY29wZXMiOltdfQ.QqYvm_YcNg866v6psACoqtkKsyJbRH4RWMTmDDfrtN7OdvhgeLrMdO73OpKwzXw6dhCtNyxfqHFxWR0au1VEJ7SmXWdP-9Yyt3pPb7HCnvnarTV0d4FllI7jqRfq_q-8CaerYSaT0A02ZwUDUQyzK-q4vGx1XrpMbPDrJdOV5_jalWrTksYm--LtA4ZzSRp35_5CppadsSkwANnKhcOXpAr0-YH_EqiuMgC1uW42XzHtt9P_2qoyQMW3ORJl3vWT8YyU-WDGvPOb2QDgWAO21j1BwVIBiR1KoU2yMIVYWBY2Z3E26LfXFT3UJxfrnaQIkM8yywwH8rXE1he9Ikg7tb9oq8bzXpCdwHwv297SZUe28I-XVyE4pybcpJc9KzOe6GFhQVfWJRywLHMwhNrrGCknZ-SaawPBg2WCqjPDbeQaI04K8XDwxq3PsTMb2T8dnOjLm4e_UyKhyox2EcjBXw47-Ggq5CS0P2utTxDNiZzh3QEZ0yiGIR7Q8gSc7Btc4EfoJPRWDeEAS1P5BhyMVvulxnZ_lZaeXbsaS_7lh_pUdRS6KATGredNE6xB8dnXBlRhaN28dPmKCjDCzu89TjpT4DoXP5GOrh0bsp_5dxYvdqg7Yz83uxLEjQx9Xnnk-mOvrBoh7yH8gPvXeS_Rg2j7BzLqWZx4hUcufchKxEA';
+  const API_ENDPOINTS = {
+    gold:   '/yearly-chart',
+    silver: '/yearly-silver-chart',
+  };
 
   // Public CORS proxies — tried in order. Each returns raw HTML.
   const PROXIES = [
@@ -62,6 +83,15 @@
        5. Hard-coded FALLBACK
   ------------------------------------------------------------ */
   async function fetchIBJARates(opts = {}) {
+    // 0 — GoldNest API (same source as the mobile app) — PREFERRED
+    try {
+      const apiRates = await fetchGoldNestApi();
+      if (apiRates) {
+        writeCache(apiRates);
+        return apiRates;
+      }
+    } catch (_) {}
+
     // 1 — same-origin JSON (fastest, no CORS, no third-party)
     try {
       const localJson = await fetchLocalJson();
@@ -108,6 +138,61 @@
 
     // 5 — hard-coded fallback
     return { ...FALLBACK, timestamp: Date.now() };
+  }
+
+  /* ------------------------------------------------------------
+     GoldNest API fetcher — the app's own source of truth.
+     Calls the yearly gold + silver endpoints and uses the LAST
+     record of each series as the live rate (per the backend team).
+     Silver is optional: if it fails, gold alone still resolves and
+     silver falls back down the chain.
+  ------------------------------------------------------------ */
+  async function fetchGoldNestApi() {
+    if (!API_TOKEN) return null;              // not configured yet
+
+    const call = async (path) => {
+      const res = await fetchWithTimeout(API_BASE + path, 7000, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + API_TOKEN,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: '{}',
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      const rows = json && Array.isArray(json.data) ? json.data : null;
+      if (!rows || !rows.length) throw new Error('empty data');
+      // LAST record = live rate.
+      const last = rows[rows.length - 1];
+      const val = parseFloat(last && last.close_price);
+      return Number.isFinite(val) ? { value: val, day: last.day } : null;
+    };
+
+    // Gold is required; silver is best-effort.
+    const gold = await call(API_ENDPOINTS.gold);
+    if (!gold || !isValidGold(gold.value)) return null;
+
+    let silver = null;
+    try {
+      const s = await call(API_ENDPOINTS.silver);
+      if (s && isValidSilver(s.value)) silver = s;
+    } catch (_) { /* silver optional */ }
+
+    const g = gold.value;
+    return {
+      gold999_per_gram:   Math.round(g),
+      gold22k_per_gram:   Math.round(g * 0.916),
+      gold18k_per_gram:   Math.round(g * 0.750),
+      silver999_per_gram: silver ? Math.round(silver.value * 100) / 100
+                                 : FALLBACK.silver999_per_gram,
+      source:    'GoldNest',
+      session:   '',
+      rate_date: gold.day || '',
+      timestamp: Date.now(),
+      isStale:   false,
+    };
   }
 
   /* ------------------------------------------------------------
@@ -175,14 +260,14 @@
     } catch (_) {}
   }
 
-  function fetchWithTimeout(url, ms) {
+  function fetchWithTimeout(url, ms, init) {
     return new Promise((resolve, reject) => {
       const ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
       const timer = setTimeout(() => {
         if (ctrl) ctrl.abort();
         reject(new Error('timeout'));
       }, ms);
-      const opts = ctrl ? { signal: ctrl.signal } : {};
+      const opts = Object.assign({}, init || {}, ctrl ? { signal: ctrl.signal } : {});
       fetch(url, opts)
         .then(r => { clearTimeout(timer); resolve(r); })
         .catch(e => { clearTimeout(timer); reject(e); });

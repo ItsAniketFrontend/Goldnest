@@ -21,7 +21,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const API_URL = 'https://www.website4test.com/goldnest/api/yearly-chart';
+// Production endpoint (goldsnest.com). Override with GOLDNEST_API_BASE
+// if you run against a different host.
+const API_BASE = process.env.GOLDNEST_API_BASE || 'https://goldsnest.com/api';
+const API_URL = API_BASE.replace(/\/$/, '') + '/yearly-chart';
 const OUT_FILE = path.join(__dirname, '..', 'gold-history.json');
 const TOKEN = process.env.GOLDNEST_API_TOKEN;
 
