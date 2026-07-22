@@ -132,8 +132,6 @@ function parseRates(html) {
   return {
     ok: true,
     gold999_per_gram:   Math.round(gold999),
-    gold22k_per_gram:   Math.round(gold999 * 0.916),
-    gold18k_per_gram:   Math.round(gold999 * 0.750),
     silver999_per_gram: silver999 != null ? Math.round(silver999 * 100) / 100 : null,
   };
 }
@@ -178,8 +176,6 @@ async function main() {
 
   const out = {
     gold999_per_gram:   parsed.gold999_per_gram,
-    gold22k_per_gram:   parsed.gold22k_per_gram,
-    gold18k_per_gram:   parsed.gold18k_per_gram,
     silver999_per_gram: parsed.silver999_per_gram,
     source:             'IBJA',
     session,

@@ -13,11 +13,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Live Silver Rates Today | 10-Year Silver Price Chart India | GoldNest</title>
-  <meta name="description" content="Check today's live silver price in India. View real-time 999, 925 Sterling, 900 silver rates per gram, 10g, kg. Explore 10-year historical silver price chart and trend analysis." />
+  <meta name="description" content="Check today's live silver price in India. View real-time 999 fine silver rates per gram, 10g and per kg. Explore 10-year historical silver price chart and trend analysis." />
   <meta name="keywords" content="live silver rate today India, silver price per gram, 999 silver rate, sterling silver price, silver price chart 10 years India, today silver price Vadodara, silver rate history" />
   <link rel="canonical" href="https://goldsnest.com/silver-rates.html" />
   <meta property="og:title" content="Live Silver Rates & 10-Year Price Chart | GoldNest" />
-  <meta property="og:description" content="Real-time silver price tracker with historical charts. Check 999, 925, 900 silver rates and 10-year price trends in India." />
+  <meta property="og:description" content="Real-time silver price tracker with historical charts. Check 999 fine silver rates and 10-year price trends in India." />
   <meta property="og:url" content="https://goldsnest.com/silver-rates.html" />
   <meta property="og:image" content="https://goldsnest.com/FrontendLogo.png" />
   <script type="application/ld+json">
@@ -57,7 +57,8 @@
     .hero-meta { text-align: right; font-size: 0.8rem; color: var(--text-muted); flex-shrink: 0; }
 
     /* LIVE PRICE CARDS */
-    .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+    /* Only one real rate comes from the API (Silver 999) — shown per-gram and per-KG */
+    .live-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 360px)); justify-content: start; gap: 16px; margin-bottom: 40px; }
     .live-card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 22px 18px; position: relative; overflow: hidden; transition: all var(--transition); min-width: 0; }
     .live-card:hover { border-color: var(--silver); box-shadow: 0 4px 24px rgba(107,114,128,0.12); }
     .live-card.primary { border-color: var(--silver-dark); background: linear-gradient(135deg, rgba(156,163,175,0.08), var(--bg-card)); }
@@ -300,7 +301,7 @@
       <div>
         <span style="display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--silver-dark);margin-bottom:10px;"><span class="live-dot"></span>Live Prices</span>
         <h1 style="margin-bottom:8px;">Today's Silver <span style="background:linear-gradient(135deg,var(--silver-dark),var(--silver-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Rates</span></h1>
-        <p>Real-time silver prices in India. Track 999 fine, 925 sterling &amp; 900 silver rates with live charts and 10-year price history.</p>
+        <p>Real-time silver prices in India. Track 999 fine silver rates with live charts and 10-year price history.</p>
       </div>
       <div class="hero-meta">
         <div>Last updated: <span id="lastUpdate" style="color:var(--text);font-weight:600;">–</span></div>
@@ -322,20 +323,6 @@
         <div class="lc-price" id="p999">₹231.81</div>
         <div class="lc-per10" id="p999-10g">per gram &nbsp;|&nbsp; ₹2,318 / 10g</div>
         <div class="lc-change up" id="c999">▲ ₹0.85 &nbsp; +0.80%</div>
-        <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
-      </div>
-      <div class="live-card">
-        <div class="lc-metal">Silver 925 (Sterling)</div>
-        <div class="lc-price" id="p925">₹214.42</div>
-        <div class="lc-per10" id="p925-10g">per gram &nbsp;|&nbsp; ₹2,144 / 10g</div>
-        <div class="lc-change up" id="c925">▲ ₹0.78 &nbsp; +0.79%</div>
-        <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
-      </div>
-      <div class="live-card">
-        <div class="lc-metal">Silver 900 (90.0%)</div>
-        <div class="lc-price" id="p900">₹208.63</div>
-        <div class="lc-per10" id="p900-10g">per gram &nbsp;|&nbsp; ₹2,086 / 10g</div>
-        <div class="lc-change up" id="c900">▲ ₹0.76 &nbsp; +0.79%</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
       <div class="live-card">
@@ -372,7 +359,7 @@
         <!-- DETAILED RATES TABLE -->
         <div class="stats-panel fade-up" data-delay="2">
           <div class="stats-panel-header">
-            <span>Today's Detailed Silver Rates by Purity</span>
+            <span>Today's Detailed Silver Rates</span>
             <span class="scroll-hint">← Scroll →</span>
           </div>
           <div class="table-scroll">
@@ -397,51 +384,6 @@
                 <td id="t999-100g">₹10,700</td>
                 <td id="t999-kg">₹2,31,810</td>
                 <td class="td-up" id="t999-ch">▲ +0.80%</td>
-              </tr>
-              <tr>
-                <td class="td-metal">Silver 925</td>
-                <td class="td-purity">92.5% Sterling</td>
-                <td class="td-price" id="t925g">₹214.42</td>
-                <td id="t925-10g">₹2,144</td>
-                <td id="t925-100g">₹9,900</td>
-                <td id="t925-kg">₹2,14,420</td>
-                <td class="td-up" id="t925-ch">▲ +0.79%</td>
-              </tr>
-              <tr>
-                <td class="td-metal">Silver 900</td>
-                <td class="td-purity">90.0% Coin</td>
-                <td class="td-price" id="t900g">₹208.63</td>
-                <td id="t900-10g">₹2,086</td>
-                <td id="t900-100g">₹9,600</td>
-                <td id="t900-kg">₹2,08,630</td>
-                <td class="td-up" id="t900-ch">▲ +0.79%</td>
-              </tr>
-              <tr>
-                <td class="td-metal">Silver 800</td>
-                <td class="td-purity">80.0%</td>
-                <td class="td-price">₹185.45</td>
-                <td>₹1,855</td>
-                <td>₹18,545</td>
-                <td>₹1,85,450</td>
-                <td class="td-up">▲ +0.80%</td>
-              </tr>
-              <tr>
-                <td class="td-metal">Silver Coin (Bar)</td>
-                <td class="td-purity">99.9% (BIS)</td>
-                <td class="td-price">₹242</td>
-                <td>₹2,420</td>
-                <td>₹24,200</td>
-                <td>₹2,42,000</td>
-                <td class="td-up">▲ +0.80%</td>
-              </tr>
-              <tr>
-                <td class="td-metal">Silver Ornament</td>
-                <td class="td-purity">925 + making</td>
-                <td class="td-price">₹115</td>
-                <td>₹1,150</td>
-                <td>₹11,500</td>
-                <td>₹1,15,000</td>
-                <td class="td-up">▲ +0.79%</td>
               </tr>
             </tbody>
           </table>
@@ -514,9 +456,6 @@
             <div class="converter-row">
               <select id="convMetal" onchange="convertSilver()" style="width:100%;">
                 <option value="231.81">Silver 999 (99.9%)</option>
-                <option value="214.42">Silver 925 (Sterling)</option>
-                <option value="208.63">Silver 900 (Coin)</option>
-                <option value="185.45">Silver 800</option>
               </select>
             </div>
             <div class="converter-result">
@@ -659,10 +598,10 @@
    ================================================================ */
 
 /* Base prices — overridden by real IBJA fetch when available */
-const BASE = { '999': 231.81, '925': 214.42, '900': 208.63 };
+const BASE = { '999': 231.81 };
 let current = { ...BASE };
-let dayHigh  = { '999': 232.50, '925': 215.06, '900': 209.25 };
-let dayLow   = { '999': 231.00, '925': 213.68, '900': 207.90 };
+let dayHigh  = { '999': 232.50 };
+let dayLow   = { '999': 231.00 };
 
 function updateTime() {
   const now = new Date();
@@ -677,28 +616,22 @@ const fmt    = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
 const fmtDec = (n) => '₹' + n.toFixed(2);
 
 function updatePrices() {
-  const drift = { '999': (Math.random() - 0.48) * 0.4, '925': (Math.random() - 0.48) * 0.35, '900': (Math.random() - 0.48) * 0.32 };
+  const drift = { '999': (Math.random() - 0.48) * 0.4 };
   for (const m in current) {
     current[m] = Math.max(current[m] + drift[m], BASE[m] * 0.96);
     dayHigh[m] = Math.max(dayHigh[m], current[m]);
     dayLow[m]  = Math.min(dayLow[m],  current[m]);
   }
 
-  const p999 = current['999'], p925 = current['925'], p900 = current['900'];
+  const p999 = current['999'];
 
   // Cards
   document.getElementById('p999').textContent = fmtDec(p999);
   document.getElementById('p999-10g').textContent = `per gram | ${fmt(p999 * 10)} / 10g`;
-  document.getElementById('p925').textContent = fmtDec(p925);
-  document.getElementById('p925-10g').textContent = `per gram | ${fmt(p925 * 10)} / 10g`;
-  document.getElementById('p900').textContent = fmtDec(p900);
-  document.getElementById('p900-10g').textContent = `per gram | ${fmt(p900 * 10)} / 10g`;
   document.getElementById('pKg').textContent = fmt(p999 * 1000);
 
   // Changes vs open
   const chg999 = p999 - 231.00, pct999 = (chg999 / 231.00 * 100);
-  const chg925 = p925 - 213.68, pct925 = (chg925 / 213.68 * 100);
-  const chg900 = p900 - 207.90, pct900 = (chg900 / 207.90 * 100);
 
   function setChange(id, change, pct, isKg=false) {
     const el = document.getElementById(id);
@@ -708,8 +641,6 @@ function updatePrices() {
     el.textContent = (up ? '▲' : '▼') + ' ₹' + amt + '  ' + (up ? '+' : '') + pct.toFixed(2) + '%';
   }
   setChange('c999', chg999, pct999);
-  setChange('c925', chg925, pct925);
-  setChange('c900', chg900, pct900);
   setChange('cKg', chg999, pct999, true);
 
   // Sidebar stats
@@ -724,16 +655,6 @@ function updatePrices() {
   document.getElementById('t999-ch').className = chg999 >= 0 ? 'td-up' : 'td-down';
   document.getElementById('t999-ch').textContent = (chg999 >= 0 ? '▲ +' : '▼ ') + pct999.toFixed(2) + '%';
 
-  document.getElementById('t925g').textContent   = fmtDec(p925);
-  document.getElementById('t925-10g').textContent  = fmt(p925 * 10);
-  document.getElementById('t925-100g').textContent = fmt(p925 * 100);
-  document.getElementById('t925-kg').textContent   = fmt(p925 * 1000);
-
-  document.getElementById('t900g').textContent   = fmtDec(p900);
-  document.getElementById('t900-10g').textContent  = fmt(p900 * 10);
-  document.getElementById('t900-100g').textContent = fmt(p900 * 100);
-  document.getElementById('t900-kg').textContent   = fmt(p900 * 1000);
-
   convertSilver();
 }
 setInterval(updatePrices, 3000);
@@ -743,11 +664,9 @@ if (window.GoldNestRates) {
   function applyIBJA(r) {
     if (!r || !r.silver999_per_gram) return;
     BASE['999'] = r.silver999_per_gram;
-    BASE['925'] = Math.round(r.silver999_per_gram * 0.925 * 100) / 100;  // sterling
-    BASE['900'] = Math.round(r.silver999_per_gram * 0.900 * 100) / 100;
     current = { ...BASE };
-    dayHigh = { '999': BASE['999'] * 1.008, '925': BASE['925'] * 1.008, '900': BASE['900'] * 1.008 };
-    dayLow  = { '999': BASE['999'] * 0.992, '925': BASE['925'] * 0.992, '900': BASE['900'] * 0.992 };
+    dayHigh = { '999': BASE['999'] * 1.008 };
+    dayLow  = { '999': BASE['999'] * 0.992 };
     updatePrices();
 
     const meta = document.getElementById('lastUpdate');

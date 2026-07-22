@@ -13,11 +13,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Live Gold Rates Today | 10-Year Gold Price Chart India | GoldNest</title>
-  <meta name="description" content="Check today's live gold price in India. View real-time 24K, 22K, 18K gold rates per gram and per 10g. Explore 10-year historical gold price chart and trend analysis." />
+  <meta name="description" content="Check today's live gold price in India. View real-time 24K (999 fine) gold rates per gram and per 10g. Explore 10-year historical gold price chart and trend analysis." />
   <meta name="keywords" content="live gold rate today India, gold price per gram, 24K gold rate, gold price chart 10 years India, today gold price Vadodara, gold rate history" />
   <link rel="canonical" href="https://goldsnest.com/gold-rates.html" />
   <meta property="og:title" content="Live Gold Rates & 10-Year Price Chart | GoldNest" />
-  <meta property="og:description" content="Real-time gold price tracker with historical charts. Check 24K, 22K, 18K gold rates and 10-year price trends in India." />
+  <meta property="og:description" content="Real-time gold price tracker with historical charts. Check 24K (999 fine) gold rates and 10-year price trends in India." />
   <meta property="og:url" content="https://goldsnest.com/gold-rates.html" />
   <meta property="og:image" content="https://goldsnest.com/FrontendLogo.png" />
   <script type="application/ld+json">
@@ -52,7 +52,8 @@
     .hero-meta { text-align: right; font-size: 0.8rem; color: var(--text-muted); flex-shrink: 0; }
 
     /* LIVE PRICE CARDS */
-    .live-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+    /* Only two real rates come from the API (Gold 999 + Silver 999) */
+    .live-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 360px)); justify-content: start; gap: 16px; margin-bottom: 40px; }
     .live-card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 22px 18px; position: relative; overflow: hidden; transition: all var(--transition); min-width: 0; }
     .live-card:hover { border-color: var(--gold); box-shadow: var(--shadow); }
     .live-card.primary { border-color: var(--gold); background: linear-gradient(135deg, rgba(212,175,55,0.06), var(--bg-card)); }
@@ -317,7 +318,7 @@
       <div>
         <span style="display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:10px;"><span class="live-dot"></span>Live Prices</span>
         <h1 style="margin-bottom:8px;">Today's Gold <span style="background:linear-gradient(135deg,var(--gold-dark),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Rates</span></h1>
-        <p>Real-time gold prices in India. Track 24K, 22K &amp; 18K gold rates with live charts and 10-year price history.</p>
+        <p>Real-time gold prices in India. Track 24K (999 fine) gold &amp; silver rates with live charts and 10-year price history.</p>
       </div>
       <div class="hero-meta">
         <div>Last updated: <span id="lastUpdate" style="color:var(--text);font-weight:600;">–</span></div>
@@ -339,20 +340,6 @@
         <div class="lc-price" id="p24">₹14,551</div>
         <div class="lc-per10" id="p24-10g">per gram &nbsp;|&nbsp; ₹1,45,510 / 10g</div>
         <div class="lc-change up" id="c24">▲ ₹38 &nbsp; +0.42%</div>
-        <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
-      </div>
-      <div class="live-card">
-        <div class="lc-metal">22K Gold (91.6%)</div>
-        <div class="lc-price" id="p22">₹13,329</div>
-        <div class="lc-per10" id="p22-10g">per gram &nbsp;|&nbsp; ₹1,33,290 / 10g</div>
-        <div class="lc-change up" id="c22">▲ ₹32 &nbsp; +0.38%</div>
-        <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
-      </div>
-      <div class="live-card">
-        <div class="lc-metal">18K Gold (75.0%)</div>
-        <div class="lc-price" id="p18">₹10,913</div>
-        <div class="lc-per10" id="p18-10g">per gram &nbsp;|&nbsp; ₹1,09,130 / 10g</div>
-        <div class="lc-change up" id="c18">▲ ₹22 &nbsp; +0.31%</div>
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
       <div class="live-card">
@@ -414,33 +401,6 @@
                 <td id="t24-10g">₹1,45,510</td>
                 <td id="t24-100g">₹14,55,100</td>
                 <td class="td-up" id="t24-ch">▲ +0.42%</td>
-              </tr>
-              <tr>
-                <td class="td-metal">Gold 22K</td>
-                <td class="td-purity">91.6%</td>
-                <td class="td-price" id="t22g">₹13,329</td>
-                <td id="t22-8g">₹1,06,632</td>
-                <td id="t22-10g">₹1,33,290</td>
-                <td id="t22-100g">₹8,47,500</td>
-                <td class="td-up" id="t22-ch">▲ +0.38%</td>
-              </tr>
-              <tr>
-                <td class="td-metal">Gold 18K</td>
-                <td class="td-purity">75.0%</td>
-                <td class="td-price" id="t18g">₹10,913</td>
-                <td id="t18-8g">₹87,304</td>
-                <td id="t18-10g">₹1,09,130</td>
-                <td id="t18-100g">₹6,93,400</td>
-                <td class="td-up" id="t18-ch">▲ +0.31%</td>
-              </tr>
-              <tr>
-                <td class="td-metal">Gold 14K</td>
-                <td class="td-purity">58.5%</td>
-                <td class="td-price">₹5,408</td>
-                <td>₹43,264</td>
-                <td>₹54,080</td>
-                <td>₹5,40,800</td>
-                <td class="td-up">▲ +0.42%</td>
               </tr>
               <tr>
                 <td class="td-metal">Silver</td>
@@ -531,8 +491,6 @@
             <div class="converter-row">
               <select id="convMetal" onchange="convertGold()" style="width:100%;">
                 <option value="14551">24K Gold (99.9%)</option>
-                <option value="13329">22K Gold (91.6%)</option>
-                <option value="10913">18K Gold (75.0%)</option>
                 <option value="231.81">Silver (99.9%)</option>
               </select>
             </div>
@@ -676,10 +634,10 @@
    ================================================================ */
 
 /* ---- Base Prices (overridden by IBJA fetch when available) ---- */
-const BASE = { '24K': 14551, '22K': 13329, '18K': 10913, 'Silver': 231.81 };
+const BASE = { '24K': 14551, 'Silver': 231.81 };
 let current = { ...BASE };
-let dayHigh  = { '24K': 14580, '22K': 13360, '18K': 10940, 'Silver': 232.5 };
-let dayLow   = { '24K': 14510, '22K': 13290, '18K': 10880, 'Silver': 231.0 };
+let dayHigh  = { '24K': 14580, 'Silver': 232.5 };
+let dayLow   = { '24K': 14510, 'Silver': 231.0 };
 
 /* ---- Live timestamp ---- */
 function updateTime() {
@@ -696,29 +654,23 @@ const fmtDec = (n) => '₹' + n.toFixed(2);
 /* ---- Live price update ---- */
 function updatePrices() {
   // Simulate small fluctuations
-  const drift = { '24K': (Math.random() - 0.48) * 8, '22K': (Math.random() - 0.48) * 7, '18K': (Math.random() - 0.48) * 6, 'Silver': (Math.random() - 0.48) * 0.3 };
+  const drift = { '24K': (Math.random() - 0.48) * 8, 'Silver': (Math.random() - 0.48) * 0.3 };
   for (const m in current) {
     current[m] = Math.max(current[m] + drift[m], BASE[m] * 0.98);
     dayHigh[m] = Math.max(dayHigh[m], current[m]);
     dayLow[m]  = Math.min(dayLow[m],  current[m]);
   }
 
-  const p24 = current['24K'], p22 = current['22K'], p18 = current['18K'], pSi = current['Silver'];
+  const p24 = current['24K'], pSi = current['Silver'];
 
   // Cards
   document.getElementById('p24').textContent = fmt(p24);
   document.getElementById('p24-10g').textContent = `per gram | ${fmt(p24 * 10)} / 10g`;
-  document.getElementById('p22').textContent = fmt(p22);
-  document.getElementById('p22-10g').textContent = `per gram | ${fmt(p22 * 10)} / 10g`;
-  document.getElementById('p18').textContent = fmt(p18);
-  document.getElementById('p18-10g').textContent = `per gram | ${fmt(p18 * 10)} / 10g`;
   document.getElementById('pSilver').textContent = fmtDec(pSi);
   document.getElementById('pSilver-10g').textContent = `per gram | ${fmt(pSi * 10)} / 10g`;
 
   // Changes vs open
   const chg24 = p24 - 14500, pct24 = (chg24 / 14500 * 100);
-  const chg22 = p22 - 13284, pct22 = (chg22 / 13284 * 100);
-  const chg18 = p18 - 10876, pct18 = (chg18 / 10876 * 100);
   const chgSi = pSi - 231.0, pctSi = (chgSi / 231.0 * 100);
 
   function setChange(id, change, pct) {
@@ -728,8 +680,6 @@ function updatePrices() {
     el.textContent = (up ? '▲' : '▼') + ' ₹' + Math.abs(change).toFixed(0) + '  ' + (up ? '+' : '') + pct.toFixed(2) + '%';
   }
   setChange('c24', chg24, pct24);
-  setChange('c22', chg22, pct22);
-  setChange('c18', chg18, pct18);
   setChange('cSilver', chgSi, pctSi);
 
   // Sidebar stats
@@ -745,7 +695,6 @@ function updatePrices() {
   document.getElementById('t24-ch').className = cl24;
   document.getElementById('t24-ch').textContent = (chg24 >= 0 ? '▲ +' : '▼ ') + pct24.toFixed(2) + '%';
 
-  document.getElementById('t22g').textContent  = fmt(p22);
   document.getElementById('tSig').textContent  = fmtDec(pSi);
 
   // Converter update
@@ -759,13 +708,11 @@ if (window.GoldNestRates) {
   function applyIBJA(r) {
     if (!r || !r.gold999_per_gram) return;
     BASE['24K']    = r.gold999_per_gram;
-    BASE['22K']    = r.gold22k_per_gram;
-    BASE['18K']    = r.gold18k_per_gram;
     BASE['Silver'] = r.silver999_per_gram;
     // reset current so the next tick reflects new baseline
     current = { ...BASE };
-    dayHigh = { '24K': BASE['24K'] * 1.0014, '22K': BASE['22K'] * 1.0013, '18K': BASE['18K'] * 1.0012, 'Silver': BASE['Silver'] * 1.0080 };
-    dayLow  = { '24K': BASE['24K'] * 0.9947, '22K': BASE['22K'] * 0.9951, '18K': BASE['18K'] * 0.9958, 'Silver': BASE['Silver'] * 0.9939 };
+    dayHigh = { '24K': BASE['24K'] * 1.0014, 'Silver': BASE['Silver'] * 1.0080 };
+    dayLow  = { '24K': BASE['24K'] * 0.9947, 'Silver': BASE['Silver'] * 0.9939 };
     updatePrices();
 
     // Show source attribution

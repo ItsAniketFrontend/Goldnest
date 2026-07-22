@@ -14,7 +14,7 @@
      <script>
        window.GoldNestRates.fetch().then(rates => {
          console.log(rates);
-         // { gold999_per_gram, gold22k_per_gram, gold18k_per_gram,
+         // { gold999_per_gram,
          //   silver999_per_gram, source, timestamp, ... }
        });
      </script>
@@ -63,8 +63,6 @@
   // Last synced: 2026-07-06 (IBJA: gold 999 ≈ ₹14,551/g, silver ≈ ₹232/g).
   const FALLBACK = Object.freeze({
     gold999_per_gram:   14551,
-    gold22k_per_gram:   13329,
-    gold18k_per_gram:   10913,
     silver999_per_gram: 232,
     source:             'fallback',
     timestamp:          0,
@@ -183,8 +181,6 @@
     const g = gold.value;
     return {
       gold999_per_gram:   Math.round(g),
-      gold22k_per_gram:   Math.round(g * 0.916),
-      gold18k_per_gram:   Math.round(g * 0.750),
       silver999_per_gram: silver ? Math.round(silver.value * 100) / 100
                                  : FALLBACK.silver999_per_gram,
       source:    'GoldNest',
@@ -211,8 +207,6 @@
     if (!data || !isValidGold(data.gold999_per_gram)) return null;
     return {
       gold999_per_gram:   data.gold999_per_gram,
-      gold22k_per_gram:   data.gold22k_per_gram   || Math.round(data.gold999_per_gram * 0.916),
-      gold18k_per_gram:   data.gold18k_per_gram   || Math.round(data.gold999_per_gram * 0.750),
       silver999_per_gram: isValidSilver(data.silver999_per_gram) ? data.silver999_per_gram : FALLBACK.silver999_per_gram,
       source:             data.source || 'IBJA',
       session:            data.session || '',
@@ -320,8 +314,6 @@
 
     return {
       gold999_per_gram:   round(gold999),
-      gold22k_per_gram:   round(gold999 * 0.916),  // 22K = 91.6% of fine
-      gold18k_per_gram:   round(gold999 * 0.750),  // 18K = 75.0% of fine
       silver999_per_gram: silver != null ? round1(silver) : null,
     };
   }

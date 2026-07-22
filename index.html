@@ -325,18 +325,10 @@
   <div class="ticker-track">
     <div class="ticker-item"><span class="t-name">24K Gold</span><span class="t-price">₹14551/g</span><span class="t-up">▲ 0.42%</span></div>
     <div class="ticker-sep">|</div>
-    <div class="ticker-item"><span class="t-name">22K Gold</span><span class="t-price">₹13329/g</span><span class="t-up">▲ 0.38%</span></div>
-    <div class="ticker-sep">|</div>
-    <div class="ticker-item"><span class="t-name">18K Gold</span><span class="t-price">₹10913/g</span><span class="t-up">▲ 0.31%</span></div>
-    <div class="ticker-sep">|</div>
     <div class="ticker-item"><span class="t-name">Silver</span><span class="t-price">₹231.81/g</span><span class="t-down">▼ 0.15%</span></div>
     <div class="ticker-sep">|</div>
     <!-- duplicate for seamless loop -->
     <div class="ticker-item"><span class="t-name">24K Gold</span><span class="t-price">₹14551/g</span><span class="t-up">▲ 0.42%</span></div>
-    <div class="ticker-sep">|</div>
-    <div class="ticker-item"><span class="t-name">22K Gold</span><span class="t-price">₹13329/g</span><span class="t-up">▲ 0.38%</span></div>
-    <div class="ticker-sep">|</div>
-    <div class="ticker-item"><span class="t-name">18K Gold</span><span class="t-price">₹10913/g</span><span class="t-up">▲ 0.31%</span></div>
     <div class="ticker-sep">|</div>
     <div class="ticker-item"><span class="t-name">Silver</span><span class="t-price">₹231.81/g</span><span class="t-down">▼ 0.15%</span></div>
   </div>
@@ -936,8 +928,6 @@
     if (window.prices || typeof prices !== 'undefined') {
       const p = window.prices || prices;
       if (p['24K Gold']) p['24K Gold'].price = r.gold999_per_gram;
-      if (p['22K Gold']) p['22K Gold'].price = r.gold22k_per_gram;
-      if (p['18K Gold']) p['18K Gold'].price = r.gold18k_per_gram;
       if (p['Silver'])   p['Silver'].price   = r.silver999_per_gram;
     }
   }
