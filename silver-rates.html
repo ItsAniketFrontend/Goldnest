@@ -224,6 +224,34 @@
     .live-grid, .page-layout, .milestones { max-width: 100%; width: 100%; }
     .page-layout > div { min-width: 0; max-width: 100%; }
 
+    /* Refresh button beside the rate cards.
+       Defined here (not just style.css) because the rules above load
+       later and would otherwise force .live-grid to 100% width, leaving
+       no room for the button. */
+    .rates-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .rates-row > .live-grid {
+      margin-bottom: 0;
+      width: auto;
+      max-width: none;
+      flex: 0 1 auto;
+    }
+    .rate-refresh-side { flex-shrink: 0; }
+
+    @media (max-width: 768px) {
+      .rates-row { gap: 16px; margin-bottom: 24px; }
+      .rates-row > .live-grid { width: 100%; }
+      .rate-refresh-side { width: 100%; }
+      .rate-refresh-side .rate-refresh { width: 100%; justify-content: center; }
+    }
+
+
     @media (max-width: 1024px) {
       .page-layout { grid-template-columns: 1fr !important; width: 100%; }
       .live-grid   { grid-template-columns: repeat(2,1fr) !important; }
