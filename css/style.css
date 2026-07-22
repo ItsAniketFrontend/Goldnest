@@ -1335,8 +1335,8 @@ section { padding: 64px 0; }
    mobile, which would have hidden the button entirely. */
 .rate-refresh-row {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
+  justify-content: flex-start;   /* sits under the heading, above the rate cards */
+  margin-top: 20px;
 }
 
 .rate-refresh {
@@ -1369,6 +1369,6 @@ section { padding: 64px 0; }
 @media (max-width: 768px) {
   /* .hero-meta is hidden at this width, so align the button with the
      heading instead of to the right of empty space. */
-  .rate-refresh-row { justify-content: flex-start; margin-top: 14px; }
+  .rate-refresh-row { margin-top: 14px; }
   .rate-refresh { font-size: .72rem; padding: 5px 12px; }
 }
