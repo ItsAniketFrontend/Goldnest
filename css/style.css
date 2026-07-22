@@ -1329,11 +1329,20 @@ section { padding: 64px 0; }
    Small pill button beside the "Last updated" stamp on the
    rates pages. Re-fetches from the API on demand.
    ============================================================ */
+/* Row that holds the button: sits under the hero meta block, pulled up
+   into the empty space beside the rate cards. The button lives here
+   rather than inside .hero-meta because that block is display:none on
+   mobile, which would have hidden the button entirely. */
+.rate-refresh-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
 .rate-refresh {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 8px;
   padding: 6px 14px;
   border: 1px solid var(--gold, #D4AF37);
   border-radius: 50px;
@@ -1358,5 +1367,8 @@ section { padding: 64px 0; }
 @keyframes rr-spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 768px) {
+  /* .hero-meta is hidden at this width, so align the button with the
+     heading instead of to the right of empty space. */
+  .rate-refresh-row { justify-content: flex-start; margin-top: 14px; }
   .rate-refresh { font-size: .72rem; padding: 5px 12px; }
 }
