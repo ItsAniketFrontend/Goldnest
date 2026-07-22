@@ -46,6 +46,10 @@
     silver: '/yearly-silver-chart',
   };
 
+  // Scraping IBJA through public CORS proxies is slow and unreliable.
+  // The GoldNest API is the real source, so this is off by default.
+  const ENABLE_PROXY_FALLBACK = false;
+
   // Public CORS proxies — tried in order. Each returns raw HTML.
   const PROXIES = [
     'https://api.allorigins.win/raw?url=',
@@ -105,7 +109,15 @@
       if (cached) return cached;
     }
 
-    // 3 — CORS proxy → IBJA  (only as a fallback for static-only deployments)
+    // 3 — CORS proxy → IBJA scrape.
+    //     DISABLED by default: the public proxies are slow (seconds each)
+    //     and routinely return markup this parser reads as junk (e.g. the
+    //     "995, 995, 7" candidates), so the page stalls only to end up with
+    //     nothing usable. The GoldNest API above is the real source; if it
+    //     is unreachable we prefer a stale cached value or the "—"
+    //     placeholder over a long wait. Set ENABLE_PROXY_FALLBACK = true to
+    //     re-enable.
+    if (ENABLE_PROXY_FALLBACK) {
     for (const proxy of PROXIES) {
       for (const source of SOURCES) {
         try {
@@ -129,13 +141,15 @@
         } catch (_) { /* try next combination */ }
       }
     }
+    }
 
     // 4 — stale cache (better than nothing)
     const stale = readCache(true);
     if (stale) return { ...stale, isStale: true };
 
-    // 5 — hard-coded fallback
-    return { ...FALLBACK, timestamp: Date.now() };
+    // 5 — nothing usable: return null so the UI keeps its "—" placeholder
+    //     rather than displaying an invented number.
+    return null;
   }
 
   /* ------------------------------------------------------------
@@ -168,15 +182,22 @@
       return Number.isFinite(val) ? { value: val, day: last.day } : null;
     };
 
+    // Fire BOTH requests at once — waiting for gold before starting silver
+    // doubled the time the page sat on its placeholder.
     // Gold is required; silver is best-effort.
-    const gold = await call(API_ENDPOINTS.gold);
+    const [goldRes, silverRes] = await Promise.allSettled([
+      call(API_ENDPOINTS.gold),
+      call(API_ENDPOINTS.silver),
+    ]);
+
+    const gold = goldRes.status === 'fulfilled' ? goldRes.value : null;
     if (!gold || !isValidGold(gold.value)) return null;
 
     let silver = null;
-    try {
-      const s = await call(API_ENDPOINTS.silver);
-      if (s && isValidSilver(s.value)) silver = s;
-    } catch (_) { /* silver optional */ }
+    if (silverRes.status === 'fulfilled' && silverRes.value &&
+        isValidSilver(silverRes.value.value)) {
+      silver = silverRes.value;
+    }
 
     const g = gold.value;
     return {
@@ -383,17 +404,34 @@
   /* ------------------------------------------------------------
      Public API
   ------------------------------------------------------------ */
+  /* Force a fresh fetch (bypasses the cache) and repaint every page hook.
+     Used by the "Refresh rate" buttons. Resolves with the rates object,
+     or null if nothing usable came back. */
+  function refresh() {
+    return fetchIBJARates({ force: true })
+      .then(r => { if (r) notifyAll(r); return r; })
+      .catch(() => null);
+  }
+
   window.GoldNestRates = {
     fetch:     fetchIBJARates,
+    refresh:   refresh,
     onUpdate:  onUpdate,
     notifyAll: notifyAll,
     formatAge: formatAge,
     fallback:  FALLBACK,
   };
 
-  // Auto-fetch as soon as the script loads so by the time the page
-  // is ready the cache is warm.
+  // On load: paint any cached rate IMMEDIATELY (no network wait), then
+  // refresh from the API in the background and repaint if it differs.
+  // Without this the page sits on its "—" placeholder for the whole
+  // round-trip even when a perfectly good recent value is known.
   document.addEventListener('DOMContentLoaded', () => {
-    fetchIBJARates().then(notifyAll).catch(() => {});
+    const cached = readCache(true);          // allow stale for first paint
+    if (cached) notifyAll({ ...cached, isStale: true });
+
+    fetchIBJARates()
+      .then(r => { if (r) notifyAll(r); })
+      .catch(() => {});
   });
 })();

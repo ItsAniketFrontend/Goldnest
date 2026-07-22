@@ -305,6 +305,9 @@
       </div>
       <div class="hero-meta">
         <div>Last updated: <span id="lastUpdate" style="color:var(--text);font-weight:600;">–</span></div>
+        <button type="button" class="rate-refresh" id="rateRefresh" aria-label="Refresh live rate">
+          <span class="rr-icon" aria-hidden="true">⟳</span><span class="rr-text">Refresh Rate</span>
+        </button>
         <div style="margin-top:4px;">Source: MCX Spot Price</div>
         <div style="margin-top:4px;">Currency: Indian Rupee (₹)</div>
       </div>
@@ -686,6 +689,24 @@ function buildSilverYearChart(series) {
       if (sub) sub.textContent = 'Silver price history is temporarily unavailable.';
     });
 })();
+
+/* ---- Refresh Rate button ----
+   Forces a fresh API fetch and repaints via the normal onUpdate hooks.
+   Rates otherwise only change on page reload. */
+document.addEventListener('DOMContentLoaded', function () {
+  var btn = document.getElementById('rateRefresh');
+  if (!btn || !window.GoldNestRates) return;
+  btn.addEventListener('click', function () {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    btn.classList.add('is-loading');
+    var done = function () {
+      btn.disabled = false;
+      btn.classList.remove('is-loading');
+    };
+    window.GoldNestRates.refresh().then(done).catch(done);
+  });
+});
 </script>
 </body>
 </html>

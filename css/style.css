@@ -1323,3 +1323,40 @@ section { padding: 64px 0; }
   h1 { font-size: 1.85rem; }
   h2 { font-size: 1.5rem; }
 }
+
+/* ============================================================
+   REFRESH LIVE RATE BUTTON
+   Small pill button beside the "Last updated" stamp on the
+   rates pages. Re-fetches from the API on demand.
+   ============================================================ */
+.rate-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 14px;
+  border: 1px solid var(--gold, #D4AF37);
+  border-radius: 50px;
+  background: transparent;
+  color: var(--gold-dark, #A8860C);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .18s ease, color .18s ease, opacity .18s ease;
+  white-space: nowrap;
+}
+.rate-refresh:hover:not(:disabled) {
+  background: var(--gold, #D4AF37);
+  color: #fff;
+}
+.rate-refresh:disabled { opacity: .6; cursor: default; }
+.rate-refresh .rr-icon { font-size: .95rem; display: inline-block; }
+/* spin only while a refresh is in flight */
+.rate-refresh.is-loading .rr-icon { animation: rr-spin .8s linear infinite; }
+@keyframes rr-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 768px) {
+  .rate-refresh { font-size: .72rem; padding: 5px 12px; }
+}
