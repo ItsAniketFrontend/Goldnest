@@ -244,7 +244,16 @@
       .sidebar-card table { width: 100% !important; table-layout: fixed; }
       .sidebar-card td    { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     }
-  </style>
+  
+    /* Refresh button uses the silver palette on this page */
+    .rate-refresh {
+      background: linear-gradient(135deg, var(--silver), var(--silver-dark));
+      box-shadow: 0 4px 14px rgba(107,114,128,.32);
+    }
+    .rate-refresh:hover:not(:disabled) {
+      box-shadow: 0 6px 20px rgba(107,114,128,.45);
+    }
+</style>
 </head>
 <body style="overflow-x:hidden;">
 
@@ -309,11 +318,6 @@
         <div style="margin-top:4px;">Currency: Indian Rupee (₹)</div>
       </div>
     </div>
-    <div class="rate-refresh-row">
-      <button type="button" class="rate-refresh" id="rateRefresh" aria-label="Refresh live rate">
-        <span class="rr-icon" aria-hidden="true">⟳</span><span class="rr-text">Refresh Rate</span>
-      </button>
-    </div>
   </div>
 </section>
 
@@ -322,6 +326,7 @@
   <div class="container">
 
     <!-- LIVE RATE CARDS -->
+    <div class="rates-row">
     <div class="live-grid">
       <div class="live-card primary">
         <div class="lc-metal">Silver 999 (99.9%)</div>
@@ -336,6 +341,13 @@
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
     </div>
+
+      <div class="rate-refresh-side">
+        <button type="button" class="rate-refresh" id="rateRefresh" aria-label="Refresh live rate">
+          <span class="rr-icon" aria-hidden="true">⟳</span><span class="rr-text">Refresh Rate</span>
+        </button>
+      </div>
+    </div><!-- /rates-row -->
 
     <!-- PAGE LAYOUT: MAIN + SIDEBAR -->
     <div class="page-layout">

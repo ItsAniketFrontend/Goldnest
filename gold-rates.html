@@ -326,11 +326,6 @@
         <div style="margin-top:4px;">Currency: Indian Rupee (₹)</div>
       </div>
     </div>
-    <div class="rate-refresh-row">
-      <button type="button" class="rate-refresh" id="rateRefresh" aria-label="Refresh live rate">
-        <span class="rr-icon" aria-hidden="true">⟳</span><span class="rr-text">Refresh Rate</span>
-      </button>
-    </div>
   </div>
 </section>
 
@@ -339,6 +334,7 @@
   <div class="container">
 
     <!-- LIVE RATE CARDS -->
+    <div class="rates-row">
     <div class="live-grid">
       <div class="live-card primary">
         <div class="lc-metal">24K Gold (99.9%)</div>
@@ -353,6 +349,13 @@
         <div class="lc-time"><span class="live-dot"></span>Updated just now</div>
       </div>
     </div>
+
+      <div class="rate-refresh-side">
+        <button type="button" class="rate-refresh" id="rateRefresh" aria-label="Refresh live rate">
+          <span class="rr-icon" aria-hidden="true">⟳</span><span class="rr-text">Refresh Rate</span>
+        </button>
+      </div>
+    </div><!-- /rates-row -->
 
     <!-- PAGE LAYOUT: MAIN + SIDEBAR -->
     <div class="page-layout">

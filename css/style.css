@@ -1333,35 +1333,52 @@ section { padding: 64px 0; }
    into the empty space beside the rate cards. The button lives here
    rather than inside .hero-meta because that block is display:none on
    mobile, which would have hidden the button entirely. */
-.rate-refresh-row {
+/* Rate cards on the left, refresh button in the space to their right. */
+.rates-row {
   display: flex;
-  justify-content: flex-start;   /* sits under the heading, above the rate cards */
-  margin-top: 20px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.rates-row .live-grid { margin-bottom: 0; }
+.rate-refresh-side { flex-shrink: 0; }
+
+/* the cards keep their own bottom spacing at the row level */
+.rates-row { margin-bottom: 40px; }
+
+@media (max-width: 768px) {
+  /* stack: button sits under the cards, full-width-ish and easy to tap */
+  .rates-row { gap: 16px; margin-bottom: 28px; }
+  .rate-refresh-side { width: 100%; }
+  .rate-refresh-side .rate-refresh { width: 100%; justify-content: center; }
 }
 
 .rate-refresh {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border: 1px solid var(--gold, #D4AF37);
+  gap: 8px;
+  padding: 11px 22px;
+  border: none;
   border-radius: 50px;
-  background: transparent;
-  color: var(--gold-dark, #A8860C);
+  background: linear-gradient(135deg, var(--gold, #D4AF37), var(--gold-dark, #A8860C));
+  color: #fff;
   font-family: inherit;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
   line-height: 1;
   cursor: pointer;
-  transition: background .18s ease, color .18s ease, opacity .18s ease;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, .35);
+  transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
   white-space: nowrap;
 }
 .rate-refresh:hover:not(:disabled) {
-  background: var(--gold, #D4AF37);
-  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, .48);
 }
-.rate-refresh:disabled { opacity: .6; cursor: default; }
-.rate-refresh .rr-icon { font-size: .95rem; display: inline-block; }
+.rate-refresh:active:not(:disabled) { transform: translateY(0); }
+.rate-refresh:disabled { opacity: .65; cursor: default; box-shadow: none; }
+.rate-refresh .rr-icon { font-size: 1.1rem; display: inline-block; }
 /* spin only while a refresh is in flight */
 .rate-refresh.is-loading .rr-icon { animation: rr-spin .8s linear infinite; }
 @keyframes rr-spin { to { transform: rotate(360deg); } }
@@ -1369,6 +1386,5 @@ section { padding: 64px 0; }
 @media (max-width: 768px) {
   /* .hero-meta is hidden at this width, so align the button with the
      heading instead of to the right of empty space. */
-  .rate-refresh-row { margin-top: 14px; }
   .rate-refresh { font-size: .72rem; padding: 5px 12px; }
 }
