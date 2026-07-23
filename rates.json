@@ -1,8 +1,8 @@
 {
-  "gold999_per_gram": 14528,
-  "silver999_per_gram": 226.24,
+  "gold999_per_gram": 14556,
+  "silver999_per_gram": 225.82,
   "source": "IBJA",
   "session": "AM",
-  "fetched_at": "2026-07-23T06:15:52.232Z",
+  "fetched_at": "2026-07-23T09:28:23.063Z",
   "source_url": "https://www.ibjarates.com/"
 }
