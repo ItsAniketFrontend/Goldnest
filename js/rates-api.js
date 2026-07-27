@@ -85,29 +85,32 @@
        5. Null rates (pages keep their "—" placeholder)
   ------------------------------------------------------------ */
   async function fetchIBJARates(opts = {}) {
-    // 0 — GoldNest API (same source as the mobile app) — PREFERRED
+    // 1 — GoldNest API — the ONE source of truth (same as the mobile app).
+    //     This is what makes the website and app agree.
     try {
       const apiRates = await fetchGoldNestApi();
       if (apiRates) {
-        writeCache(apiRates);
+        writeCache(apiRates);        // remember it for the next visit
         return apiRates;
       }
     } catch (_) {}
 
-    // 1 — same-origin JSON (fastest, no CORS, no third-party)
+    // 2 — last GoldNest value we cached (a previous successful API fetch).
+    //     Used only if the API is momentarily unreachable, so the number
+    //     still comes from GoldNest — never from IBJA.
+    const cached = readCache(true);  // allow slightly stale
+    if (cached && cached.source === 'GoldNest') {
+      return { ...cached, isStale: true };
+    }
+
+    // 3 — same-origin rates.json (IBJA-scraped) — LAST-RESORT ONLY, e.g. a
+    //     brand-new visitor whose very first API call failed. Kept so the
+    //     page shows a plausible number rather than "—", but it is not the
+    //     preferred source and is flagged stale.
     try {
       const localJson = await fetchLocalJson();
-      if (localJson) {
-        writeCache(localJson);
-        return localJson;
-      }
+      if (localJson) return { ...localJson, isStale: true };
     } catch (_) {}
-
-    // 2 — fresh localStorage cache
-    if (!opts.force) {
-      const cached = readCache();
-      if (cached) return cached;
-    }
 
     // 3 — CORS proxy → IBJA scrape.
     //     DISABLED by default: the public proxies are slow (seconds each)
@@ -163,10 +166,13 @@
     if (!API_TOKEN) return null;              // not configured yet
 
     const call = async (path) => {
-      // Keep this tight: if the API is slow or down (e.g. a 502 from the
-      // origin) we would rather fall back to a cached rate quickly than
-      // leave the visitor staring at a placeholder.
-      const res = await fetchWithTimeout(API_BASE + path, 4000, {
+      // The endpoint typically answers in ~3s but the browser fires gold
+      // and silver together, so give it real headroom (10s). A too-tight
+      // timeout was killing successful-but-slow calls and falling back to
+      // the stale bundled rates.json (yesterday's number). The page still
+      // feels instant because a cached value is painted first (see the
+      // DOMContentLoaded handler), then replaced when the live value lands.
+      const res = await fetchWithTimeout(API_BASE + path, 10000, {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + API_TOKEN,
@@ -441,8 +447,14 @@
   // Without this the page sits on its "—" placeholder for the whole
   // round-trip even when a perfectly good recent value is known.
   document.addEventListener('DOMContentLoaded', () => {
-    const cached = readCache(true);          // allow stale for first paint
-    if (cached) notifyAll({ ...cached, isStale: true });
+    // Paint a previously-cached GoldNest value instantly (no network wait)
+    // so repeat visitors see a rate at once. Only a GoldNest-sourced cache
+    // is used here — never the bundled IBJA rates.json — so the wrong
+    // (stale IBJA) number can't flash before the live value arrives.
+    const cached = readCache(true);
+    if (cached && cached.source === 'GoldNest') {
+      notifyAll({ ...cached, isStale: true });
+    }
 
     fetchIBJARates()
       .then(r => { if (r) notifyAll(r); })
