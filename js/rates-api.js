@@ -163,7 +163,10 @@
     if (!API_TOKEN) return null;              // not configured yet
 
     const call = async (path) => {
-      const res = await fetchWithTimeout(API_BASE + path, 7000, {
+      // Keep this tight: if the API is slow or down (e.g. a 502 from the
+      // origin) we would rather fall back to a cached rate quickly than
+      // leave the visitor staring at a placeholder.
+      const res = await fetchWithTimeout(API_BASE + path, 4000, {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + API_TOKEN,
@@ -221,8 +224,10 @@
     // Cache-bust at most once per cache TTL window so updates show up
     // promptly without hammering origin on every page load.
     const bucket = Math.floor(Date.now() / CACHE_TTL_MS);
-    const url = '/rates.json?v=' + bucket;
-    const res = await fetchWithTimeout(url, 4000);
+    // Relative, not root-relative: the site is served from a subpath on
+    // GitHub Pages, where "/rates.json" 404s.
+    const url = 'rates.json?v=' + bucket;
+    const res = await fetchWithTimeout(url, 3000);
     if (!res.ok) return null;
     const data = await res.json();
     if (!data || !isValidGold(data.gold999_per_gram)) return null;

@@ -384,6 +384,7 @@
         </button>
       </div>
     </div><!-- /rates-row -->
+    <div id="rateNote" style="display:none;margin:-24px 0 32px;font-size:.8rem;color:#B45309;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:8px 14px;"></div>
 
     <!-- PAGE LAYOUT: MAIN + SIDEBAR -->
     <div class="page-layout">
@@ -638,6 +639,18 @@ function applyIBJA(r) {
   if (meta && r.source === 'IBJA') {
     const age = window.GoldNestRates.formatAge(r.timestamp);
     meta.title = 'Source: IBJA · fetched ' + age;
+  }
+
+  // If the value we painted is a cached/last-known one (the live API is
+  // slow or down), say so rather than implying it is this second's rate.
+  const note = document.getElementById('rateNote');
+  if (note) {
+    if (r.isStale) {
+      note.textContent = 'Showing last available rate — live update is temporarily unavailable.';
+      note.style.display = '';
+    } else {
+      note.style.display = 'none';
+    }
   }
 }
 // js/rates-api.js is deferred, so it only exists by DOMContentLoaded.
