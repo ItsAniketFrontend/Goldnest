@@ -35,7 +35,11 @@
   const ENDPOINTS = { gold: '/yearly-chart', silver: '/yearly-silver-chart' };
 
   const CACHE_KEY    = 'goldnest_rates_v3';
-  const TIMEOUT_MS   = 12000;   // the API answers in ~3-7s; give real headroom
+  // The API returns 350 days of data (~41 KB) and answers in 3-10s, so on a
+  // slower connection a single call can take a while. Give it a generous
+  // ceiling so real responses are never cut off; the cached value is shown
+  // first so the wait is invisible to repeat visitors.
+  const TIMEOUT_MS   = 20000;
 
   // Plausibility ranges — reject anything obviously wrong.
   const GOLD_MIN = 4000, GOLD_MAX = 30000;  // ₹/gram
@@ -90,23 +94,47 @@
       return null;
     };
 
-    // Gold is required; silver is best-effort (page still works if it fails).
-    const [goldRes, silverRes] = await Promise.allSettled([
-      call(ENDPOINTS.gold),
-      call(ENDPOINTS.silver),
-    ]);
+    // Fire both, but treat them INDEPENDENTLY. Silver is often slower (or,
+    // lately, returns 0.00), and it must never hold gold back. As soon as
+    // gold arrives we paint it; silver updates the page whenever it lands.
+    const goldP   = call(ENDPOINTS.gold);
+    const silverP = call(ENDPOINTS.silver);
 
-    const gold = goldRes.status === 'fulfilled' ? goldRes.value : null;
+    // When silver eventually resolves, merge it in and repaint — without
+    // blocking the gold result below.
+    silverP
+      .then((s) => {
+        if (s && isValidSilver(s.value) && _lastGold) {
+          const merged = buildResult(_lastGold, s);
+          writeCache(merged);
+          notifyAll(merged);
+        }
+      })
+      .catch(() => {});
+
+    const gold = await goldP.catch(() => null);
     if (!gold || !isValidGold(gold.value)) return null;
+    _lastGold = gold;
 
+    // Return with silver if it happens to already be ready, else gold-only
+    // (silver will repaint via the handler above when it arrives). Keep a
+    // cached silver so the page isn't blank on the silver card meanwhile.
     let silver = null;
-    if (silverRes.status === 'fulfilled' && silverRes.value && isValidSilver(silverRes.value.value)) {
-      silver = silverRes.value;
+    const cachedSilver = readCache();
+    if (cachedSilver && isValidSilver(cachedSilver.silver999_per_gram)) {
+      silver = { value: cachedSilver.silver999_per_gram, day: cachedSilver.rate_date };
     }
+    return buildResult(gold, silver);
+  }
 
+  // Keep the newest gold result so the async silver handler can merge it.
+  let _lastGold = null;
+
+  function buildResult(gold, silver) {
     return {
       gold999_per_gram:   Math.round(gold.value),
-      silver999_per_gram: silver ? Math.round(silver.value * 100) / 100 : null,
+      silver999_per_gram: silver && isValidSilver(silver.value)
+                            ? Math.round(silver.value * 100) / 100 : null,
       source:    'GoldNest',
       rate_date: gold.day || '',
       timestamp: nowMs(),
