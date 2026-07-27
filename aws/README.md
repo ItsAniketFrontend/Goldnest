@@ -1,27 +1,26 @@
 # GoldNest on AWS — Deployment Guide
 
-This folder makes the site **AWS-ready** two ways:
+The site is a **static website**. Deploying it is just static hosting:
+**S3 (private) + CloudFront**, with `/api/*` routed to the existing
+`goldsnest.com` backend for the contact/enquiry forms.
 
-1. **Static hosting** of the site itself (S3 + CloudFront).
-2. **AWS-native rate refresh** — a Lambda on an EventBridge schedule that
-   keeps `rates.json` in sync with the official IBJA rate, replacing the
-   GitHub Action so nothing depends on GitHub once you're live.
+**There is no rate-refresh job to run.** Live gold/silver rates are fetched
+directly in the browser from the GoldNest API — the same source the mobile
+app uses — so the website and app always match:
 
 ```
-  EventBridge (cron 3x/day)
-        │
-        ▼
-  Lambda  goldnest-update-rates   ── scrapes ibjarates.com
-        │                            parses + validates
-        ├─► S3  s3://<bucket>/rates.json   (last-good on failure)
-        └─► CloudFront invalidation /rates.json
-                    │
+        Browser  js/rates-api.js
+                    │  POST (with Bearer token)
                     ▼
-        Browser  js/rates-api.js  → same-origin /rates.json
+        https://goldsnest.com/api/yearly-chart        (gold)
+        https://goldsnest.com/api/yearly-silver-chart (silver)
+                    │  last record = live rate
+                    ▼
+        Rate shown on the page
 ```
 
-The Lambda uses the **same parse + validation logic** as
-`scripts/update-rates.js`, so the two paths never disagree.
+No Lambda, no EventBridge, no `rates.json`, no IBJA scraping — all of that
+was removed. Nothing server-side needs to run to keep rates fresh.
 
 ---
 
@@ -43,14 +42,18 @@ aws s3 sync . "s3://$BUCKET" \
   --delete
 ```
 
-Set the right `Content-Type`/cache for `rates.json` (short cache so rate
-updates show up fast):
+The chart data files use a short cache so the 1-year charts stay current:
 
 ```bash
-aws s3 cp rates.json "s3://$BUCKET/rates.json" \
+aws s3 cp gold-history.json "s3://$BUCKET/gold-history.json" \
+  --content-type application/json \
+  --cache-control "public, max-age=300, must-revalidate"
+aws s3 cp silver-history.json "s3://$BUCKET/silver-history.json" \
   --content-type application/json \
   --cache-control "public, max-age=300, must-revalidate"
 ```
+
+(Live rates need no such file — they come from the API in the browser.)
 
 ### 1b. Put CloudFront in front (recommended: HTTPS + caching + custom domain)
 
@@ -67,53 +70,22 @@ aws s3 cp rates.json "s3://$BUCKET/rates.json" \
 
 ---
 
-## Part 2 — Deploy the AWS-native rate refresher
+## Part 2 — Live rates (nothing to deploy)
 
-Requires the **AWS SAM CLI** (`sam --version`) and credentials with rights to
-create Lambda/IAM/EventBridge/CloudWatch.
+Live gold/silver rates are fetched **client-side** by `js/rates-api.js`
+straight from the GoldNest API. There is no Lambda, no cron, and no
+`rates.json` — so there is nothing to deploy or schedule for rates.
 
-```bash
-cd aws/lambda
-npm install          # pulls the two AWS SDK v3 clients
-cd ..
+The only requirement is that the two API endpoints stay reachable and the
+Bearer token in `js/rates-api.js` stays valid:
 
-sam build
+- `POST https://goldsnest.com/api/yearly-chart`
+- `POST https://goldsnest.com/api/yearly-silver-chart`
 
-sam deploy --guided \
-  --stack-name goldnest-rates \
-  --capabilities CAPABILITY_IAM \
-  --parameter-overrides \
-      SiteBucketName=goldnest-site \
-      RatesKey=rates.json \
-      CloudFrontDistributionId=EXXXXXXXXXXXXX   # or leave '' for S3-only
-```
-
-On subsequent deploys just run `sam build && sam deploy` (config is saved to
-`samconfig.toml`).
-
-### Force an immediate refresh (and smoke-test)
-
-```bash
-aws lambda invoke --function-name goldnest-update-rates /dev/stdout
-# then confirm the object updated:
-aws s3 cp s3://goldnest-site/rates.json - | cat
-```
-
-### Schedule (all times IST)
-
-| Trigger                | Cron (UTC)          | Runs                     |
-|------------------------|---------------------|--------------------------|
-| Daily safety net       | `30 3 * * ? *`      | 09:00 IST, every day     |
-| After IBJA AM rate     | `0 7 ? * MON-FRI *` | 12:30 IST, weekdays      |
-| After IBJA PM rate     | `0 12 ? * MON-FRI *`| 17:30 IST, weekdays      |
-
-### Failure behaviour (important)
-
-If **both** IBJA sources are unreachable or the markup changed so nothing
-parses within the plausibility range, the Lambda **throws and does NOT
-overwrite** `rates.json` — the last good rate stays live. The throw trips the
-`goldnest-update-rates-errors` CloudWatch alarm so you find out. Wire that
-alarm to an SNS topic / email to get notified.
+If the token is ever rotated, update the `API_TOKEN` constant near the top
+of `js/rates-api.js` and redeploy the static files. If the API is briefly
+unreachable, the page shows the last value cached in the visitor's browser
+(with a small "last available rate" note), then updates on the next load.
 
 ---
 
@@ -149,26 +121,14 @@ If you ever host the static site on a **different** domain, switch the two
 
 ---
 
-## Retiring the GitHub Action
-
-Once the Lambda is confirmed writing to S3, disable the old workflow so the
-two don't both commit/write:
-
-- Delete or disable `.github/workflows/update-rates.yml` (Actions tab →
-  workflow → ⋯ → Disable), **or** keep it only as a repo-side backup that
-  commits to git but is no longer the production source.
-
-The site reads `rates.json` **same-origin** either way — on AWS that file now
-comes from S3, written by the Lambda.
-
----
-
 ## Quick pre-launch checklist
 
-- [ ] `rates.json` shows today's real IBJA rate (gold ≈ ₹14.5k/g range, not ₹9k).
-- [ ] `sam deploy` succeeded; manual `lambda invoke` updated the S3 object.
-- [ ] CloudFront serves `https://<domain>/rates.json` with the fresh value.
-- [ ] Open the live site → gold-rates / silver-rates show the IBJA number
-      (check the "Updated … via IBJA" stamp), on **mobile and desktop**.
-- [ ] CloudWatch alarm has an SNS/email target.
-- [ ] Old GitHub Action disabled (or demoted to backup).
+- [ ] Static files uploaded to S3; CloudFront default root object = `index.html`.
+- [ ] `/api/*` behaviour routes to the goldsnest.com backend (forms + rates).
+- [ ] ACM cert + `goldsnest.com` CNAME attached to the distribution.
+- [ ] Open the live site → gold-rates / silver-rates show the **live GoldNest
+      rate** (matching the app), and it stays steady (no per-second ticking),
+      on **mobile and desktop**.
+- [ ] The 1-year charts render (from `gold-history.json` / `silver-history.json`).
+- [ ] Contact + partner forms submit with no 404 in the browser console.
+- [ ] `API_TOKEN` in `js/rates-api.js` is current (rotate if the backend reissues).
