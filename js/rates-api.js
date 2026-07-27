@@ -179,10 +179,19 @@
       const json = await res.json();
       const rows = json && Array.isArray(json.data) ? json.data : null;
       if (!rows || !rows.length) throw new Error('empty data');
-      // LAST record = live rate.
-      const last = rows[rows.length - 1];
-      const val = parseFloat(last && last.close_price);
-      return Number.isFinite(val) ? { value: val, day: last.day } : null;
+      // The live rate is the most recent record — BUT the feed sometimes
+      // publishes today's row before a price is set, leaving close_price
+      // as "0.00" (e.g. silver did this for several days). Reading the
+      // last row blindly would then show ₹0 while the app shows the last
+      // real price. So walk backwards to the newest row with a real,
+      // positive close and use that instead.
+      for (let i = rows.length - 1; i >= 0; i--) {
+        const val = parseFloat(rows[i] && rows[i].close_price);
+        if (Number.isFinite(val) && val > 0) {
+          return { value: val, day: rows[i].day };
+        }
+      }
+      return null;
     };
 
     // Fire BOTH requests at once — waiting for gold before starting silver
